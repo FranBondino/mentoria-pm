@@ -1,0 +1,3104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>De la Gestión Tradicional a la Era de la IA - Sesión 1</title>
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* CSS RESET & VARIABLES */
+        :root {
+            --bg-primary: #090d16;
+            --bg-secondary: #0f172a;
+            --bg-card: rgba(15, 23, 42, 0.6);
+            --border-card: rgba(255, 255, 255, 0.05);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --color-blue: #3b82f6;
+            --color-blue-glow: rgba(59, 130, 246, 0.4);
+            --color-green: #10b981;
+            --color-green-glow: rgba(16, 185, 129, 0.4);
+            --color-purple: #8b5cf6;
+            --color-purple-glow: rgba(139, 92, 246, 0.4);
+            --color-red: #ef4444;
+            --color-red-glow: rgba(239, 68, 68, 0.4);
+            --color-orange: #f97316;
+            --font-display: 'Plus Jakarta Sans', 'Inter', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        /* Lucide Icons Custom styling */
+        .lucide {
+            width: 24px;
+            height: 24px;
+            stroke-width: 2px;
+            color: currentColor;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .icon-sm {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2px;
+        }
+        .icon-lg {
+            width: 32px;
+            height: 32px;
+            stroke-width: 1.5px;
+        }
+        .icon-xl {
+            width: 48px;
+            height: 48px;
+            stroke-width: 1.2px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(30, 27, 75, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(15, 23, 42, 0.6) 0%, transparent 50%);
+        }
+
+        /* PROGRESS BAR */
+        .progress-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.03);
+            z-index: 100;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--color-blue), var(--color-purple));
+            box-shadow: 0 0 10px var(--color-blue-glow);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* MAIN SLIDE CONTAINER */
+        .slides-wrapper {
+            position: relative;
+            flex-grow: 1;
+            width: 100%;
+            height: calc(100vh - 80px);
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            display: none; /* Bulletproof: hide from rendering tree to prevent GPU backdrop-filter bleeding */
+            pointer-events: none;
+            transform: translateX(50px);
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-direction: column;
+            justify-content: flex-start; /* flex-start allows proper overflow scrolling (center clips top) */
+            align-items: center;
+            padding: 1.5rem 3rem 3rem; /* extra bottom padding clears the controls bar */
+            box-sizing: border-box;
+            overflow-y: auto;
+            z-index: 1;
+        }
+
+        /* Collapsible spacers: center content on short slides, collapse on tall slides so overflow is scrollable */
+        .slide::before,
+        .slide::after {
+            content: '';
+            flex: 1;
+            min-height: 0.5rem;
+        }
+
+        /* Elegant custom scrollbar for slides */
+        .slide::-webkit-scrollbar {
+            width: 6px;
+        }
+        .slide::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .slide::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        .slide::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .slide.active {
+            opacity: 1;
+            display: flex; /* Show active slide */
+            pointer-events: auto;
+            transform: translateX(0);
+            z-index: 10;
+        }
+
+        .slide.prev {
+            transform: translateX(-50px);
+        }
+
+        /* SLIDE COMMON COMPONENTS */
+        .slide-title {
+            font-family: var(--font-display);
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            text-align: center;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #ffffff 60%, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .slide-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            max-width: 850px;
+            line-height: 1.5;
+        }
+
+        /* GLASS CARD COMMON STYLE */
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* BENTO GRID LAYOUTS */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.2rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        /* SPECIFIC SLIDES DESIGNS */
+        
+        /* SLIDE 1: PORTADA */
+        .cover-container {
+            text-align: center;
+            max-width: 900px;
+            margin-bottom: 2rem;
+        }
+
+        .global-title {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--color-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 1rem;
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 30px;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.05);
+        }
+
+        .cover-h1 {
+            font-family: var(--font-display);
+            font-size: 3.4rem;
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -0.04em;
+            margin-bottom: 1.2rem;
+            background: linear-gradient(135deg, #ffffff 40%, #a5b4fc 70%, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cover-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            line-height: 1.5;
+        }
+
+        .badge-session {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            color: #c084fc;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .cover-timeline-bg {
+            position: absolute;
+            bottom: 8%;
+            width: 80%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08) 20%, rgba(255, 255, 255, 0.08) 80%, transparent);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .timeline-node {
+            width: 8px;
+            height: 8px;
+            background: var(--text-secondary);
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .timeline-node.active {
+            background: var(--color-blue);
+            box-shadow: 0 0 15px var(--color-blue);
+            transform: scale(1.3);
+        }
+
+        .timeline-label {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        /* SLIDE 2: LA REGLA DE ORO */
+        .golden-card-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            padding: 0.6rem;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .golden-title {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: #ffffff;
+        }
+
+        .golden-description {
+            color: var(--text-secondary);
+            line-height: 1.45;
+            font-size: 0.9rem;
+        }
+
+        .golden-card-purple .golden-card-icon { color: var(--color-purple); box-shadow: 0 0 12px rgba(139, 92, 246, 0.12); }
+        .golden-card-blue .golden-card-icon { color: var(--color-blue); box-shadow: 0 0 12px rgba(59, 130, 246, 0.12); }
+        .golden-card-green .golden-card-icon { color: var(--color-green); box-shadow: 0 0 12px rgba(16, 185, 129, 0.12); }
+
+        .philosophy-banner {
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 1.5rem;
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.04), rgba(59, 130, 246, 0.04));
+            border-left: 4px solid var(--color-purple);
+            padding: 1rem 1.5rem;
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+            color: #e2e8f0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* SLIDE 3: COMPARATIVA TEMPORAL */
+        .compare-column-title {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .badge-old {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+        }
+
+        .badge-new {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+        }
+
+        .compare-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .compare-item {
+            padding: 0.7rem 0.9rem;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            line-height: 1.4;
+        }
+
+        .compare-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.15rem;
+        }
+
+        .compare-value {
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: #f1f5f9;
+        }
+
+        .compare-column-right .compare-item {
+            border-color: rgba(16, 185, 129, 0.04);
+            background: rgba(16, 185, 129, 0.01);
+        }
+
+        .compare-column-left .compare-item {
+            border-color: rgba(239, 68, 68, 0.04);
+            background: rgba(239, 68, 68, 0.01);
+        }
+
+        /* SLIDE 4: METAFORA API */
+        .api-meta-container {
+            display: flex;
+            align-items: stretch;
+            gap: 1rem;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 1rem;
+        }
+
+        .api-meta-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 1.5rem 1.2rem;
+        }
+
+        .api-meta-card-waiter {
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            background: rgba(59, 130, 246, 0.04);
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.05);
+        }
+
+        .api-meta-icon {
+            font-size: 2.2rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .api-meta-role {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            color: #ffffff;
+        }
+
+        .api-meta-tech {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--color-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 1rem;
+        }
+
+        .api-meta-desc {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            line-height: 1.45;
+        }
+
+        .api-arrow-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.08);
+            font-size: 1.5rem;
+            font-weight: 300;
+            padding: 0 0.5rem;
+        }
+
+        .api-arrow-active {
+            color: var(--color-blue);
+            animation: pulse-arrow 1.5s infinite;
+        }
+
+        @keyframes pulse-arrow {
+            0% { opacity: 0.3; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1.1); }
+            100% { opacity: 0.3; transform: scale(0.9); }
+        }
+
+        /* SLIDE 5: PIPELINE CI/CD */
+        .pipeline-container {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin: 1.2rem 0;
+            padding: 0 1rem;
+        }
+
+        .pipeline-line {
+            position: absolute;
+            top: 26px;
+            left: 5%;
+            width: 90%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.05);
+            z-index: 1;
+        }
+
+        .pipeline-line-active {
+            position: absolute;
+            top: 26px;
+            left: 5%;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-blue), var(--color-purple));
+            box-shadow: 0 0 10px var(--color-blue-glow);
+            z-index: 2;
+            transition: width 1s ease-in-out;
+        }
+
+        .pipeline-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+            width: 160px;
+            text-align: center;
+        }
+
+        .pipeline-step-node {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #0f172a;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: 0.6rem;
+            transition: all 0.5s ease;
+            cursor: pointer;
+        }
+
+        .pipeline-step.active .pipeline-step-node {
+            border-color: var(--color-blue);
+            box-shadow: 0 0 15px var(--color-blue-glow);
+            background: rgba(59, 130, 246, 0.1);
+            transform: scale(1.1);
+        }
+
+        .pipeline-step.active-purple .pipeline-step-node {
+            border-color: var(--color-purple);
+            box-shadow: 0 0 15px var(--color-purple-glow);
+            background: rgba(139, 92, 246, 0.1);
+            transform: scale(1.1);
+        }
+
+        .pipeline-step-title {
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+            color: #ffffff;
+        }
+
+        .pipeline-step-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.35;
+        }
+
+        .pipeline-panel {
+            width: 100%;
+            max-width: 1000px;
+            margin-top: 1rem;
+            min-height: 80px;
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 12px;
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* SLIDE 6: GIT BRANCHING */
+        .git-visual-container {
+            width: 100%;
+            max-width: 1000px;
+            background: rgba(15, 23, 42, 0.35);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 2rem 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            position: relative;
+        }
+
+        .git-branch-line {
+            display: flex;
+            align-items: center;
+            height: 40px;
+            position: relative;
+        }
+
+        .git-branch-line::before {
+            content: '';
+            position: absolute;
+            left: 150px;
+            top: 50%;
+            width: 80%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.05);
+            z-index: 1;
+        }
+
+        /* Color code each branch path */
+        .git-branch-line-main::before {
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.8) 100%);
+        }
+        .git-branch-line-preprod::before {
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.8) 100%);
+        }
+        .git-branch-line-testing::before {
+            background: linear-gradient(90deg, rgba(249, 115, 22, 0.1) 0%, rgba(249, 115, 22, 0.8) 100%);
+        }
+        .git-branch-line-develop::before {
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0.8) 100%);
+        }
+        .git-branch-line-feature::before {
+            background: linear-gradient(90deg, rgba(244, 63, 94, 0.8) 0%, rgba(244, 63, 94, 0.8) 100%);
+            width: 35%;
+            left: 200px;
+        }
+
+        /* Branch labels styling */
+        .git-branch-name {
+            width: 120px;
+            font-family: var(--font-display);
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 0.35rem 0.6rem;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 10;
+        }
+
+        .git-branch-name-main { border-color: rgba(16, 185, 129, 0.3); color: #34d399; background: rgba(16, 185, 129, 0.04); }
+        .git-branch-name-preprod { border-color: rgba(59, 130, 246, 0.3); color: #60a5fa; background: rgba(59, 130, 246, 0.04); }
+        .git-branch-name-testing { border-color: rgba(249, 115, 22, 0.3); color: #fbd560; background: rgba(249, 115, 22, 0.04); }
+        .git-branch-name-develop { border-color: rgba(139, 92, 246, 0.3); color: #c084fc; background: rgba(139, 92, 246, 0.04); }
+        .git-branch-name-feature { border-color: rgba(244, 63, 94, 0.3); color: #fb7185; background: rgba(244, 63, 94, 0.04); }
+
+        /* Git Nodes */
+        .git-nodes-container {
+            position: absolute;
+            left: 150px;
+            width: 80%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .git-node {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #0f172a;
+            border: 3px solid var(--text-secondary);
+            z-index: 10;
+            position: absolute;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .git-node:hover {
+            transform: scale(1.3) translateY(-1px);
+            background: #ffffff !important;
+        }
+
+        .git-node-main { border-color: var(--color-green); box-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
+        .git-node-preprod { border-color: var(--color-blue); box-shadow: 0 0 10px rgba(59, 130, 246, 0.4); }
+        .git-node-testing { border-color: var(--color-orange); box-shadow: 0 0 10px rgba(249, 115, 22, 0.4); }
+        .git-node-develop { border-color: var(--color-purple); box-shadow: 0 0 10px rgba(139, 92, 246, 0.4); }
+        .git-node-feature { border-color: #f43f5e; box-shadow: 0 0 10px rgba(244, 63, 94, 0.4); }
+
+        .git-node-active {
+            background: #ffffff;
+            box-shadow: 0 0 20px #ffffff !important;
+            transform: scale(1.2);
+        }
+
+        .git-node-label {
+            position: absolute;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 0.7rem;
+            color: #ffffff;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 600;
+            pointer-events: none;
+        }
+
+        /* Flow connector lines */
+        .git-flow-connector {
+            position: absolute;
+            width: 2px;
+            border-left: 2px dashed rgba(255, 255, 255, 0.2);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .git-node-desc {
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            min-height: 50px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 1rem;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        /* SLIDE 7: AMBIENTES */
+        .env-card {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            position: relative;
+            overflow: hidden;
+            padding: 1.2rem;
+        }
+
+        .env-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .env-badge-dev { background: rgba(249, 115, 22, 0.1); border: 1px solid rgba(249, 115, 22, 0.2); color: #fdba74; }
+        .env-badge-staging { background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.2); color: #c084fc; }
+        .env-badge-prod { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #6ee7b7; }
+
+        .env-card-dev { border-color: rgba(249, 115, 22, 0.1); }
+        .env-card-staging { border-color: rgba(139, 92, 246, 0.1); }
+        .env-card-prod { border-color: rgba(16, 185, 129, 0.1); }
+
+        .env-card-dev:hover { border-color: rgba(249, 115, 22, 0.3); box-shadow: 0 0 25px rgba(249, 115, 22, 0.05); }
+        .env-card-staging:hover { border-color: rgba(139, 92, 246, 0.3); box-shadow: 0 0 25px rgba(139, 92, 246, 0.05); }
+        .env-card-prod:hover { border-color: rgba(16, 185, 129, 0.3); box-shadow: 0 0 25px rgba(16, 185, 129, 0.05); }
+
+        .env-name {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .env-tagline {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .env-bullets {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        .env-bullet-item {
+            font-size: 0.85rem;
+            line-height: 1.35;
+            padding-left: 1rem;
+            position: relative;
+            color: #cbd5e1;
+        }
+
+        .env-bullet-item::before {
+            content: '⬢';
+            position: absolute;
+            left: 0;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            top: -2px;
+        }
+
+        .env-card-dev .env-bullet-item::before { color: var(--color-orange); }
+        .env-card-staging .env-bullet-item::before { color: var(--color-purple); }
+        .env-card-prod .env-bullet-item::before { color: var(--color-green); }
+
+        /* SLIDE 8: TALLER PRACTICO CV */
+        .cv-workshop-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .cv-card-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 1fr;
+            gap: 1rem;
+            align-items: stretch;
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .cv-card-row:hover {
+            border-color: rgba(255, 255, 255, 0.08);
+            transform: translateX(5px);
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        .cv-badge-col {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 800;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            text-align: center;
+        }
+
+        .cv-card-row:hover .cv-badge-col {
+            color: #ffffff;
+            background: rgba(59, 130, 246, 0.05);
+            border-color: rgba(59, 130, 246, 0.15);
+        }
+
+        .cv-text-col {
+            padding: 0.5rem;
+            border-radius: 10px;
+            line-height: 1.45;
+            font-size: 0.88rem;
+        }
+
+        .cv-text-before {
+            border-left: 3px solid var(--color-red);
+            background: rgba(239, 68, 68, 0.01);
+            color: #cbd5e1;
+        }
+
+        .cv-text-after {
+            border-left: 3px solid var(--color-green);
+            background: rgba(16, 185, 129, 0.01);
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.01);
+        }
+
+        .cv-header-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 1fr;
+            gap: 1rem;
+            padding: 0 1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .cv-header-title {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+        }
+
+        /* SLIDE 9: PREGUNTAS DE ENTREVISTA */
+        .q-card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .q-card {
+            perspective: 1000px;
+            height: 300px;
+            cursor: pointer;
+        }
+
+        .q-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .q-card.flipped .q-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .q-card-front, .q-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            border-radius: 16px;
+            padding: 1.5rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .q-card-front {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            justify-content: space-between;
+        }
+
+        .q-card-back {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            transform: rotateY(180deg);
+            justify-content: flex-start;
+        }
+
+        .q-badge {
+            align-self: flex-start;
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            padding: 0.25rem 0.6rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .q-question-text {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+            line-height: 1.4;
+            color: #ffffff;
+            margin: auto 0;
+        }
+
+        .q-action-hint {
+            font-size: 0.75rem;
+            color: var(--color-blue);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 0.8rem;
+        }
+
+        .q-star-badge {
+            align-self: flex-start;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            padding: 0.25rem 0.6rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.8rem;
+        }
+
+        .q-answer-text {
+            font-size: 0.85rem;
+            line-height: 1.45;
+            color: #e2e8f0;
+        }
+
+        /* SLIDE 10: ROADMAP */
+        .roadmap-timeline {
+            display: flex;
+            width: 100%;
+            max-width: 1100px;
+            justify-content: space-between;
+            position: relative;
+            margin-top: 1.5rem;
+        }
+
+        .roadmap-line {
+            position: absolute;
+            top: 22px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.05);
+            z-index: 1;
+        }
+
+        .roadmap-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 200px;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .roadmap-dot {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #0f172a;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .roadmap-step.active .roadmap-dot {
+            border-color: var(--color-blue);
+            background: rgba(59, 130, 246, 0.1);
+            color: #ffffff;
+            box-shadow: 0 0 15px var(--color-blue-glow);
+        }
+
+        .roadmap-step.done .roadmap-dot {
+            border-color: var(--color-green);
+            background: rgba(16, 185, 129, 0.1);
+            color: #ffffff;
+        }
+
+        .roadmap-step-title {
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.3rem;
+        }
+
+        .roadmap-step-status {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .roadmap-step.active .roadmap-step-status { color: var(--color-blue); }
+        .roadmap-step.done .roadmap-step-status { color: var(--color-green); }
+
+        .portfolio-box {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(139, 92, 246, 0.03);
+            border: 1px solid rgba(139, 92, 246, 0.1);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .portfolio-icon {
+            font-size: 2rem;
+            color: var(--color-purple);
+            padding: 0.5rem;
+            background: rgba(139, 92, 246, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(139, 92, 246, 0.1);
+        }
+
+        .portfolio-content h4 {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.2rem;
+        }
+
+        .portfolio-content p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* SLIDE 4b: METODOS HTTP */
+        .http-methods-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 1.2rem;
+        }
+
+        .http-method-card {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 14px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .http-method-card:hover {
+            border-color: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        .http-badge-get { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa; }
+        .http-badge-post { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399; }
+        .http-badge-put { background: rgba(249, 115, 22, 0.1); border: 1px solid rgba(249, 115, 22, 0.2); color: #fdba74; }
+        .http-badge-delete { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #f87171; }
+
+        .http-method-title {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+            margin-bottom: 0.3rem;
+            color: #ffffff;
+        }
+
+        .http-analog-text {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .status-codes-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 1rem;
+        }
+
+        .status-card {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: space-between;
+            min-height: 240px;
+            transition: all 0.3s ease;
+        }
+
+        .status-card:hover {
+            border-color: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        .status-code-num {
+            font-family: var(--font-display);
+            font-size: 2.2rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-code-num-2xx { color: var(--color-green); }
+        .status-code-num-4xx { color: var(--color-orange); }
+        .status-code-num-5xx { color: var(--color-red); }
+
+        .status-code-info h4 {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.4rem;
+        }
+
+        .status-code-info p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        /* SLIDE 7b: BASES DE DATOS */
+        .db-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .db-card-glow-blue { border-color: rgba(59, 130, 246, 0.1); }
+        .db-card-glow-blue:hover { border-color: rgba(59, 130, 246, 0.3); box-shadow: 0 0 25px rgba(59, 130, 246, 0.05); }
+
+        .db-card-glow-orange { border-color: rgba(249, 115, 22, 0.1); }
+        .db-card-glow-orange:hover { border-color: rgba(249, 115, 22, 0.3); box-shadow: 0 0 25px rgba(249, 115, 22, 0.05); }
+
+        .db-card-glow-purple { border-color: rgba(139, 92, 246, 0.1); }
+        .db-card-glow-purple:hover { border-color: rgba(139, 92, 246, 0.3); box-shadow: 0 0 25px rgba(139, 92, 246, 0.05); }
+
+
+        /* CONTROLS BAR AT THE BOTTOM */
+        .controls-bar {
+            background: rgba(9, 13, 22, 0.8);
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 1.2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .controls-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .controls-session-label {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .controls-slide-indicator {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .controls-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-ctrl {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            padding: 0.6rem 1.4rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-ctrl:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .btn-ctrl:disabled {
+            opacity: 0.25;
+            cursor: not-allowed;
+        }
+
+        .btn-ctrl-primary {
+            background: var(--color-blue);
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.15);
+        }
+
+        .btn-ctrl-primary:hover:not(:disabled) {
+            background: #2563eb;
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.3);
+        }
+
+        /* KEYBOARD KEYS INDICATOR */
+        .keyboard-hint {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .key-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            padding: 0.1rem 0.3rem;
+            font-family: monospace;
+            font-size: 0.75rem;
+        }
+
+        /* SLIDES 5b & 5c: TEAM DYNAMICS */
+        .role-bento-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .role-bento-card {
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            padding: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .role-bento-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.08);
+        }
+
+        .role-bento-card.active-role {
+            background: rgba(59, 130, 246, 0.05);
+            border-color: var(--color-blue);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+        }
+
+        .role-bento-card-purple:hover {
+            border-color: rgba(139, 92, 246, 0.3);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.08);
+        }
+
+        .role-bento-card-purple.active-role {
+            background: rgba(139, 92, 246, 0.05);
+            border-color: var(--color-purple);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
+        }
+
+        .role-bento-card-green:hover {
+            border-color: rgba(16, 185, 129, 0.3);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.08);
+        }
+
+        .role-bento-card-green.active-role {
+            background: rgba(16, 185, 129, 0.05);
+            border-color: var(--color-green);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+        }
+
+        .role-bento-card-orange:hover {
+            border-color: rgba(249, 115, 22, 0.3);
+            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.08);
+        }
+
+        .role-bento-card-orange.active-role {
+            background: rgba(249, 115, 22, 0.05);
+            border-color: var(--color-orange);
+            box-shadow: 0 0 20px rgba(249, 115, 22, 0.15);
+        }
+
+        .role-bento-card-red:hover {
+            border-color: rgba(239, 68, 68, 0.3);
+            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.08);
+        }
+
+        .role-bento-card-red.active-role {
+            background: rgba(239, 68, 68, 0.05);
+            border-color: var(--color-red);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.15);
+        }
+
+        .role-icon-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .role-bento-card:hover .role-icon-box {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .role-text-content {
+            text-align: left;
+        }
+
+        .role-card-title {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .role-card-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin: 0.1rem 0 0 0;
+        }
+
+        .role-detail-panel {
+            width: 100%;
+            max-width: 1100px;
+            margin-top: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            min-height: 80px;
+            text-align: left;
+            transition: all 0.3s ease;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            color: #e2e8f0;
+        }
+
+        /* ============================================
+           SLIDE 5d -  PM EN EL PIPELINE
+        ============================================ */
+        .pm-pipeline-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.9rem;
+            width: 100%;
+            max-width: 1150px;
+        }
+        .pm-stage-card {
+            display: flex;
+            flex-direction: column;
+            border-radius: 14px;
+            overflow: hidden;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            cursor: default;
+        }
+        .pm-stage-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+        }
+        .pm-stage-header {
+            padding: 1rem 1rem 0.8rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .pm-stage-num {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1;
+            opacity: 0.7;
+        }
+        .pm-stage-title {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+        .pm-stage-body {
+            padding: 0.9rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex: 1;
+        }
+        .pm-action-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin: 0;
+        }
+        .pm-action-text {
+            font-size: 0.8rem;
+            line-height: 1.45;
+            color: #cbd5e1;
+            margin: 0;
+            flex: 1;
+        }
+        .pm-role-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid;
+            border-radius: 20px;
+            padding: 3px 10px;
+            margin-top: 0.3rem;
+            width: fit-content;
+        }
+        .pm-key-insight {
+            background: rgba(16, 185, 129, 0.04);
+            border-radius: 10px;
+            font-size: 0.88rem;
+            color: #e2e8f0;
+        }
+        .icon-xs { width: 12px; height: 12px; }
+
+        /* ============================================
+           SLIDE 5e -  USER STORY = RAMA GIT
+        ============================================ */
+        .us-branch-layout {
+            display: flex;
+            align-items: stretch;
+            gap: 1rem;
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 1.2rem;
+        }
+        .us-jira-col, .us-git-col {
+            flex: 1;
+            padding: 1.2rem;
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        .us-col-header {
+            font-family: var(--font-display);
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            margin-bottom: 0.3rem;
+        }
+        .us-ticket, .us-branch-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.55rem 0.9rem;
+            border-radius: 8px;
+            border-left: 3px solid;
+            background: rgba(255,255,255,0.03);
+            transition: background 0.2s ease;
+            gap: 0.5rem;
+        }
+        .us-ticket:hover, .us-branch-item:hover {
+            background: rgba(255,255,255,0.06);
+        }
+        .us-ticket-muted, .us-branch-muted {
+            border-color: rgba(255,255,255,0.1) !important;
+            opacity: 0.45;
+        }
+        .us-ticket-id {
+            font-family: 'Courier New', monospace;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #94a3b8;
+            white-space: nowrap;
+        }
+        .us-ticket-name {
+            font-size: 0.82rem;
+            color: #e2e8f0;
+            flex: 1;
+            padding-left: 0.5rem;
+        }
+        .us-branch-tag {
+            font-family: 'Courier New', monospace;
+            font-size: 0.72rem;
+            font-weight: 600;
+            flex: 1;
+        }
+        .us-branch-status {
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 12px;
+            white-space: nowrap;
+        }
+        .us-branch-status.merged { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+        .us-branch-status.in-review { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+        .us-branch-status.in-dev { background: rgba(139, 92, 246, 0.15); color: #a78bfa; }
+        .us-branch-status.backlog { background: rgba(148, 163, 184, 0.1); color: #94a3b8; }
+        .us-arrows-col {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.6rem;
+            padding-top: 3.5rem; /* offset for header */
+        }
+        .us-arrow {
+            font-size: 1.4rem;
+            color: rgba(255,255,255,0.2);
+            text-align: center;
+            line-height: 2.2rem; /* match ticket height */
+            height: 2.2rem;
+        }
+        .us-arrow.live { color: var(--color-blue); animation: pulse-arrow 1.5s ease-in-out infinite; }
+        @keyframes pulse-arrow {
+            0%, 100% { opacity: 0.4; } 50% { opacity: 1; }
+        }
+        .us-pm-actions-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.9rem;
+            width: 100%;
+            max-width: 1100px;
+        }
+        .us-pm-action-card {
+            padding: 1rem 1.2rem;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            transition: transform 0.2s ease;
+        }
+        .us-pm-action-card:hover { transform: translateY(-3px); }
+        .us-action-label {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .us-action-desc {
+            font-size: 0.78rem;
+            line-height: 1.4;
+            color: #94a3b8;
+        }
+
+        /* ============================================
+           MEDIA QUERIES FOR ABSOLUTE RESPONSIVENESS
+        ============================================ */
+        @media (max-width: 768px) {
+            body {
+                height: 100dvh; /* Use dynamic viewport height for mobile browsers */
+            }
+            .slides-wrapper {
+                height: calc(100dvh - 70px);
+            }
+            .slide {
+                padding: 1rem 1rem 5.5rem !important;
+            }
+            .slide::before,
+            .slide::after {
+                display: none; /* Disable spacer elements on mobile to save vertical space */
+            }
+            .slide-title {
+                font-size: 1.6rem !important;
+                margin-bottom: 0.4rem !important;
+            }
+            .slide-subtitle {
+                font-size: 0.85rem !important;
+                margin-bottom: 1rem !important;
+                line-height: 1.4 !important;
+            }
+            .glass-card {
+                padding: 1rem !important;
+            }
+            
+            /* Grid layouts collapse to single column */
+            .grid-3, .grid-2 {
+                grid-template-columns: 1fr !important;
+                gap: 0.8rem !important;
+            }
+            
+            /* Cover Slide */
+            .cover-container {
+                margin-bottom: 1rem !important;
+            }
+            .cover-h1 {
+                font-size: 2.2rem !important;
+                line-height: 1.2 !important;
+                margin-bottom: 0.8rem !important;
+            }
+            .cover-subtitle {
+                font-size: 0.95rem !important;
+                margin-bottom: 1.5rem !important;
+            }
+            .cover-timeline-bg {
+                display: none !important; /* Remove background timeline node elements on mobile for cleanliness */
+            }
+            
+            /* Slide 3 & 4: Images inside containers */
+            .slide[id="slide3"] .grid-2 > div:first-child,
+            .slide[id="slide4"] .grid-2 > div:first-child {
+                min-height: 200px !important;
+                height: auto !important;
+                padding: 0.8rem !important;
+            }
+            
+            /* Slide 4b: HTTP Methods */
+            .http-methods-grid {
+                grid-template-columns: 1fr !important;
+                gap: 0.8rem !important;
+            }
+            
+            /* Slide 4c: Status Codes */
+            .status-codes-container {
+                grid-template-columns: 1fr !important;
+                gap: 0.8rem !important;
+            }
+            .status-card {
+                min-height: auto !important;
+                padding: 1rem !important;
+            }
+            
+            /* Slide 5: CI/CD Pipeline (Horizontal to Vertical flow!) */
+            .pipeline-container {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                padding-left: 2rem !important;
+                gap: 1.2rem !important;
+                margin: 1rem 0 !important;
+            }
+            .pipeline-line {
+                left: 45px !important;
+                top: 20px !important;
+                width: 3px !important;
+                height: 80% !important;
+            }
+            .pipeline-line-active {
+                left: 45px !important;
+                top: 20px !important;
+                width: 3px !important;
+                height: 0% !important; /* height is transitioned instead of width on mobile */
+            }
+            .pipeline-step {
+                flex-direction: row !important;
+                align-items: center !important;
+                text-align: left !important;
+                width: 100% !important;
+                gap: 1rem !important;
+            }
+            .pipeline-step-node {
+                margin-bottom: 0 !important;
+                min-width: 52px !important;
+                height: 52px !important;
+            }
+            .pipeline-panel {
+                margin-top: 0.5rem !important;
+                padding: 0.8rem !important;
+                font-size: 0.85rem !important;
+            }
+            
+            /* Slide 5b & 5c: Roles grids */
+            .role-bento-grid {
+                grid-template-columns: 1fr !important;
+                gap: 0.8rem !important;
+            }
+            .role-bento-card {
+                grid-column: span 1 !important;
+                padding: 0.9rem !important;
+            }
+            
+            /* Slide 5d: PM in pipeline */
+            .pm-pipeline-grid {
+                grid-template-columns: 1fr !important;
+                gap: 0.8rem !important;
+            }
+            .pm-stage-card {
+                height: auto !important;
+            }
+            
+            /* Slide 5e: User Story branching */
+            .us-branch-layout {
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+            .us-arrows-col {
+                flex-direction: row !important;
+                justify-content: center !important;
+                padding-top: 0 !important;
+                height: auto !important;
+                margin: 0.3rem 0 !important;
+            }
+            .us-arrow {
+                transform: rotate(90deg) !important;
+                height: auto !important;
+                line-height: 1 !important;
+                font-size: 1.2rem !important;
+            }
+            .us-pm-actions-row {
+                grid-template-columns: 1fr !important;
+                gap: 0.8rem !important;
+            }
+            
+            /* Slide 6: Git visual branches (Keep horizontal visual but make it overflow-x scrollable) */
+            .git-visual-container {
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+                padding: 1.2rem 1rem !important;
+            }
+            .git-branch-line {
+                min-width: 750px !important;
+            }
+            .git-flow-connector {
+                /* Preserve dashed lines proportional coordinates */
+            }
+            
+            /* Slide 8: CV Workshop */
+            .cv-header-row {
+                display: none !important;
+            }
+            .cv-card-row {
+                grid-template-columns: 1fr !important;
+                gap: 0.6rem !important;
+                padding: 1rem !important;
+            }
+            .cv-badge-col {
+                padding: 0.4rem !important;
+                width: 100% !important;
+                justify-content: flex-start !important;
+            }
+            .cv-text-before::before {
+                content: 'ANTES: ' !important;
+                font-weight: 700 !important;
+                color: var(--color-red) !important;
+                display: block !important;
+                font-size: 0.75rem !important;
+                margin-bottom: 0.2rem !important;
+            }
+            .cv-text-after::before {
+                content: 'DESPUÉS (ENFOQUE AGILE / RIOPLATENSE): ' !important;
+                font-weight: 700 !important;
+                color: var(--color-green) !important;
+                display: block !important;
+                font-size: 0.75rem !important;
+                margin-bottom: 0.2rem !important;
+            }
+            
+            /* Slide 9: Questions grid */
+            .q-card-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+            .q-card {
+                height: 280px !important;
+            }
+            .q-card-back {
+                overflow-y: auto !important;
+            }
+            
+            /* Slide 10: Roadmap (Horizontal to Vertical flow!) */
+            .roadmap-timeline {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                padding-left: 2rem !important;
+                gap: 1.5rem !important;
+                margin-top: 1rem !important;
+            }
+            .roadmap-line {
+                left: 41px !important;
+                top: 10px !important;
+                width: 2px !important;
+                height: 85% !important;
+            }
+            .roadmap-step {
+                flex-direction: row !important;
+                align-items: center !important;
+                text-align: left !important;
+                width: 100% !important;
+                gap: 1rem !important;
+            }
+            .roadmap-dot {
+                margin-bottom: 0 !important;
+                min-width: 44px !important;
+                height: 44px !important;
+            }
+            .portfolio-box {
+                flex-direction: column !important;
+                padding: 1rem !important;
+                margin-top: 1.5rem !important;
+            }
+            
+            /* Controls Bar */
+            .controls-bar {
+                padding: 0.8rem 1rem !important;
+                background: rgba(9, 13, 22, 0.95) !important;
+            }
+            .keyboard-hint {
+                display: none !important;
+            }
+            .controls-session-label {
+                display: none !important;
+            }
+            .btn-ctrl {
+                padding: 0.5rem 1rem !important;
+                font-size: 0.85rem !important;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- TOP PROGRESS BAR -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- MAIN SLIDES LIST -->
+    <div class="slides-wrapper">
+
+        <!-- SLIDE 1: PORTADA -->
+        <div class="slide active" id="slide1">
+            <div class="cover-container">
+                <span class="global-title">Mentoría Estratégica</span>
+                <h1 class="cover-h1">De la Gestión Tradicional<br>a la Era de la IA</h1>
+                <p class="cover-subtitle">Cómo liderar, estructurar y desplegar productos de software en el nuevo ecosistema ágil y de Inteligencia Artificial. Tu hoja de ruta. Tu hoja de ruta.</p>
+                <div class="badge-session">
+                    <i data-lucide="sparkles" class="icon-sm" style="margin-right: 6px; color: var(--color-blue); vertical-align: middle;"></i> Sesión 1: Ecosistema IT, DevOps y Dinámicas de Equipos
+                </div>
+            </div>
+            <div class="cover-timeline-bg">
+                <div class="timeline-node active"><span class="timeline-label">1. DevOps & Cloud</span></div>
+                <div class="timeline-node"><span class="timeline-label">2. IA & RAG</span></div>
+                <div class="timeline-node"><span class="timeline-label">3. Agentes Autónomos</span></div>
+                <div class="timeline-node"><span class="timeline-label">4. ROI, Evals & Entrevistas</span></div>
+            </div>
+        </div>
+
+        <!-- SLIDE 1b: LA EVOLUCI- N HACIA LA IA -->
+        <div class="slide" id="slide1b">
+            <h2 class="slide-title">La Ola de la IA Generativa</h2>
+            <p class="slide-subtitle">El gran salto desde el desarrollo de software clásico hasta la revolución agéntica impulsada por ChatGPT. Miralos acá: Miralos acá:</p>
+            
+            <div class="grid-3">
+                <div class="glass-card" style="border-left: 4px solid var(--color-blue); display: flex; flex-direction: column; justify-content: flex-start; text-align: left; padding: 1.5rem;">
+                    <span style="margin-bottom: 0.8rem; display: block; color: var(--color-blue);"><i data-lucide="code" class="icon-lg"></i></span>
+                    <h3 style="font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; color: #ffffff; margin-bottom: 0.5rem;">1. Software Tradicional</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.45; margin: 0;"><strong>Era Determinista (Pre-2022):</strong> Los programadores escriben reglas rígidas hechas a mano. El software hace exactamente lo que se le codifica ("si pasa A, entonces se ejecuta B"). Mayor control, pero menor adaptabilidad.</p>
+                </div>
+                
+                <div class="glass-card" style="border-left: 4px solid var(--color-orange); display: flex; flex-direction: column; justify-content: flex-start; text-align: left; padding: 1.5rem;">
+                    <span style="margin-bottom: 0.8rem; display: block; color: var(--color-orange);"><i data-lucide="message-square" class="icon-lg"></i></span>
+                    <h3 style="font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; color: #ffffff; margin-bottom: 0.5rem;">2. El Hito de ChatGPT</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.45; margin: 0;"><strong>Noviembre 2022:</strong> El lanzamiento de ChatGPT democratiza y expande la Inteligencia Artificial a nivel mundial. La IA deja de ser exclusiva de científicos de datos y pasa a consumirse masivamente a través del lenguaje natural y APIs.</p>
+                </div>
+                
+                <div class="glass-card" style="border-left: 4px solid var(--color-purple); display: flex; flex-direction: column; justify-content: flex-start; text-align: left; padding: 1.5rem;">
+                    <span style="margin-bottom: 0.8rem; display: block; color: var(--color-purple);"><i data-lucide="bot" class="icon-lg"></i></span>
+                    <h3 style="font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; color: #ffffff; margin-bottom: 0.5rem;">3. Era de Proyectos de IA</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.45; margin: 0;"><strong>2023 - 2026:</strong> Las empresas ya no construyen software clásico aislado. Integran modelos de lenguaje para procesar datos, interactuar con clientes de forma inteligente y automatizar decisiones autónomas (Flujos Agénticos).</p>
+                </div>
+            </div>
+            
+            <div class="philosophy-banner" style="border-left-color: var(--color-purple); margin-top: 2rem; width: 100%; max-width: 1200px; text-align: left;">
+                <i data-lucide="trending-up" class="icon-sm" style="margin-right: 6px; color: var(--color-purple); vertical-align: middle;"></i> <strong>El impacto en el Rol del PM:</strong> En esta era, como Project Manager ya no gestionás solo flujos lógicos rígidos. Ahora tenés que saber orquestar sistemas probabilísticos de IA integrados sobre la infraestructura de software tradicional.
+            </div>
+        </div>
+
+        <!-- SLIDE 2: LA REGLA DE ORO -->
+        <div class="slide" id="slide2">
+            <h2 class="slide-title">La Regla de Oro</h2>
+            <p class="slide-subtitle">Para entender la Inteligencia Artificial, primero tenés que entender los cimientos del software tradicional.</p>
+            
+            <div class="grid-3">
+                <div class="glass-card golden-card-purple">
+                    <span class="golden-card-icon"><i data-lucide="brain"></i></span>
+                    <h3 class="golden-title">El LLM es una API</h3>
+                    <p class="golden-description">No es magia libre flotando en la nube. Un modelo de lenguaje moderno se integra a las aplicaciones empresariales consumiéndose como un servicio web externo estructurado. Pensalo así. Pensalo así.</p>
+                </div>
+                
+                <div class="glass-card golden-card-blue">
+                    <span class="golden-card-icon"><i data-lucide="database"></i></span>
+                    <h3 class="golden-title">El Contexto es una BD</h3>
+                    <p class="golden-description">La memoria de trabajo del modelo para los datos privados de la empresa se almacena e indexa mediante búsquedas semánticas en bases de datos vectoriales.</p>
+                </div>
+                
+                <div class="glass-card golden-card-green">
+                    <span class="golden-card-icon"><i data-lucide="cpu"></i></span>
+                    <h3 class="golden-title">La Automatización es Código</h3>
+                    <p class="golden-description">Los flujos inteligentes y las decisiones autónomas que toma un agente de IA corren en un servidor tradicional, orquestados mediante código.</p>
+                </div>
+            </div>
+
+            <div class="philosophy-banner">
+                <i data-lucide="lightbulb" class="icon-sm" style="margin-right: 6px; color: var(--color-purple); vertical-align: middle;"></i> <strong>Filosofía del Programa:</strong> "No podés liderar ni gestionar proyectos de Inteligencia Artificial exitosos si primero no dominás cómo se construye, expone, versiona, despliega y monitorea el software moderno."
+            </div>
+        </div>
+
+        <!-- SLIDE 3: EL GRAN SALTO TEMPORAL -->
+        <div class="slide" id="slide3">
+            <h2 class="slide-title">El Gran Salto Temporal</h2>
+            <p class="slide-subtitle">Para sonar actualizado en las entrevistas de IT, es clave que entiendas la profunda evolución del desarrollo de software de los últimos 10 años.</p>
+            
+            <div class="grid-2" style="align-items: center; max-width: 1200px; width: 100%;">
+                <!-- Left: Beautiful conceptual diagram -->
+                <div class="glass-card" style="display: flex; align-items: center; justify-content: center; padding: 1.5rem; height: 100%; min-height: 400px; background: rgba(15, 23, 42, 0.4); border-color: rgba(59, 130, 246, 0.1);">
+                    <img src="monolith_vs_microservices.png" alt="Monolitos vs Microservicios" style="width: 100%; height: auto; max-height: 380px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.5); object-fit: contain; border: 1px solid rgba(255,255,255,0.05);">
+                </div>
+
+                <!-- Right: Stacking comparison cards -->
+                <div style="display: flex; flex-direction: column; gap: 0.8rem; width: 100%;">
+                    <div class="glass-card compare-column-left" style="padding: 0.8rem 1.2rem;">
+                        <h3 class="compare-column-title" style="margin-bottom: 0.4rem; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="history" class="icon-sm" style="color: var(--color-red); vertical-align: middle;"></i> 2012: Waterfall & Monolitos
+                            <span class="badge-old" style="margin-left: auto;">Obsoleto</span>
+                        </h3>
+                        <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45; margin: 0;">
+                            • <strong>Arquitectura:</strong> Un único bloque gigante acoplado.<br>
+                            • <strong>Servidores:</strong> Físicos y locales (On-Premise) en la empresa.<br>
+                            • <strong>Despliegues:</strong> Manuales y caóticos cada 3 meses.<br>
+                            • <strong>Cultura:</strong> Silos rígidos y aislados entre equipos.
+                        </p>
+                    </div>
+
+                    <div class="glass-card compare-column-right" style="padding: 0.8rem 1.2rem; border-color: rgba(16, 185, 129, 0.2); background: rgba(16, 185, 129, 0.02);">
+                        <h3 class="compare-column-title" style="margin-bottom: 0.4rem; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="rocket" class="icon-sm" style="color: var(--color-green); vertical-align: middle;"></i> 2026: Cloud Native & Agile
+                            <span class="badge-new" style="margin-left: auto;">Estándar Actual</span>
+                        </h3>
+                        <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45; margin: 0;">
+                            • <strong>Arquitectura:</strong> Microservicios modulares comunicados por APIs.<br>
+                            • <strong>Servidores:</strong> Elásticos en la nube (AWS o Azure).<br>
+                            • <strong>Despliegues:</strong> Automatizados y continuos (múltiples al día).<br>
+                            • <strong>Cultura:</strong> DevOps de responsabilidad e integración total.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GLOSARIO DE INFRAESTRUCTURA -->
+            <div style="margin-top: 1.2rem; width: 100%; max-width: 1200px;">
+                <div style="font-family: var(--font-display); font-size: 0.9rem; font-weight: 700; color: #a78bfa; margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.4rem; justify-content: center;">
+                    <i data-lucide="info" class="icon-sm"></i> Glosario de Infraestructura (¿Qué significan en la práctica? Miralos acá:)
+                </div>
+                <div class="grid-3" style="gap: 0.7rem;">
+                    <div class="glass-card" style="padding: 0.7rem 0.9rem; border-color: rgba(59, 130, 246, 0.15); background: rgba(59, 130, 246, 0.01);">
+                        <h4 style="font-family: var(--font-display); font-size: 0.85rem; font-weight: 700; color: var(--color-blue); margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.4rem;">
+                            <i data-lucide="cloud" class="icon-xs"></i> AWS / Cloud
+                        </h4>
+                        <p style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.35; margin: 0;">
+                            Alquilás servidores de forma elástica en la nube de Amazon por segundo, evitando compras de hardware costoso.
+                        </p>
+                    </div>
+                    <div class="glass-card" style="padding: 0.7rem 0.9rem; border-color: rgba(16, 185, 129, 0.15); background: rgba(16, 185, 129, 0.01);">
+                        <h4 style="font-family: var(--font-display); font-size: 0.85rem; font-weight: 700; color: var(--color-green); margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.4rem;">
+                            <i data-lucide="box" class="icon-xs"></i> Docker
+                        </h4>
+                        <p style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.35; margin: 0;">
+                            Caja de embalaje cerrada para el software. Te garantiza que funcione igual en tu computadora o en cualquier servidor.
+                        </p>
+                    </div>
+                    <div class="glass-card" style="padding: 0.7rem 0.9rem; border-color: rgba(139, 92, 246, 0.15); background: rgba(139, 92, 246, 0.01);">
+                        <h4 style="font-family: var(--font-display); font-size: 0.85rem; font-weight: 700; color: var(--color-purple); margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.4rem;">
+                            <i data-lucide="network" class="icon-xs"></i> Kubernetes
+                        </h4>
+                        <p style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.35; margin: 0;">
+                            Orquestador que coordina miles de contenedores: los reinicia si fallan y escala el tráfico automáticamente.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: METAFORA API -->
+        <div class="slide" id="slide4">
+            <h2 class="slide-title">APIs: El Pegamento del Software</h2>
+            <p class="slide-subtitle">Una API permite que sistemas diferentes se conecten entre sí. Mirá esta analogía clásica para entenderlo rápido.</p>
+            
+            <div class="grid-2" style="align-items: center; max-width: 1200px; width: 100%;">
+                <!-- Left: Beautiful conceptual illustration -->
+                <div class="glass-card" style="display: flex; align-items: center; justify-content: center; padding: 1.5rem; height: 100%; min-height: 400px; background: rgba(15, 23, 42, 0.4); border-color: rgba(139, 92, 246, 0.1);">
+                    <img src="api_restaurant_metaphor.png" alt="Metáfora de la API - El Restaurante" style="width: 100%; height: auto; max-height: 380px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.5); object-fit: contain; border: 1px solid rgba(255,255,255,0.05);">
+                </div>
+
+                <!-- Right: Stacking Metaphor Roles -->
+                <div style="display: flex; flex-direction: column; gap: 0.8rem; width: 100%;">
+                    <div class="glass-card api-meta-card" style="display: flex; align-items: center; gap: 1rem; padding: 0.8rem 1.2rem; width: 100%; max-width: none;">
+                        <span class="api-meta-icon" style="color: var(--color-blue); margin: 0; min-width: 32px;"><i data-lucide="smartphone" class="icon-lg"></i></span>
+                        <div style="text-align: left;">
+                            <h3 class="api-meta-role" style="font-size: 1.05rem; margin: 0; display: inline-block;">El Cliente</h3>
+                            <span class="api-meta-tech" style="font-size: 0.75rem; margin-left: 0.5rem; display: inline-block; vertical-align: middle;">Frontend / App</span>
+                            <p class="api-meta-desc" style="font-size: 0.8rem; margin: 0.2rem 0 0 0; line-height: 1.4;">El usuario interactúa con la interfaz gráfica. Abrís el menú digital en tu mesa y seleccionás el plato que querés ordenar.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card api-meta-card api-meta-card-waiter" style="display: flex; align-items: center; gap: 1rem; padding: 0.8rem 1.2rem; width: 100%; max-width: none; border-color: rgba(139, 92, 246, 0.3); background: rgba(139, 92, 246, 0.03);">
+                        <span class="api-meta-icon" style="color: var(--color-purple); margin: 0; min-width: 32px;"><i data-lucide="arrow-left-right" class="icon-lg"></i></span>
+                        <div style="text-align: left;">
+                            <h3 class="api-meta-role" style="font-size: 1.05rem; margin: 0; display: inline-block;">El Mozo (La API)</h3>
+                            <span class="api-meta-tech" style="font-size: 0.75rem; margin-left: 0.5rem; display: inline-block; vertical-align: middle;">REST API / JSON</span>
+                            <p class="api-meta-desc" style="font-size: 0.8rem; margin: 0.2rem 0 0 0; line-height: 1.4;">Toma la orden estructurada del cliente, la traslada de forma segura a la cocina y regresa con el plato. <strong>Es el canal de comunicación.</strong></p>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card api-meta-card" style="display: flex; align-items: center; gap: 1rem; padding: 0.8rem 1.2rem; width: 100%; max-width: none;">
+                        <span class="api-meta-icon" style="color: var(--color-green); margin: 0; min-width: 32px;"><i data-lucide="server" class="icon-lg"></i></span>
+                        <div style="text-align: left;">
+                            <h3 class="api-meta-role" style="font-size: 1.05rem; margin: 0; display: inline-block;">La Cocina</h3>
+                            <span class="api-meta-tech" style="font-size: 0.75rem; margin-left: 0.5rem; display: inline-block; vertical-align: middle;">Backend / Servidor / BD</span>
+                            <p class="api-meta-desc" style="font-size: 0.8rem; margin: 0.2rem 0 0 0; line-height: 1.4;">Procesa la orden, tiene acceso directo a la despensa (Base de Datos) y tiene la lógica compleja para preparar lo que pediste.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4b: VERBOS HTTP -->
+        <div class="slide" id="slide4b">
+            <h2 class="slide-title">Verbos HTTP: El Vocabulario de las APIs</h2>
+            <p class="slide-subtitle">Las aplicaciones se comunican indicando acciones claras sobre los datos. Como Project Manager, tenés que entender qué hace cada una en la práctica.</p>
+            
+            <div class="http-methods-grid">
+                <div class="http-method-card">
+                    <span class="http-badge http-badge-get">GET</span>
+                    <h3 class="http-method-title">Consultar</h3>
+                    <p class="http-analog-text">
+                        <strong>Acción:</strong> Lee datos sin modificarlos.<br>
+                        <strong>Ejemplo:</strong> Cargar catálogo de productos.<br>
+                        <span style="display: block; margin-top: 12px; color: var(--color-blue); font-size: 0.78rem;"><strong><i data-lucide="shield" class="icon-sm" style="vertical-align: middle; margin-right: 4px;"></i> Seguridad:</strong> Nunca uses GET para enviar contraseñas o datos sensibles.</span>
+                    </p>
+                </div>
+                
+                <div class="http-method-card">
+                    <span class="http-badge http-badge-post">POST</span>
+                    <h3 class="http-method-title">Crear</h3>
+                    <p class="http-analog-text">
+                        <strong>Acción:</strong> Guarda datos nuevos en la base de datos.<br>
+                        <strong>Ejemplo:</strong> Registrar usuario o procesar un pago.<br>
+                        <span style="display: block; margin-top: 12px; color: var(--color-green); font-size: 0.78rem;"><strong><i data-lucide="lock" class="icon-sm" style="vertical-align: middle; margin-right: 4px;"></i> Privacidad:</strong> Tus datos viajan ocultos y protegidos en el cuerpo del mensaje.</span>
+                    </p>
+                </div>
+                
+                <div class="http-method-card">
+                    <span class="http-badge http-badge-put">PUT</span>
+                    <h3 class="http-method-title">Actualizar</h3>
+                    <p class="http-analog-text">
+                        <strong>Acción:</strong> Editás un registro existente por completo.<br>
+                        <strong>Ejemplo:</strong> Modificar cantidades en el carrito.<br>
+                        <span style="display: block; margin-top: 12px; color: var(--color-orange); font-size: 0.78rem;"><strong><i data-lucide="edit-3" class="icon-sm" style="vertical-align: middle; margin-right: 4px;"></i> Control:</strong> Modifica la información existente de forma limpia y directa.</span>
+                    </p>
+                </div>
+                
+                <div class="http-method-card">
+                    <span class="http-badge http-badge-delete">DELETE</span>
+                    <h3 class="http-method-title">Eliminar</h3>
+                    <p class="http-analog-text">
+                        <strong>Acción:</strong> Borra datos de forma permanente.<br>
+                        <strong>Ejemplo:</strong> Dar de baja una suscripción.<br>
+                        <span style="display: block; margin-top: 12px; color: var(--color-red); font-size: 0.78rem;"><strong><i data-lucide="alert-triangle" class="icon-sm" style="vertical-align: middle; margin-right: 4px;"></i> Riesgo:</strong> Acción irreversible. Asegurate de que siempre requiera confirmación en la UI.</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4c: CODIGOS DE ESTADO -->
+        <div class="slide" id="slide4c">
+            <h2 class="slide-title">Códigos de Estado: El Semáforo de la Web</h2>
+            <p class="slide-subtitle">El servidor te responde con un código numérico estándar que te dice la salud del sistema y el impacto en tu negocio.</p>
+            
+            <div class="status-codes-container">
+                <div class="status-card">
+                    <div class="status-code-num status-code-num-2xx">2xx</div>
+                    <div class="status-code-info">
+                        <h4>Success (-0xito de Negocio)</h4>
+                        <p>El servidor procesó la petición con éxito. La conversión es alta, la velocidad es óptima y tu cliente navega feliz y sin fricciones.</p>
+                    </div>
+                    <div style="font-size: 0.8rem; font-weight: 600; color: var(--color-green); display: flex; align-items: center; gap: 4px; margin-top: 0.5rem;">
+                        <i data-lucide="trending-up" class="icon-sm"></i> Operación Saludable
+                    </div>
+                </div>
+                
+                <div class="status-card">
+                    <div class="status-code-num status-code-num-4xx">4xx</div>
+                    <div class="status-code-info">
+                        <h4>Client Error (Fricción en UX)</h4>
+                        <p>El cliente cometió un error o pidió algo inválido (ej. 404 Not Found). Si este número sube, tu interfaz es confusa; fijate cómo mejorarla.</p>
+                    </div>
+                    <div style="font-size: 0.8rem; font-weight: 600; color: var(--color-orange); display: flex; align-items: center; gap: 4px; margin-top: 0.5rem;">
+                        <i data-lucide="help-circle" class="icon-sm"></i> Optimizar Usabilidad
+                    </div>
+                </div>
+                
+                <div class="status-card">
+                    <div class="status-code-num status-code-num-5xx">5xx</div>
+                    <div class="status-code-info">
+                        <h4>Server Error (Pérdida Crítica)</h4>
+                        <p>El servidor falló de forma catastrófica (ej. 500 Server Error). El sistema está caído: perdés ventas y usuarios en tiempo real.</p>
+                    </div>
+                    <div style="font-size: 0.8rem; font-weight: 600; color: var(--color-red); display: flex; align-items: center; gap: 4px; margin-top: 0.5rem;">
+                        <i data-lucide="alert-octagon" class="icon-sm"></i> Alerta Roja / Caído
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: PIPELINE CI/CD -->
+        <div class="slide" id="slide5">
+            <h2 class="slide-title">El Viaje de un Feature (CI/CD)</h2>
+            <p class="slide-subtitle">La automatización de despliegues es el corazón de DevOps. Mirá los pasos exactos que sigue una historia de usuario desde que la planeás hasta que llega a producción.</p>
+            
+            <div class="pipeline-container">
+                <div class="pipeline-line"></div>
+                <div class="pipeline-line-active" id="pipelineLine"></div>
+                
+                <div class="pipeline-step active" onclick="activatePipeline(0)">
+                    <div class="pipeline-step-node" style="color: var(--text-primary);"><i data-lucide="clipboard-list" class="lucide"></i></div>
+                    <h3 class="pipeline-step-title">1. Jira Ticket</h3>
+                    <p class="pipeline-step-desc">El PM define y refina Historias de Usuario.</p>
+                </div>
+                
+                <div class="pipeline-step" onclick="activatePipeline(1)">
+                    <div class="pipeline-step-node" style="color: var(--text-primary);"><i data-lucide="code" class="lucide"></i></div>
+                    <h3 class="pipeline-step-title">2. Codificación</h3>
+                    <p class="pipeline-step-desc">El desarrollador escribe la solución localmente.</p>
+                </div>
+                
+                <div class="pipeline-step" onclick="activatePipeline(2)">
+                    <div class="pipeline-step-node" style="color: var(--text-primary);"><i data-lucide="flask-conical" class="lucide"></i></div>
+                    <h3 class="pipeline-step-title">3. CI (Pruebas)</h3>
+                    <p class="pipeline-step-desc">Integración Continua: testeo automático en la nube.</p>
+                </div>
+                
+                <div class="pipeline-step" onclick="activatePipeline(3)">
+                    <div class="pipeline-step-node" style="color: var(--text-primary);"><i data-lucide="rocket" class="lucide"></i></div>
+                    <h3 class="pipeline-step-title">4. CD (Deploy)</h3>
+                    <p class="pipeline-step-desc">Entrega Continua: subida a Staging y Producción.</p>
+                </div>
+            </div>
+            
+            <div class="pipeline-panel" id="pipelinePanel">
+                Hacé clic en cada paso del pipeline para ver la explicación detallada y tu rol como PM.
+            </div>
+        </div>
+
+        <!-- SLIDE 5b: ROLES STARTUP -->
+        <div class="slide" id="slide5b">
+            <h2 class="slide-title">Dinámica de Roles: El Ecosistema Startup</h2>
+            <p class="slide-subtitle">En empresas chicas y startups que crecen rápido, la regla de oro es: <strong>"todos hacen de todo"</strong>. Olvidate de los silos: acá la velocidad manda sobre el proceso.</p>
+            
+            <div class="role-bento-grid">
+                <div class="glass-card role-bento-card role-bento-card-purple active-role" onclick="activateStartupRole(0, this)">
+                    <span class="role-icon-box" style="color: var(--color-purple);"><i data-lucide="laptop" class="icon-lg"></i></span>
+                    <div class="role-text-content">
+                        <h3 class="role-card-title">Full-Stack Developer</h3>
+                        <span class="role-card-subtitle">Frontend + Backend + Cloud</span>
+                    </div>
+                </div>
+                
+                <div class="glass-card role-bento-card" onclick="activateStartupRole(1, this)">
+                    <span class="role-icon-box" style="color: var(--color-blue);"><i data-lucide="user-cog" class="icon-lg"></i></span>
+                    <div class="role-text-content">
+                        <h3 class="role-card-title">Project Manager / PO</h3>
+                        <span class="role-card-subtitle">Estrategia + Backlog + QA + Demo</span>
+                    </div>
+                </div>
+                
+                <div class="glass-card role-bento-card" onclick="activateStartupRole(2, this)">
+                    <span class="role-icon-box" style="color: var(--color-green);"><i data-lucide="check-square" class="icon-lg"></i></span>
+                    <div class="role-text-content">
+                        <h3 class="role-card-title">QA / Tester Liviano</h3>
+                        <span class="role-card-subtitle">Validación manual rápida</span>
+                    </div>
+                </div>
+                
+                <div class="glass-card role-bento-card" onclick="activateStartupRole(3, this)">
+                    <span class="role-icon-box" style="color: var(--color-orange);"><i data-lucide="pie-chart" class="icon-lg"></i></span>
+                    <div class="role-text-content">
+                        <h3 class="role-card-title">Analista de Datos Gral.</h3>
+                        <span class="role-card-subtitle">BBDD + Métricas de Negocio</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="role-detail-panel" id="startupRolePanel" style="border-left: 4px solid var(--color-purple);">
+                <strong><i data-lucide="laptop" class="icon-sm" style="margin-right: 6px; color: var(--color-purple); vertical-align: middle;"></i> Full-Stack Developer:</strong> Un programador generalista que domina todo el stack tecnológico. Diseña la interfaz gráfica del usuario (Frontend) y escribe la lógica del servidor y APIs (Backend). Incluso suele configurar servidores básicos en AWS o Vercel (DevOps). <br><br><strong><i data-lucide="message-square" class="icon-sm" style="margin-right: 4px; color: var(--color-blue); vertical-align: middle;"></i> Canal del PM:</strong> Comunicación informal y directa (Slack sin intermediarios o charlas rápidas de pasillo). Las alineaciones son inmediatas y sin burocracia técnica.
+            </div>
+        </div>
+
+        <!-- SLIDE 5c: ROLES CORPORATIVO -->
+        <div class="slide" id="slide5c">
+            <h2 class="slide-title">Dinámica de Roles: La Matriz Corporativa</h2>
+            <p class="slide-subtitle">En grandes corporaciones, la clave es la <strong>"especialización extrema"</strong>. Olvidate de hacer de todo: cada miembro tiene una responsabilidad súper delimitada.</p>
+            
+            <div class="role-bento-grid" style="grid-template-columns: repeat(6, 1fr); max-width: 1200px;">
+                <div class="glass-card role-bento-card role-bento-card-purple active-role" style="grid-column: span 2;" onclick="activateCorporateRole(0, this)">
+                    <span class="role-icon-box" style="color: var(--color-purple);"><i data-lucide="users" class="icon-lg"></i></span>
+                    <div class="role-text-content">
+                        <h3 class="role-card-title">PM vs. PO</h3>
+                        <span class="role-card-subtitle">Estrategia vs. Sprints Jira</span>
+                    </div>
+                </div>
+                
+                <div class="glass-card role-bento-card" style="grid-column: span 2;" onclick="activateCorporateRole(1, this)">
+                    <span class="role-icon-box" style="color: var(--color-blue);"><i data-lucide="cpu" class="icon-lg"></i></span>
+                    <div class="role-text-content">
+                        <h3 class="role-card-title">Especialistas Devs</h3>
+                        <span class="role-card-subtitle">FE, BE, Mobile + Tech Leads</span>
+                    </div>
+                </div>
+                
+                <div class="glass-card role-bento-card" style="grid-column: span 2;" onclick="activateCorporateRole(2, this)">
+                    <span class="role-icon-box" style="color: var(--color-green);"><i data-lucide="shield-check" class="icon-lg"></i></span>
+                    <div class="role-text-content">
+                        <h3 class="role-card-title">QA Automation</h3>
+                        <span class="role-card-subtitle">Pruebas en Pipeline CI/CD</span>
+                    </div>
+                </div>
+                
+                <div class="glass-card role-bento-card" style="grid-column: span 3;" onclick="activateCorporateRole(3, this)">
+                    <span class="role-icon-box" style="color: var(--color-orange);"><i data-lucide="database" class="icon-lg"></i></span>
+                    <div class="role-text-content">
+                        <h3 class="role-card-title">Data Stack Team</h3>
+                        <span class="role-card-subtitle">Data Engineers + Scientists</span>
+                    </div>
+                </div>
+                
+                <div class="glass-card role-bento-card" style="grid-column: span 3;" onclick="activateCorporateRole(4, this)">
+                    <span class="role-icon-box" style="color: var(--color-red);"><i data-lucide="network" class="icon-lg"></i></span>
+                    <div class="role-text-content">
+                        <h3 class="role-card-title">DevOps & SecOps</h3>
+                        <span class="role-card-subtitle">Nube dedicada + Ciberseguridad</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="role-detail-panel" id="corporateRolePanel" style="border-left: 4px solid var(--color-purple);">
+                <strong><i data-lucide="users" class="icon-sm" style="margin-right: 6px; color: var(--color-purple); vertical-align: middle;"></i> PM vs. PO (Responsabilidades Separadas):</strong> El Project Manager (PM) lidera el roadmap a largo plazo, el ROI del producto y las alineaciones con directores corporativos. El Product Owner (PO) vive dentro del squad Scrum, escribe épicas e Historias de Usuario granulares y lidera las ceremonias diarias (Dailies, Refinement, Planning). <br><br><strong><i data-lucide="message-square" class="icon-sm" style="margin-right: 4px; color: var(--color-blue); vertical-align: middle;"></i> Canal del PM:</strong> El PM colabora de cerca con el PO para traducir la estrategia de negocio en trabajo ejecutable, sin entrometerse en el micromanagement diario del sprint.
+            </div>
+        </div>
+
+        <!-- SLIDE 5d: PM EN EL PIPELINE -->
+        <div class="slide" id="slide5d">
+            <h2 class="slide-title">El PM en el Pipeline: Puntos de Intervención</h2>
+            <p class="slide-subtitle">No se escribe código -  pero se bloquea o libera el pipeline en los momentos clave de decisión.</p>
+            
+            <div class="pm-pipeline-grid">
+                <!-- Stage 1: Jira -->
+                <div class="pm-stage-card glass-card">
+                    <div class="pm-stage-header" style="background: linear-gradient(160deg, rgba(59,130,246,0.18), rgba(59,130,246,0.03));">
+                        <span class="pm-stage-num" style="color: var(--color-blue);">01</span>
+                        <i data-lucide="clipboard-list" class="icon-lg" style="color: var(--color-blue);"></i>
+                        <h3 class="pm-stage-title">Jira Ticket</h3>
+                    </div>
+                    <div class="pm-stage-body">
+                        <p class="pm-action-label">Acción del PM</p>
+                        <p class="pm-action-text">Escribís las <strong>User Stories</strong> con criterios de aceptación nítidos. Si definís mal la base, todo lo que haga el equipo después va a fallar.</p>
+                        <div class="pm-role-chip" style="border-color: var(--color-blue); color: #60a5fa;">
+                            <i data-lucide="user-cog" class="icon-xs"></i> PM -   PO
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stage 2: Desarrollo -->
+                <div class="pm-stage-card glass-card">
+                    <div class="pm-stage-header" style="background: linear-gradient(160deg, rgba(139,92,246,0.18), rgba(139,92,246,0.03));">
+                        <span class="pm-stage-num" style="color: var(--color-purple);">02</span>
+                        <i data-lucide="code-2" class="icon-lg" style="color: var(--color-purple);"></i>
+                        <h3 class="pm-stage-title">Desarrollo</h3>
+                    </div>
+                    <div class="pm-stage-body">
+                        <p class="pm-action-label">Acción del PM</p>
+                        <p class="pm-action-text">Tenés que estar <strong>disponible</strong> para despejar dudas de negocio sin hacer micromanagement. El dev trabaja tranquilo en su rama aislada.</p>
+                        <div class="pm-role-chip" style="border-color: var(--color-purple); color: #c084fc;">
+                            <i data-lucide="cpu" class="icon-xs"></i> PM -   Tech Lead
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stage 3: CI -->
+                <div class="pm-stage-card glass-card">
+                    <div class="pm-stage-header" style="background: linear-gradient(160deg, rgba(245,158,11,0.18), rgba(245,158,11,0.03));">
+                        <span class="pm-stage-num" style="color: var(--color-orange);">03</span>
+                        <i data-lucide="flask-conical" class="icon-lg" style="color: var(--color-orange);"></i>
+                        <h3 class="pm-stage-title">CI / Tests</h3>
+                    </div>
+                    <div class="pm-stage-body">
+                        <p class="pm-action-label">Acción del PM</p>
+                        <p class="pm-action-text">Revisás con el QA Lead la <strong>cobertura de tests</strong>. Si el pipeline da rojo, la subida queda bloqueada: no se negocia la calidad.</p>
+                        <div class="pm-role-chip" style="border-color: var(--color-orange); color: #fbbf24;">
+                            <i data-lucide="shield-check" class="icon-xs"></i> PM -   QA Lead
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stage 4: Staging UAT -->
+                <div class="pm-stage-card glass-card">
+                    <div class="pm-stage-header" style="background: linear-gradient(160deg, rgba(16,185,129,0.18), rgba(16,185,129,0.03));">
+                        <span class="pm-stage-num" style="color: var(--color-green);">04</span>
+                        <i data-lucide="monitor-check" class="icon-lg" style="color: var(--color-green);"></i>
+                        <h3 class="pm-stage-title">Staging / UAT</h3>
+                    </div>
+                    <div class="pm-stage-body">
+                        <p class="pm-action-label">⭐ Momento Clave</p>
+                        <p class="pm-action-text">Validás el feature contra tus <strong>criterios de aceptación</strong> en un entorno seguro. Emitís el <strong>Sign-Off</strong> o reportás errores.</p>
+                        <div class="pm-role-chip" style="border-color: var(--color-green); color: #34d399;">
+                            <i data-lucide="check-circle-2" class="icon-xs"></i> PM da Sign-Off
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stage 5: Producción -->
+                <div class="pm-stage-card glass-card">
+                    <div class="pm-stage-header" style="background: linear-gradient(160deg, rgba(239,68,68,0.18), rgba(239,68,68,0.03));">
+                        <span class="pm-stage-num" style="color: var(--color-red);">05</span>
+                        <i data-lucide="rocket" class="icon-lg" style="color: var(--color-red);"></i>
+                        <h3 class="pm-stage-title">Producción</h3>
+                    </div>
+                    <div class="pm-stage-body">
+                        <p class="pm-action-label">Acción del PM</p>
+                        <p class="pm-action-text">Autorizás el <strong>Release</strong> (decidís cuándo lo ve el cliente). El DevOps gestiona el <strong>Deploy</strong>. Controlás el timing con un <strong>Feature Flag</strong>.</p>
+                        <div class="pm-role-chip" style="border-color: var(--color-red); color: #f87171;">
+                            <i data-lucide="zap" class="icon-xs"></i> PM -   DevOps
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pm-key-insight glass-card" style="margin-top: 1.2rem; padding: 0.9rem 1.5rem; border-left: 3px solid var(--color-green); max-width: 900px; text-align: center;">
+                <i data-lucide="lightbulb" class="icon-sm" style="color: var(--color-green); vertical-align: middle; margin-right: 6px;"></i>
+                <strong style="color: var(--color-green);">Regla de Oro:</strong> Deploy -0- Release. Los devs deciden <em>cómo</em> y <em>dónde</em> suben el código. Vos decidís <em>cuándo</em> se lo habilitás a tus usuarios.
+            </div>
+
+            <div class="pm-key-insight glass-card" style="margin-top: 0.8rem; padding: 0.9rem 1.5rem; border-left: 3px solid var(--color-purple); max-width: 900px;">
+                <p style="margin: 0; font-size: 0.9rem; color: var(--text-primary);">
+                    <i data-lucide="toggle-right" class="icon-sm" style="color: var(--color-purple); vertical-align: middle; margin-right: 6px;"></i>
+                    <strong style="color: var(--color-purple);">¿Qué es un Feature Flag?</strong> Es un interruptor en el código. El equipo técnico puede subir una funcionalidad al servidor de producción con ese interruptor en «apagado». El PM decide exactamente cuándo «encenderlo» para los usuarios -  puede ser para todos a la vez, solo para un grupo piloto, o coordinado con el equipo comercial. Así el trabajo técnico nunca bloquea al negocio, ni viceversa.
+                </p>
+            </div>
+        </div>
+
+        <!-- SLIDE 5e: USER STORY = RAMA DE GIT -->
+        <div class="slide" id="slide5e">
+            <h2 class="slide-title">Cada User Story = Una Rama de Git</h2>
+            <p class="slide-subtitle">Tu backlog priorizado en Jira se traduce directo en la estrategia de branching. Así conectás tu planificación con el desarrollo real.</p>
+
+            <div class="us-branch-layout">
+                <!-- Columna Jira -->
+                <div class="us-jira-col glass-card">
+                    <div class="us-col-header" style="color: var(--color-blue);">
+                        <i data-lucide="clipboard-list" class="icon-sm"></i> El Backlog (Jira)
+                    </div>
+                    <div class="us-ticket" style="border-color: var(--color-green);">
+                        <span class="us-ticket-id">US-41</span>
+                        <span class="us-ticket-name">Login con Google OAuth</span>
+                    </div>
+                    <div class="us-ticket" style="border-color: var(--color-orange);">
+                        <span class="us-ticket-id">US-42</span>
+                        <span class="us-ticket-name">Dashboard de métricas</span>
+                    </div>
+                    <div class="us-ticket" style="border-color: var(--color-purple);">
+                        <span class="us-ticket-id">US-43</span>
+                        <span class="us-ticket-name">Exportar reportes CSV</span>
+                    </div>
+                    <div class="us-ticket us-ticket-muted" style="border-color: rgba(255,255,255,0.1);">
+                        <span class="us-ticket-id">US-44</span>
+                        <span class="us-ticket-name">Notificaciones push</span>
+                    </div>
+                </div>
+
+                <!-- Flechas -->
+                <div class="us-arrows-col">
+                    <div class="us-arrow live">- </div>
+                    <div class="us-arrow live" style="animation-delay: 0.4s;">- </div>
+                    <div class="us-arrow live" style="animation-delay: 0.8s;">- </div>
+                    <div class="us-arrow">- </div>
+                </div>
+
+                <!-- Columna Git -->
+                <div class="us-git-col glass-card">
+                    <div class="us-col-header" style="color: var(--color-green);">
+                        <i data-lucide="git-branch" class="icon-sm"></i> Ramas de Git (Repositorio)
+                    </div>
+                    <div class="us-branch-item" style="border-color: var(--color-green);">
+                        <span class="us-branch-tag" style="color: #34d399;">feature/US-41-login-google</span>
+                        <span class="us-branch-status merged">🚀 Mergeada</span>
+                    </div>
+                    <div class="us-branch-item" style="border-color: var(--color-orange);">
+                        <span class="us-branch-tag" style="color: #fbbf24;">feature/US-42-dashboard</span>
+                        <span class="us-branch-status in-review">⏳ En Code Review</span>
+                    </div>
+                    <div class="us-branch-item" style="border-color: var(--color-purple);">
+                        <span class="us-branch-tag" style="color: #a78bfa;">feature/US-43-export-csv</span>
+                        <span class="us-branch-status in-dev">💻 En Desarrollo</span>
+                    </div>
+                    <div class="us-branch-item us-branch-muted">
+                        <span class="us-branch-tag" style="color: #64748b;">Sin rama -  no comenzó</span>
+                        <span class="us-branch-status backlog">📋 Backlog</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fila de 3 acciones del PM -->
+            <div class="us-pm-actions-row">
+                <div class="us-pm-action-card glass-card" style="border-top: 2px solid var(--color-blue);">
+                    <i data-lucide="pen-line" class="icon-sm" style="color: var(--color-blue);"></i>
+                    <span class="us-action-label">1 · PM Redacta</span>
+                    <span class="us-action-desc">Definís Criterios de Aceptación claros que le sirven al desarrollador para saber cuándo terminar la rama y abrir su Pull Request.</span>
+                </div>
+                <div class="us-pm-action-card glass-card" style="border-top: 2px solid var(--color-orange);">
+                    <i data-lucide="eye" class="icon-sm" style="color: var(--color-orange);"></i>
+                    <span class="us-action-label">2 · Validación de PM (UAT)</span>
+                    <span class="us-action-desc">Validás la función en Staging (UAT). Con tu visto bueno, la rama de feature se integra de forma segura a la rama principal (main).</span>
+                </div>
+                <div class="us-pm-action-card glass-card" style="border-top: 2px solid var(--color-green);">
+                    <i data-lucide="send" class="icon-sm" style="color: var(--color-green);"></i>
+                    <span class="us-action-label">3 · Liberación (Release)</span>
+                    <span class="us-action-desc">Decidís el momento de encender la función. El Release es tu responsabilidad exclusiva; el Deploy técnico es de DevOps.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: GIT & BRANCHING -->
+
+        <div class="slide" id="slide6">
+            <h2 class="slide-title">Git: Control de Versiones Moderno</h2>
+            <p class="slide-subtitle">En corporaciones, el software pasa por ambientes y controles estrictos para no romper nada. Hacé clic en los nodos para ver el flujo.</p>
+            
+            <!-- Tarjeta Explicativa de Valor para el PM -->
+            <div class="glass-card" style="margin: 0 auto 1.5rem auto; padding: 0.8rem 1.2rem; border-left: 3px solid var(--color-blue); max-width: 1000px; width: 100%; text-align: left; font-size: 0.85rem; line-height: 1.45;">
+                <strong style="color: var(--color-blue);"><i data-lucide="info" class="icon-sm" style="vertical-align: middle; margin-right: 6px;"></i> ¿Por qué un Project Manager debe entender Git?</strong> 
+                Entender Git te permite hablar el mismo idioma que los desarrolladores, hacer un seguimiento real en Jira (detectando cuellos de botella en Code Review o QA) y anticipar riesgos cuando gestionás varias funciones a la vez.
+            </div>
+            
+            <div class="git-visual-container">
+                <!-- Vertical connectors showing the code flow ascending through quality gates -->
+                <div class="git-flow-connector" style="left: calc(150px + 10% + 8px); top: 198px; height: 45px;"></div>
+                <div class="git-flow-connector" style="left: calc(150px + 32% + 8px); top: 198px; height: 45px;"></div>
+                <div class="git-flow-connector" style="left: calc(150px + 50% + 8px); top: 138px; height: 45px;"></div>
+                <div class="git-flow-connector" style="left: calc(150px + 65% + 8px); top: 78px; height: 45px;"></div>
+                <div class="git-flow-connector" style="left: calc(150px + 80% + 8px); top: 18px; height: 45px;"></div>
+                
+                <!-- 1. MAIN (PROD) -->
+                <div class="git-branch-line git-branch-line-main">
+                    <span class="git-branch-name git-branch-name-main">main (Prod)</span>
+                    <div class="git-nodes-container">
+                        <div class="git-node git-node-main" style="left: 80%;" onclick="activateGitNode(5, this)">
+                            <span class="git-node-label">6. Release Final</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. PRE-PROD (STAGING) -->
+                <div class="git-branch-line git-branch-line-preprod">
+                    <span class="git-branch-name git-branch-name-preprod">pre-prod</span>
+                    <div class="git-nodes-container">
+                        <div class="git-node git-node-preprod" style="left: 65%;" onclick="activateGitNode(4, this)">
+                            <span class="git-node-label">5. Security Gate</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. TESTING (QA) -->
+                <div class="git-branch-line git-branch-line-testing">
+                    <span class="git-branch-name git-branch-name-testing">testing</span>
+                    <div class="git-nodes-container">
+                        <div class="git-node git-node-testing" style="left: 50%;" onclick="activateGitNode(3, this)">
+                            <span class="git-node-label">4. QA Testing</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. DEVELOP (CI) -->
+                <div class="git-branch-line git-branch-line-develop">
+                    <span class="git-branch-name git-branch-name-develop">develop</span>
+                    <div class="git-nodes-container">
+                        <div class="git-node git-node-develop" style="left: 32%;" onclick="activateGitNode(2, this)">
+                            <span class="git-node-label">3. Merge a develop</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. FEATURE BRANCH -->
+                <div class="git-branch-line git-branch-line-feature">
+                    <span class="git-branch-name git-branch-name-feature">feature/US-42</span>
+                    <div class="git-nodes-container">
+                        <div class="git-node git-node-feature git-node-active" style="left: 10%;" onclick="activateGitNode(0, this)">
+                            <span class="git-node-label">1. Nueva Rama</span>
+                        </div>
+                        <div class="git-node git-node-feature" style="left: 22%;" onclick="activateGitNode(1, this)">
+                            <span class="git-node-label">2. Code Review</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="git-node-desc" id="gitNodeDesc">
+                Hacer clic en los nodos numerados para explorar cómo se construye, revisa, prueba y despliega el código de forma segura y profesional en la industria de IT.
+            </div>
+        </div>
+
+        <!-- SLIDE 7: GESTION DE AMBIENTES -->
+        <div class="slide" id="slide7">
+            <h2 class="slide-title">Dónde Vive el Software</h2>
+            <p class="slide-subtitle">Un error típico es confundir dónde se están probando los cambios. Anotate estos 3 ambientes indispensables del software moderno.</p>
+            
+            <div class="grid-3">
+                <div class="glass-card env-card env-card-dev">
+                    <span class="env-badge env-badge-dev">Desarrollo</span>
+                    <h3 class="env-name">Dev Environment</h3>
+                    <p class="env-tagline">El Laboratorio</p>
+                    <ul class="env-bullets">
+                        <li class="env-bullet-item">Espacio inestable donde los devs integran sus ramas diariamente.</li>
+                        <li class="env-bullet-item">Ideal para pruebas unitarias rápidas.</li>
+                        <li class="env-bullet-item"><strong>Tu rol:</strong> Ninguno directo. Dejá que el equipo técnico experimente e itere libremente acá.</li>
+                    </ul>
+                </div>
+                
+                <div class="glass-card env-card env-card-staging">
+                    <span class="env-badge env-badge-staging">Staging / Pre-Prod</span>
+                    <h3 class="env-name">Staging Environment</h3>
+                    <p class="env-tagline">El Simulador de Vuelo</p>
+                    <ul class="env-bullets">
+                        <li class="env-bullet-item">Réplica idéntica de las bases de datos y servidores de producción.</li>
+                        <li class="env-bullet-item">Acá hacés tus pruebas funcionales de aceptación (UAT).</li>
+                        <li class="env-bullet-item"><strong>Tu rol:</strong> Máxima autoridad. Liderás el Sign-Off final para autorizar la subida a producción.</li>
+                    </ul>
+                </div>
+                
+                <div class="glass-card env-card env-card-prod">
+                    <span class="env-badge env-badge-prod">Producción</span>
+                    <h3 class="env-name">Prod Environment</h3>
+                    <p class="env-tagline">El Estadio Lleno</p>
+                    <ul class="env-bullets">
+                        <li class="env-bullet-item">Acá viven tus usuarios y clientes reales. Todo debe ser impecable, seguro y rápido.</li>
+                        <li class="env-bullet-item">Lanzás de forma gradual con Feature Flags para mitigar riesgos.</li>
+                        <li class="env-bullet-item"><strong>Tu rol:</strong> Coordinar el lanzamiento de negocio y medir el impacto real con métricas.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7b: ECOBBDD -->
+        <div class="slide" id="slide7b">
+            <h2 class="slide-title">Bases de Datos: Dónde y Cómo se Guarda la Info</h2>
+            <p class="slide-subtitle">Como líder de producto, tenés que entender cómo se guardan y buscan los datos según el problema de negocio que quieras resolver.</p>
+            
+            <div class="db-grid">
+                <div class="glass-card env-card db-card-glow-blue">
+                    <span class="env-badge env-badge-dev" style="background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.2); color: #60a5fa;">Relacional (SQL)</span>
+                    <h3 class="env-name">SQL (Tablas Rígidas)</h3>
+                    <p class="env-tagline">El Archivero Perfecto</p>
+                    <ul class="env-bullets">
+                        <li class="env-bullet-item"><strong>Concepto:</strong> Datos estructurados en tablas estrictas de filas y columnas (ej. PostgreSQL, MySQL). Cero margen de error.</li>
+                        <li class="env-bullet-item"><strong>Analogía:</strong> Una hoja de Excel gigante donde cada celda debe respetar su tipo de columna obligatoriamente.</li>
+                        <li class="env-bullet-item"><strong><i data-lucide="lightbulb" class="icon-sm" style="color: var(--color-blue); margin-right: 4px; vertical-align: middle;"></i> La Decisión del PM:</strong> Obligatorio para pasarelas de pago, registros contables, facturación o cualquier sistema crítico donde la precisión absoluta y la consistencia de datos sean de vida o muerte.</li>
+                    </ul>
+                </div>
+                
+                <div class="glass-card env-card db-card-glow-orange">
+                    <span class="env-badge env-badge-staging" style="background: rgba(249, 115, 22, 0.1); border-color: rgba(249, 115, 22, 0.2); color: #fdba74;">No-Relacional (NoSQL)</span>
+                    <h3 class="env-name">NoSQL (Documentos Libres)</h3>
+                    <p class="env-tagline">La Caja de Carpetas Libres</p>
+                    <ul class="env-bullets">
+                        <li class="env-bullet-item"><strong>Concepto:</strong> Formatos flexibles (JSON) donde cada documento puede tener campos diferentes según haga falta (ej. MongoDB).</li>
+                        <li class="env-bullet-item"><strong>Analogía:</strong> Una carpeta donde archivas hojas sueltas. Cada hoja puede tener diferentes campos sin un esquema fijo.</li>
+                        <li class="env-bullet-item"><strong><i data-lucide="lightbulb" class="icon-sm" style="color: var(--color-orange); margin-right: 4px; vertical-align: middle;"></i> La Decisión del PM:</strong> Excelente para catálogos dinámicos que cambian constantemente, perfiles de redes sociales, blogs o para lanzar MVPs súper rápido al mercado sin frenar el desarrollo por la estructura del modelo.</li>
+                    </ul>
+                </div>
+                
+                <div class="glass-card env-card db-card-glow-purple">
+                    <span class="env-badge env-badge-prod" style="background: rgba(139, 92, 246, 0.1); border-color: rgba(139, 92, 246, 0.2); color: #c084fc;">Base Vectorial (IA)</span>
+                    <h3 class="env-name">Vector DB (Significado)</h3>
+                    <p class="env-tagline">La Biblioteca Mágica en 3D</p>
+                    <ul class="env-bullets">
+                        <li class="env-bullet-item"><strong>Concepto:</strong> Guarda representaciones matemáticas del significado del texto o imágenes (Embeddings). Busca similitud semántica.</li>
+                        <li class="env-bullet-item"><strong>Analogía:</strong> Conceptos similares flotan físicamente cerca en un espacio 3D. "Cachorro" y "Perro" flotan al lado de "Mascota" (no por ortografía, sino por concepto).</li>
+                        <li class="env-bullet-item"><strong><i data-lucide="lightbulb" class="icon-sm" style="color: var(--color-purple); margin-right: 4px; vertical-align: middle;"></i> La Decisión del PM:</strong> Indispensable para crear motores de recomendación inteligentes, buscadores avanzados de productos o alimentar al modelo de Inteligencia Artificial con datos privados de la empresa (RAG).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: TALLER PRACTICO CV -->
+        <div class="slide" id="slide8">
+            <h2 class="slide-title">Taller Práctico: El CV en Idioma IT</h2>
+            <p class="slide-subtitle">Traducí tu trayectoria corporativa al léxico ágil y técnico que buscan los reclutadores IT. Mirá la diferencia de impacto.</p>
+            
+            <div class="cv-workshop-wrapper">
+                <div class="cv-header-row">
+                    <span class="cv-header-title" style="text-align: center;">Proyecto</span>
+                    <span class="cv-header-title">Antes (Gestión Tradicional SAP/ERP)</span>
+                    <span class="cv-header-title">Después (Enfoque Moderno Agile/Project)</span>
+                </div>
+                
+                <div class="cv-card-row">
+                    <div class="cv-badge-col">Migración ERP</div>
+                    <div class="cv-text-col cv-text-before">
+                        "Lideré squad de 10 personas para diseñar procesos futuros de migración ERP con savings de USD 1.6M."
+                    </div>
+                    <div class="cv-text-col cv-text-after">
+                        <strong>"Actué como Product Owner de un squad ágil de 10 personas para la migración de sistemas core.</strong> Prioricé el backlog y user stories, estableciendo un roadmap iterativo que proyectó un ROI de USD 1.6M mediante la optimización de flujos de valor."
+                    </div>
+                </div>
+                
+                <div class="cv-card-row">
+                    <div class="cv-badge-col">Sistemas LatAm</div>
+                    <div class="cv-text-col cv-text-before">
+                        "Lideré el delivery end-to-end de SAP PPM para plantas LatAm, coordinando 12 equipos y presupuesto de USD 15M."
+                    </div>
+                    <div class="cv-text-col cv-text-after">
+                        <strong>"Dirigí el delivery end-to-end de una solución corporativa escalable a nivel LatAm,</strong> orquestando sprints de 12 squads distribuidos. Aseguré la integración continua vía APIs y prioricé entregas incrementales de valor con presupuesto de USD 15M."
+                    </div>
+                </div>
+                
+                <div class="cv-card-row">
+                    <div class="cv-badge-col">Automatización</div>
+                    <div class="cv-text-col cv-text-before">
+                        "Implementé proyectos de RPA con ahorro de USD 90K, coordinando desarrollo, requisitos y pruebas."
+                    </div>
+                    <div class="cv-text-col cv-text-after">
+                        <strong>"Lancé múltiples flujos de automatización de procesos (workflows) coordinando el ciclo de vida del software end-to-end,</strong> traduciendo necesidades a épicas/user stories, y supervisando el pipeline de QA/UAT y despliegue continuo."
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: PREGUNTAS DE ENTREVISTA -->
+        <div class="slide" id="slide9">
+            <h2 class="slide-title">Preguntas "Rompe-Entrevistas"</h2>
+            <p class="slide-subtitle">Hacé clic en cada tarjeta para simular una pregunta de entrevista y ver cómo responderla con autoridad.</p>
+            
+            <div class="q-card-grid">
+                <!-- CARD 1 -->
+                <div class="q-card" onclick="flipCard(this)">
+                    <div class="q-card-inner">
+                        <div class="q-card-front">
+                            <span class="q-badge">Deploy vs. Release</span>
+                            <p class="q-question-text">"¿Cómo se controla el momento en que una funcionalidad llega al usuario final, si el código ya está en producción?"</p>
+                            <span class="q-action-hint"><i data-lucide="refresh-cw" class="icon-sm" style="margin-right: 4px; vertical-align: middle;"></i> Hacé clic para girar</span>
+                        </div>
+                        <div class="q-card-back">
+                            <span class="q-star-badge">Respuesta Estrella <i data-lucide="star" class="icon-sm" style="margin-right: 4px; fill: currentColor; vertical-align: middle;"></i></span>
+                            <p class="q-answer-text">"En nuestros equipos usamos lo que se llama un <strong>Feature Flag</strong>: básicamente un interruptor. El código de la nueva funcionalidad ya está subido al servidor, pero está 'apagado'. Esto nos permite como Product Manager decidir exactamente cuándo 'encenderlo' para los usuarios -  puede ser de a poco, solo para un grupo, o coordinado con el lanzamiento comercial. Así el equipo técnico trabaja sin bloqueos y nosotros mantenemos el control del timing del negocio."</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CARD 2 -->
+                <div class="q-card" onclick="flipCard(this)">
+                    <div class="q-card-inner">
+                        <div class="q-card-front">
+                            <span class="q-badge">Git &amp; Colaboración</span>
+                            <p class="q-question-text">"¿Cómo se asegura que varios desarrolladores trabajando en paralelo no se 'pisen' el trabajo entre sí?"</p>
+                            <span class="q-action-hint"><i data-lucide="refresh-cw" class="icon-sm" style="margin-right: 4px; vertical-align: middle;"></i> Hacé clic para girar</span>
+                        </div>
+                        <div class="q-card-back">
+                            <span class="q-star-badge">Respuesta Estrella <i data-lucide="star" class="icon-sm" style="margin-right: 4px; fill: currentColor; vertical-align: middle;"></i></span>
+                            <p class="q-answer-text">"Cada desarrollador trabaja en su propia <strong>copia aislada del código</strong>, llamada rama o branch. Es como trabajar en una carpeta separada: lo que uno hace no afecta al resto. Cuando termina su parte, abre una <strong>Pull Request</strong> -  que es básicamente una solicitud de revisión -  y un compañero lo revisa antes de integrarlo al código principal. Mientras más seguido se integra, menos problemas de conflictos hay al final del Sprint."</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CARD 3 -->
+                <div class="q-card" onclick="flipCard(this)">
+                    <div class="q-card-inner">
+                        <div class="q-card-front">
+                            <span class="q-badge">Gestión de Incidentes</span>
+                            <p class="q-question-text">"Si se sube algo a producción y el sistema falla, ¿cuál es el protocolo como Product Manager?"</p>
+                            <span class="q-action-hint"><i data-lucide="refresh-cw" class="icon-sm" style="margin-right: 4px; vertical-align: middle;"></i> Hacé clic para girar</span>
+                        </div>
+                        <div class="q-card-back">
+                            <span class="q-star-badge">Respuesta Estrella <i data-lucide="star" class="icon-sm" style="margin-right: 4px; fill: currentColor; vertical-align: middle;"></i></span>
+                            <p class="q-answer-text">"Lo primero es restaurar el servicio lo antes posible. Coordino con el equipo técnico para <strong>volver a la versión anterior</strong> que funcionaba bien -  eso se llama rollback -  o para aplicar una corrección de emergencia rápida. Una vez que el sistema está estable, hacemos una reunión de análisis: ¿qué falló? ¿qué control de calidad no lo detectó? El objetivo no es buscar culpables sino aprender para que no vuelva a pasar."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: ROADMAP -->
+        <div class="slide" id="slide10">
+            <h2 class="slide-title">Ruta hacia el Liderazgo en IA</h2>
+            <p class="slide-subtitle">¡Te felicito por completar la primera sesión! Tu viaje estratégico de actualización tecnológica recién empieza.</p>
+            
+            <div class="roadmap-timeline">
+                <div class="roadmap-line"></div>
+                
+                <div class="roadmap-step done">
+                    <div class="roadmap-dot" style="display: flex; align-items: center; justify-content: center;"><i data-lucide="check" class="icon-sm" style="stroke-width: 3px;"></i></div>
+                    <span class="roadmap-step-title">Sesión 1</span>
+                    <span class="roadmap-step-status">DevOps &amp; Cloud</span>
+                </div>
+                
+                <div class="roadmap-step active">
+                    <div class="roadmap-dot">2</div>
+                    <span class="roadmap-step-title">Sesión 2</span>
+                    <span class="roadmap-step-status">IA & RAG</span>
+                </div>
+                
+                <div class="roadmap-step">
+                    <div class="roadmap-dot">3</div>
+                    <span class="roadmap-step-title">Sesión 3</span>
+                    <span class="roadmap-step-status">Agentes Autónomos</span>
+                </div>
+                
+                <div class="roadmap-step">
+                    <div class="roadmap-dot">4</div>
+                    <span class="roadmap-step-title">Sesión 4</span>
+                    <span class="roadmap-step-status">ROI, Evals &amp; Entrevistas</span>
+                </div>
+            </div>
+
+            <div class="portfolio-box">
+                <div class="portfolio-icon" style="color: var(--color-purple);"><i data-lucide="brain" class="icon-lg"></i></div>
+                <div class="portfolio-content">
+                    <h4>Ejercicio de Reflexión para esta Semana:</h4>
+                    <p>Pensá en dos proyectos previos e intentá describirlos usando el léxico de hoy: ¿tenían un pipeline de entrega? ¿usaban ambientes de staging para UAT? ¿cómo manejaban los cambios en paralelo? El objetivo es que empieces a ver tu experiencia con ojos de líder IT moderno.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CONTROLS BAR AT THE BOTTOM -->
+    <div class="controls-bar">
+        <div class="controls-info">
+            <span class="controls-session-label">IT & AI Strategy Upgrade</span>
+            <span class="controls-slide-indicator" id="slideIndicator">1 / 10</span>
+            <div class="keyboard-hint">
+                <span class="key-btn">←</span> <span class="key-btn">→</span> para navegar
+            </div>
+        </div>
+        <div class="controls-buttons">
+            <button class="btn-ctrl" id="btnPrev" onclick="changeSlide(-1)" disabled><i data-lucide="chevron-left" class="icon-sm" style="vertical-align: middle; margin-right: 4px;"></i> Anterior</button>
+            <button class="btn-ctrl btn-ctrl-primary" id="btnNext" onclick="changeSlide(1)">Siguiente <i data-lucide="chevron-right" class="icon-sm" style="vertical-align: middle; margin-left: 4px;"></i></button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const slideIndicator = document.getElementById('slideIndicator');
+        const progressBar = document.getElementById('progressBar');
+        const btnPrev = document.getElementById('btnPrev');
+        const btnNext = document.getElementById('btnNext');
+
+        function updateSlideUI() {
+            // Update Active Class
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'prev');
+                if (index === currentSlideIndex) {
+                    slide.classList.add('active');
+                } else if (index < currentSlideIndex) {
+                    slide.classList.add('prev');
+                }
+            });
+
+            // Update Indicator Text
+            slideIndicator.textContent = `${currentSlideIndex + 1} / ${slides.length}`;
+
+            // Update Progress Bar
+            const percentage = ((currentSlideIndex) / (slides.length - 1)) * 100;
+            progressBar.style.width = `${percentage}%`;
+
+            // Update Buttons Disabled State
+            btnPrev.disabled = currentSlideIndex === 0;
+            if (currentSlideIndex === slides.length - 1) {
+                btnNext.innerHTML = 'Finalizar Clase <i data-lucide="check" class="icon-sm" style="vertical-align: middle; margin-left: 4px;"></i>';
+                btnNext.classList.remove('btn-ctrl-primary');
+                btnNext.style.background = 'var(--color-green)';
+                btnNext.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+            } else {
+                btnNext.innerHTML = 'Siguiente <i data-lucide="chevron-right" class="icon-sm" style="vertical-align: middle; margin-left: 4px;"></i>';
+                btnNext.classList.add('btn-ctrl-primary');
+                btnNext.style.background = '';
+                btnNext.style.borderColor = '';
+            }
+            
+            // Re-render Lucide icons for dynamically set innerHTML buttons
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+
+            // Custom specific slides scripts
+            if (slides[currentSlideIndex] && slides[currentSlideIndex].id === 'slide5') { // CI/CD slide
+                setTimeout(() => {
+                    const lineActive = document.getElementById('pipelineLine');
+                    if (lineActive) lineActive.style.width = '0%';
+                }, 100);
+            }
+        }
+
+        function changeSlide(direction) {
+            const nextIndex = currentSlideIndex + direction;
+            if (nextIndex >= 0 && nextIndex < slides.length) {
+                currentSlideIndex = nextIndex;
+                updateSlideUI();
+            } else if (nextIndex === slides.length) {
+                alert("¡Felicidades! Completaron exitosamente la Sesión 1. ¡Listos para la Sesión 2 de Inteligencia Artificial!");
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                changeSlide(1);
+            } else if (e.key === 'ArrowLeft' || e.key === 'Backspace') {
+                e.preventDefault();
+                changeSlide(-1);
+            }
+        });
+
+        /* INTERACTIVITY SCRIPTS */
+
+        // Slide 5: Pipeline Interaction
+        const pipelineDetails = [
+            "<strong>1. El Ticket de Jira (Gestión de Requisitos):</strong> Aquí es donde el Project Manager actúa como PO/PM traduciendo los requerimientos corporativos complejos en épicas y Historias de Usuario granulares. Es fundamental definir <em>Criterios de Aceptación</em> claros antes de entregar la tarea al squad de desarrollo.",
+            "<strong>2. Codificación en Rama Local (Desarrollo):</strong> El programador toma la Story asignada y crea una rama de trabajo aislada en Git. Codifica la solución de forma local y realiza los tests unitarios manuales o preliminares sin afectar al resto del equipo.",
+            "<strong>3. Integración Continua (CI - Servidor en la Nube):</strong> El dev abre una Pull Request (PR) y sube su código. En este instante, un pipeline automático en la nube (ej. GitHub Actions o GitLab CI) compila la app y ejecuta suites de tests unitarios/QA. Si una prueba falla, el pipeline da rojo y bloquea el merge.",
+            "<strong>4. Entrega y Despliegue Continuo (CD - Ambientes):</strong> Una vez aprobado el código con la firma técnica, el pipeline despliega automáticamente el binario a <strong>Staging</strong> para que el Project Manager y QA aprueben el UAT (User Acceptance Testing). Finalmente, se publica a <strong>Producción (Prod)</strong> en ventanas de bajo tráfico."
+        ];
+
+        function activatePipeline(stepIndex) {
+            const steps = document.querySelectorAll('.pipeline-step');
+            const lineActive = document.getElementById('pipelineLine');
+            const panel = document.getElementById('pipelinePanel');
+
+            steps.forEach((step, idx) => {
+                step.classList.remove('active', 'active-purple');
+                if (idx <= stepIndex) {
+                    if (idx % 2 === 0) {
+                        step.classList.add('active');
+                    } else {
+                        step.classList.add('active-purple');
+                    }
+                }
+            });
+
+            // Update pipeline line width / height dynamically for responsiveness
+            const percent = (stepIndex / 3) * (window.innerWidth <= 768 ? 80 : 90);
+            if (window.innerWidth <= 768) {
+                lineActive.style.width = '3px';
+                lineActive.style.height = `${percent}%`;
+            } else {
+                lineActive.style.width = `${percent}%`;
+                lineActive.style.height = '3px';
+            }
+
+            // Update detail text
+            panel.innerHTML = pipelineDetails[stepIndex];
+        }
+
+        // Slide 6: Git Interaction
+        const gitDetails = [
+            "<strong>1. Nueva Rama (Nace desde develop):</strong> Para iniciar la Story <code>US-42</code>, el programador crea una rama de trabajo aislada llamada <code>feature/US-42-dashboard</code>. Al nacer desde la rama base de desarrollo (develop), trabaja de forma completamente segura sin peligro de romper la aplicación en producción ni interferir con otros desarrolladores.",
+            "<strong>2. Desarrollo & Code Review:</strong> El desarrollador programa la funcionalidad y realiza commits (guardados parciales firmados). Al finalizar, abre una <strong>Pull Request (PR)</strong> y solicita revisión de código. Otro desarrollador senior (Tech Lead) audita la calidad del código, garantizando que cumpla con los estándares de la corporación.",
+            "<strong>3. Integración Continua (Merge a develop):</strong> Tras recibir el 'Approve' técnico y haber superado la suite de tests automáticos en el servidor de CI (ej: GitHub Actions), la rama de feature se une (mergea) de manera segura a la rama <code>develop</code>, consolidando el trabajo diario del squad.",
+            "<strong>4. Pase a testing (QA Manual y Automatizado):</strong> El DevOps toma los cambios integrados en <code>develop</code> y los despliega automáticamente en la rama y ambiente de <code>testing</code>. Aquí, el squad de QA ejecuta regresiones automatizadas y el Project Manager realiza la validación funcional de cara al usuario.",
+            "<strong>5. Promoción a pre-prod (Staging / Security Audit):</strong> Una vez aprobado por QA, el build pasa a la rama de <code>pre-prod</code> (pre-producción o Staging). En este ambiente de espejo idéntico al de producción, se realiza un último check crítico de rendimiento, pruebas de penetración y la auditoría de SecOps.",
+            "<strong>6. Release Final a main (Producción):</strong> ¡La versión está 100% certificada y lista para el negocio! Se mergea en la rama <code>main</code> (o master) y el pipeline de CD realiza el despliegue final. El Project Manager decide el momento comercial exacto para activar la funcionalidad al usuario real."
+        ];
+
+        function activateGitNode(nodeIndex, element) {
+            const nodes = document.querySelectorAll('.git-node');
+            const desc = document.getElementById('gitNodeDesc');
+
+            nodes.forEach((node) => {
+                node.classList.remove('git-node-active');
+            });
+            
+            // Add active class to clicked node element directly
+            if (element) {
+                element.classList.add('git-node-active');
+            } else {
+                // Fallback for initial load
+                nodes[nodeIndex].classList.add('git-node-active');
+            }
+
+            desc.innerHTML = gitDetails[nodeIndex];
+        }
+
+        // Slide 5b: Startup Roles details
+        const startupRoleDetails = [
+            "<strong><i data-lucide='laptop' class='icon-sm' style='margin-right: 6px; color: var(--color-purple); vertical-align: middle;'></i> Full-Stack Developer:</strong> Un programador generalista que domina todo el stack tecnológico. Diseña la interfaz gráfica del usuario (Frontend) y escribe la lógica del servidor y APIs (Backend). Incluso suele configurar servidores básicos en AWS o Vercel (DevOps). <br><br><strong><i data-lucide='message-square' class='icon-sm' style='margin-right: 4px; color: var(--color-blue); vertical-align: middle;'></i> Canal del PM:</strong> Comunicación informal y directa (Slack sin intermediarios o charlas rápidas de pasillo). Las alineaciones son inmediatas y sin burocracia técnica.",
+            "<strong><i data-lucide='user-cog' class='icon-sm' style='margin-right: 6px; color: var(--color-blue); vertical-align: middle;'></i> Project Manager / PO:</strong> En startups pequeñas, se asume un rol integral de 360 grados. Se diseñan mockups rápidos, se gestiona el backlog, se realizan pruebas manuales de aceptación (QA), se capacita al equipo de soporte y se lideran los lanzamientos comerciales. <br><br><strong><i data-lucide='message-square' class='icon-sm' style='margin-right: 4px; color: var(--color-blue); vertical-align: middle;'></i> Canal del PM:</strong> Se actúa como el centro del ecosistema, exigiendo agilidad extrema, priorizando de forma implacable y manteniendo la satisfacción del cliente con entregas veloces.",
+            "<strong><i data-lucide='check-square' class='icon-sm' style='margin-right: 6px; color: var(--color-green); vertical-align: middle;'></i> QA / Tester Liviano:</strong> Un tester ágil centrado en validar rápidamente flujos críticos a mano. Rara vez implementa automatización compleja, delegando el peso del control de calidad en los propios desarrolladores y en las pruebas de UAT del PM. <br><br><strong><i data-lucide='message-square' class='icon-sm' style='margin-right: 4px; color: var(--color-blue); vertical-align: middle;'></i> Canal del PM:</strong> Comunicación continua durante el sprint. El PM actúa como la 'segunda línea de defensa' para certificar que todo funcione antes de autorizar el merge final.",
+            "<strong><i data-lucide='pie-chart' class='icon-sm' style='margin-right: 6px; color: var(--color-orange); vertical-align: middle;'></i> Analista de Datos Generalista:</strong> Un rol clave enfocado en configurar herramientas analíticas auto-gestionadas (ej: Amplitude, Mixpanel, Google Analytics), estructurar la base de datos SQL inicial y generar los reportes comerciales solicitados por el PM. <br><br><strong><i data-lucide='message-square' class='icon-sm' style='margin-right: 4px; color: var(--color-blue); vertical-align: middle;'></i> Canal del PM:</strong> Colaboración constante para medir la adopción del producto y el éxito de cada feature lanzado a producción."
+        ];
+
+        function activateStartupRole(roleIndex, cardElement) {
+            const cards = cardElement.parentNode.querySelectorAll('.role-bento-card');
+            const panel = document.getElementById('startupRolePanel');
+
+            cards.forEach(card => card.classList.remove('active-role', 'role-bento-card-purple', 'role-bento-card-blue', 'role-bento-card-green', 'role-bento-card-orange'));
+            
+            // Add active class and specific glow matching the index
+            cardElement.classList.add('active-role');
+            if (roleIndex === 0) cardElement.classList.add('role-bento-card-purple');
+            else if (roleIndex === 1) cardElement.classList.add('role-bento-card-blue');
+            else if (roleIndex === 2) cardElement.classList.add('role-bento-card-green');
+            else if (roleIndex === 3) cardElement.classList.add('role-bento-card-orange');
+
+            // Update border-left color and HTML content
+            const borderColors = ['var(--color-purple)', 'var(--color-blue)', 'var(--color-green)', 'var(--color-orange)'];
+            panel.style.borderLeftColor = borderColors[roleIndex];
+            panel.innerHTML = startupRoleDetails[roleIndex];
+            
+            if (window.lucide) lucide.createIcons();
+        }
+
+        // Slide 5c: Corporate Roles details
+        const corporateRoleDetails = [
+            "<strong><i data-lucide='users' class='icon-sm' style='margin-right: 6px; color: var(--color-purple); vertical-align: middle;'></i> PM vs. PO (Responsabilidades Separadas):</strong> El Project Manager (PM) lidera el roadmap a largo plazo, el ROI del producto y las alineaciones con directores corporativos. El Product Owner (PO) vive dentro del squad Scrum, escribe épicas e Historias de Usuario granulares y lidera las ceremonias diarias (Dailies, Refinement, Planning). <br><br><strong><i data-lucide='message-square' class='icon-sm' style='margin-right: 4px; color: var(--color-blue); vertical-align: middle;'></i> Canal del PM:</strong> El PM colabora de cerca con el PO para traducir la estrategia de negocio en trabajo ejecutable, sin entrometerse en el micromanagement diario del sprint.",
+            "<strong><i data-lucide='cpu' class='icon-sm' style='margin-right: 6px; color: var(--color-blue); vertical-align: middle;'></i> Especialistas en Ingeniería:</strong> Squad de desarrollo segregado compuesto por Frontend Devs (exclusivos de la interfaz en React/NextJS), Backend Devs (exclusivos de bases de datos y microservicios Java/Node), Mobile Devs (sólo iOS/Android) y Tech Leads (expertos que definen estándares de código y arquitecturas de APIs). <br><br><strong><i data-lucide='message-square' class='icon-sm' style='margin-right: 4px; color: var(--color-blue); vertical-align: middle;'></i> Canal del PM:</strong> La comunicación se realiza a través del Tech Lead o del PO. Se debe respetar la estructura de sprints para no desviar los enfoques especializados.",
+            "<strong><i data-lucide='shield-check' class='icon-sm' style='margin-right: 6px; color: var(--color-green); vertical-align: middle;'></i> QA Automation Engineers & Dedicated Squads:</strong> Ingenieros de calidad dedicados a automatizar regresiones y tests de estrés (con Playwright o Cypress). Cuentan con un pipeline estricto de control de calidad. El software no se despliega en producción si la suite de tests de QA no da 'verde'. <br><br><strong><i data-lucide='message-square' class='icon-sm' style='margin-right: 4px; color: var(--color-blue); vertical-align: middle;'></i> Canal del PM:</strong> Se coordinan con el QA Lead los planes de UAT para garantizar la cobertura funcional de los casos de uso del negocio.",
+            "<strong><i data-lucide='database' class='icon-sm' style='margin-right: 6px; color: var(--color-orange); vertical-align: middle;'></i> Data Stack Specialists (Data Squads):</strong> Squads independientes con roles separados. Los Data Engineers crean tuberías ETL complejas para ingesta masiva. Los Data Scientists entrenan modelos matemáticos y de IA para optimizar predicciones. Los BI Analysts configuran reportes interactivos corporativos en Tableau/PowerBI. <br><br><strong><i data-lucide='message-square' class='icon-sm' style='margin-right: 4px; color: var(--color-blue); vertical-align: middle;'></i> Canal del PM:</strong> Se negocian recursos con el Data Manager para priorizar modelos de datos e insights clave para medir los productos.",
+            "<strong><i data-lucide='network' class='icon-sm' style='margin-right: 6px; color: var(--color-red); vertical-align: middle;'></i> DevOps & SecOps Dedicated:</strong> Ingenieros expertos dedicados en exclusiva a gestionar el ecosistema cloud de la corporación (AWS/Azure con Kubernetes o Docker) y robustecer el cumplimiento y la ciberseguridad. Controlan auditorías de accesos, encriptación y firewalls corporativos. <br><br><strong><i data-lucide='message-square' class='icon-sm' style='margin-right: 4px; color: var(--color-blue); vertical-align: middle;'></i> Canal del PM:</strong> Se debe coordinar y justificar el cumplimiento regulatorio y la infraestructura técnica para cada funcionalidad con suficiente antelación."
+        ];
+
+        function activateCorporateRole(roleIndex, cardElement) {
+            const cards = cardElement.parentNode.querySelectorAll('.role-bento-card');
+            const panel = document.getElementById('corporateRolePanel');
+
+            cards.forEach(card => card.classList.remove('active-role', 'role-bento-card-purple', 'role-bento-card-blue', 'role-bento-card-green', 'role-bento-card-orange', 'role-bento-card-red'));
+            
+            // Add active class and specific glow matching the index
+            cardElement.classList.add('active-role');
+            if (roleIndex === 0) cardElement.classList.add('role-bento-card-purple');
+            else if (roleIndex === 1) cardElement.classList.add('role-bento-card-blue');
+            else if (roleIndex === 2) cardElement.classList.add('role-bento-card-green');
+            else if (roleIndex === 3) cardElement.classList.add('role-bento-card-orange');
+            else if (roleIndex === 4) cardElement.classList.add('role-bento-card-red');
+
+            // Update border-left color and HTML content
+            const borderColors = ['var(--color-purple)', 'var(--color-blue)', 'var(--color-green)', 'var(--color-orange)', 'var(--color-red)'];
+            panel.style.borderLeftColor = borderColors[roleIndex];
+            panel.innerHTML = corporateRoleDetails[roleIndex];
+            
+            if (window.lucide) lucide.createIcons();
+        }
+
+        // Slide 9: Flip card logic
+        function flipCard(cardElement) {
+            cardElement.classList.toggle('flipped');
+        }
+
+        // Initialize Slider
+        updateSlideUI();
+        lucide.createIcons();
+    </script>
+</body>
+</html>
+
+

@@ -1,0 +1,16 @@
+# Excluir archivos locales temporales y scripts de utilidad
+*.csv
+*.ps1
+*.sh
+*.json
+server.js
+print_card_answer_chars.js
+check_language.js
+validate_html.js
+betheme-child/
+n8n-repo/
+woo-wholesale-portal/
+woo-wholesale-portal.zip
+.planning/
+.system_generated/
+*.log
