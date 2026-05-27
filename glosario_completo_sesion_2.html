@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glosario Técnico de IA &amp; RAG - Sesión 2</title>
+    <!-- Google Fonts: Outfit & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg-page: #f8fafc;
+            --bg-card: #ffffff;
+            --border-color: #e2e8f0;
+            --text-title: #0f172a;
+            --text-body: #334155;
+            --text-light: #64748b;
+            
+            /* Accent Colors */
+            --color-purple: #8b5cf6;
+            --color-purple-light: #f5f3ff;
+            --color-purple-border: #ddd6fe;
+            --color-blue: #3b82f6;
+            --color-blue-light: #eff6ff;
+            --color-blue-border: #bfdbfe;
+            --color-green: #10b981;
+            --color-green-light: #ecfdf5;
+            --color-green-border: #a7f3d0;
+            --color-orange: #f97316;
+            --color-orange-light: #fff7ed;
+            --color-orange-border: #ffedd5;
+            
+            --font-display: 'Outfit', 'Inter', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        /* RESET & GENERAL STYLES */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-body);
+            font-family: var(--font-body);
+            line-height: 1.6;
+            padding: 3rem 1.5rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .lucide {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2px;
+            color: currentColor;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        /* CONTAINER A4 SIZE */
+        .glossary-container {
+            width: 100%;
+            max-width: 820px; /* Standard A4 printable width */
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+            padding: 3.5rem;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* HEADER SECTION */
+        .glossary-header {
+            margin-bottom: 3rem;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 2rem;
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .badge-session {
+            background-color: var(--color-purple-light);
+            border: 1px solid var(--color-purple-border);
+            color: var(--color-purple);
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.35rem 0.9rem;
+            border-radius: 20px;
+        }
+
+        .header-title-wrapper h1 {
+            font-family: var(--font-display);
+            font-size: 2.3rem;
+            font-weight: 800;
+            color: var(--text-title);
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            margin-bottom: 0.6rem;
+        }
+
+        .header-desc {
+            font-size: 1rem;
+            color: var(--text-light);
+            max-width: 700px;
+        }
+
+        /* GLOSSARY TERM CARD */
+        .term-card {
+            margin-bottom: 3.5rem;
+            position: relative;
+        }
+
+        .term-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .term-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .term-title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .term-number {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--color-purple);
+            background-color: var(--color-purple-light);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .term-title {
+            font-family: var(--font-display);
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-title);
+            letter-spacing: -0.02em;
+        }
+
+        .badge-category {
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.25rem 0.65rem;
+            border-radius: 4px;
+        }
+
+        /* Badges styling based on category */
+        .badge-architecture { background-color: var(--color-blue-light); border: 1px solid var(--color-blue-border); color: var(--color-blue); }
+        .badge-economics { background-color: var(--color-orange-light); border: 1px solid var(--color-orange-border); color: var(--color-orange); }
+        .badge-engineering { background-color: var(--color-purple-light); border: 1px solid var(--color-purple-border); color: var(--color-purple); }
+        .badge-strategy { background-color: var(--color-green-light); border: 1px solid var(--color-green-border); color: var(--color-green); }
+
+        /* TERM SECTIONS */
+        .section-definition {
+            font-size: 0.95rem;
+            color: var(--text-body);
+            line-height: 1.55;
+            margin-bottom: 0.8rem;
+        }
+
+        .section-definition strong {
+            color: var(--text-title);
+        }
+
+        /* Metaphor Box */
+        .section-metaphor {
+            background-color: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 0.9rem 1.2rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+        }
+
+        .metaphor-icon-wrapper {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 0.4rem;
+            border-radius: 6px;
+            color: var(--text-light);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .metaphor-content {
+            font-size: 0.86rem;
+            color: var(--text-light);
+            line-height: 1.45;
+        }
+
+        .metaphor-content strong {
+            color: var(--text-title);
+        }
+
+        /* PM Insight Box */
+        .section-insight {
+            border-left: 3px solid var(--color-green);
+            background-color: var(--color-green-light);
+            border-radius: 0 10px 10px 0;
+            padding: 0.9rem 1.2rem;
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+        }
+
+        .insight-icon-wrapper {
+            background-color: #ffffff;
+            border: 1px solid var(--color-green-border);
+            padding: 0.4rem;
+            border-radius: 6px;
+            color: var(--color-green);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .insight-content {
+            font-size: 0.86rem;
+            color: #065f46;
+            line-height: 1.45;
+        }
+
+        .insight-content strong {
+            color: #0f172a;
+        }
+
+        /* PRINT STYLING - Optimize for physical output */
+        @media print {
+            body {
+                background-color: #ffffff;
+                color: #000000;
+                padding: 0;
+            }
+
+            .glossary-container {
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                max-width: 100%;
+            }
+
+            .term-card {
+                page-break-inside: avoid;
+                margin-bottom: 2.5rem;
+            }
+
+            .section-metaphor, .section-insight {
+                page-break-inside: avoid;
+            }
+
+            .section-metaphor {
+                background-color: #fafafa;
+                border: 1px solid #cccccc;
+            }
+
+            .section-insight {
+                background-color: #f4fbf7;
+                border-left: 3px solid #10b981 !important;
+                border: 1px solid #d1e7dd;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glossary-container">
+        <!-- HEADER -->
+        <header class="glossary-header">
+            <div class="header-top">
+                <span class="badge-session">Mentoría Estratégica PM</span>
+                <span style="font-size: 0.8rem; font-family: var(--font-display); font-weight: 700; color: var(--text-light);">SESIÓN 2</span>
+            </div>
+            <div class="header-title-wrapper">
+                <h1>Glosario de Inteligencia Artificial &amp; RAG</h1>
+                <p class="header-desc">
+                    Conceptos técnicos y estratégicos fundamentales de IA Generativa. Diseñado específicamente para Project Managers y líderes de negocio en transición al mercado IT.
+                </p>
+            </div>
+        </header>
+
+        <!-- TERM 1 -->
+        <article class="term-card">
+            <div class="term-header">
+                <div class="term-title-wrapper">
+                    <span class="term-number">01</span>
+                    <h2 class="term-title">LLM (Large Language Model)</h2>
+                </div>
+                <span class="badge-category badge-architecture">Arquitectura</span>
+            </div>
+            
+            <p class="section-definition">
+                Una red neuronal de aprendizaje profundo (generalmente basada en la arquitectura <strong>Transformer</strong>) entrenada con corpus masivos de texto. Su función principal consiste en realizar predicciones probabilísticas de la siguiente palabra o token más coherente dado un contexto previo (Next-Token Prediction).
+            </p>
+
+            <div class="section-metaphor">
+                <div class="metaphor-icon-wrapper">
+                    <i data-lucide="help-circle"></i>
+                </div>
+                <p class="metaphor-content">
+                    <strong>La Metáfora:</strong> Es como un corrector ortográfico o el predictor de texto de tu celular sumamente avanzado que ha leído toda la internet pública. No "comprende" de manera consciente, simplemente sabe qué sílaba debe seguir estadísticamente.
+                </p>
+            </div>
+
+            <div class="section-insight">
+                <div class="insight-icon-wrapper">
+                    <i data-lucide="target"></i>
+                </div>
+                <p class="insight-content">
+                    <strong>Perspectiva del PM:</strong> Debes entender el LLM como un microservicio probabilístico que se integra mediante APIs. El objetivo es estructurar la lógica de negocio a nivel del prompt para guiar sus respuestas de manera determinista y controlable.
+                </p>
+            </div>
+        </article>
+
+        <!-- TERM 2 -->
+        <article class="term-card">
+            <div class="term-header">
+                <div class="term-title-wrapper">
+                    <span class="term-number">02</span>
+                    <h2 class="term-title">Token</h2>
+                </div>
+                <span class="badge-category badge-economics">Economía</span>
+            </div>
+            
+            <p class="section-definition">
+                La unidad mínima de procesamiento matemático lingüístico que un modelo utiliza para analizar el texto. En lugar de palabras completas, segmenta las palabras en fragmentos de caracteres. Por estándar de la industria, <strong>1000 tokens equivalen aproximadamente a 750 palabras</strong>.
+            </p>
+
+            <div class="section-metaphor">
+                <div class="metaphor-icon-wrapper">
+                    <i data-lucide="help-circle"></i>
+                </div>
+                <p class="metaphor-content">
+                    <strong>La Metáfora:</strong> Es como enviar un telegrama antiguo donde la oficina postal te cobra por cada sílaba leída en el mensaje original y por cada sílaba escrita en el telegrama de respuesta.
+                </p>
+            </div>
+
+            <div class="section-insight">
+                <div class="insight-icon-wrapper">
+                    <i data-lucide="target"></i>
+                </div>
+                <p class="insight-content">
+                    <strong>Perspectiva del PM:</strong> Las APIs facturan según el consumo variable de tokens de entrada (Input) y salida (Output). Gestionar eficientemente la longitud del prompt impacta de manera directa los costos de nube y el margen de ganancia de tu producto.
+                </p>
+            </div>
+        </article>
+
+        <!-- TERM 3 -->
+        <article class="term-card">
+            <div class="term-header">
+                <div class="term-title-wrapper">
+                    <span class="term-number">03</span>
+                    <h2 class="term-title">Ventana de Contexto (Context Window)</h2>
+                </div>
+                <span class="badge-category badge-architecture">Arquitectura</span>
+            </div>
+            
+            <p class="section-definition">
+                El límite de memoria de corto plazo de un modelo en una única llamada de API. Representa el volumen máximo de tokens de entrada (instrucción, contexto e historial) y salida (respuesta del modelo) que el sistema puede procesar de forma simultánea.
+            </p>
+
+            <div class="section-metaphor">
+                <div class="metaphor-icon-wrapper">
+                    <i data-lucide="help-circle"></i>
+                </div>
+                <p class="metaphor-content">
+                    <strong>La Metáfora:</strong> El tamaño físico de tu escritorio de oficina. Si es pequeño, solo puedes trabajar con dos hojas a la vez. Si el escritorio es gigante, puedes tener carpetas enteras de reglamentos abiertos, pero te tomará más tiempo encontrar un dato puntual.
+                </p>
+            </div>
+
+            <div class="section-insight">
+                <div class="insight-icon-wrapper">
+                    <i data-lucide="target"></i>
+                </div>
+                <p class="insight-content">
+                    <strong>Perspectiva del PM:</strong> Saturar la ventana de contexto incrementa radicalmente la latencia y los costos de facturación. Tu rol es diseñar tuberías (pipelines) de datos eficientes que inyecten exclusivamente la información crucial que el modelo necesita.
+                </p>
+            </div>
+        </article>
+
+        <!-- TERM 4 -->
+        <article class="term-card">
+            <div class="term-header">
+                <div class="term-title-wrapper">
+                    <span class="term-number">04</span>
+                    <h2 class="term-title">Prompt Engineering</h2>
+                </div>
+                <span class="badge-category badge-engineering">Ingeniería</span>
+            </div>
+            
+            <p class="section-definition">
+                La disciplina de diseñar, estructurar y optimizar los textos de entrada (instrucciones, ejemplos y restricciones) enviados al LLM para obtener respuestas consistentes, precisas y alineadas al comportamiento esperado de producto.
+            </p>
+
+            <div class="section-metaphor">
+                <div class="metaphor-icon-wrapper">
+                    <i data-lucide="help-circle"></i>
+                </div>
+                <p class="metaphor-content">
+                    <strong>La Metáfora:</strong> Darle indicaciones detalladas y con ejemplos resueltos a un pasante sumamente inteligente pero que no tiene memoria de lo que hizo ayer y necesita pautas estrictas para trabajar con calidad corporativa.
+                </p>
+            </div>
+
+            <div class="section-insight">
+                <div class="insight-icon-wrapper">
+                    <i data-lucide="target"></i>
+                </div>
+                <p class="insight-content">
+                    <strong>Perspectiva del PM:</strong> En el software moderno, los prompts no se escriben a mano de forma improvisada. Se diseñan como plantillas backend fijas (Templates) integrando variables dinámicas de consulta y aislando las reglas de negocio del usuario final.
+                </p>
+            </div>
+        </article>
+
+        <!-- TERM 5 -->
+        <article class="term-card">
+            <div class="term-header">
+                <div class="term-title-wrapper">
+                    <span class="term-number">05</span>
+                    <h2 class="term-title">Embedding</h2>
+                </div>
+                <span class="badge-category badge-engineering">Ingeniería</span>
+            </div>
+            
+            <p class="section-definition">
+                Un modelo matemático que convierte textos (palabras, oraciones o párrafos) en un vector numérico de alta dimensión (coordenadas matemáticas decimales). Este vector captura el significado conceptual y semántico del texto.
+            </p>
+
+            <div class="section-metaphor">
+                <div class="metaphor-icon-wrapper">
+                    <i data-lucide="help-circle"></i>
+                </div>
+                <p class="metaphor-content">
+                    <strong>La Metáfora:</strong> Un sistema de coordenadas GPS, pero para ideas en lugar de calles físicas. Las ideas similares (ej. "Carta de porte" y "Despacho de aduana") quedan ubicadas geométricamente muy cerca una de la otra en el mapa conceptual.
+                </p>
+            </div>
+
+            <div class="section-insight">
+                <div class="insight-icon-wrapper">
+                    <i data-lucide="target"></i>
+                </div>
+                <p class="insight-content">
+                    <strong>Perspectiva del PM:</strong> Permiten realizar búsquedas conceptuales (semánticas) avanzadas. Permite al buscador entender qué quiere recuperar el usuario aunque no use las palabras literales correctas o contenga errores ortográficos.
+                </p>
+            </div>
+        </article>
+
+        <!-- TERM 6 -->
+        <article class="term-card">
+            <div class="term-header">
+                <div class="term-title-wrapper">
+                    <span class="term-number">06</span>
+                    <h2 class="term-title">Base de Datos Vectorial</h2>
+                </div>
+                <span class="badge-category badge-architecture">Arquitectura</span>
+            </div>
+            
+            <p class="section-definition">
+                Un motor de base de datos especializado diseñado exclusivamente para almacenar y consultar vectores matemáticos (embeddings) de forma extremadamente veloz. Permite realizar búsquedas de similitud (como el algoritmo de K-Vecinos más Cercanos o KNN) sobre millones de vectores en milisegundos.
+            </p>
+
+            <div class="section-metaphor">
+                <div class="metaphor-icon-wrapper">
+                    <i data-lucide="help-circle"></i>
+                </div>
+                <p class="metaphor-content">
+                    <strong>La Metáfora:</strong> Es una biblioteca gigante donde los libros no están ordenados alfabéticamente ni por código de barra clásico, sino por similitud semántica de su contenido. Los libros de exportación están en un estante junto a los manuales de logística, y muy distantes de los recetarios de cocina.
+                </p>
+            </div>
+
+            <div class="section-insight">
+                <div class="insight-icon-wrapper">
+                    <i data-lucide="target"></i>
+                </div>
+                <p class="insight-content">
+                    <strong>Perspectiva del PM:</strong> Representa la memoria semántica persistente y segura a largo plazo para las aplicaciones de IA corporativas. Herramientas líderes de la industria como Pinecone, Chroma o PGVector son indispensables para inyectar contexto privado sin violar límites de memoria física del LLM.
+                </p>
+            </div>
+        </article>
+
+        <!-- TERM 7 -->
+        <article class="term-card">
+            <div class="term-header">
+                <div class="term-title-wrapper">
+                    <span class="term-number">07</span>
+                    <h2 class="term-title">Chunking &amp; Overlap</h2>
+                </div>
+                <span class="badge-category badge-engineering">Ingeniería</span>
+            </div>
+            
+            <p class="section-definition">
+                <strong>Chunking</strong> es el proceso de cortar documentos extensos (PDFs) en trozos discretos (ej. 250 palabras) para procesarlos de forma ágil. <strong>Overlap</strong> consiste en duplicar un porcentaje de texto (ej. 10%) en los límites de cada trozo para que oraciones contiguas no pierdan sentido.
+            </p>
+
+            <div class="section-metaphor">
+                <div class="metaphor-icon-wrapper">
+                    <i data-lucide="help-circle"></i>
+                </div>
+                <p class="metaphor-content">
+                    <strong>La Metáfora:</strong> Cortar una tira de película física o realizar impresiones continuas, dejas un borde superpuesto en las uniones para asegurarte de que ninguna palabra o número importante (como una fecha o una tarifa logística) quede cortado por la mitad y pierda sentido al ser analizado por separado.
+                </p>
+            </div>
+
+            <div class="section-insight">
+                <div class="insight-icon-wrapper">
+                    <i data-lucide="target"></i>
+                </div>
+                <p class="insight-content">
+                    <strong>Perspectiva del PM:</strong> Configurar el tamaño del chunk y overlap impacta de forma radical en la capacidad del buscador para encontrar el dato exacto. Es una definición técnica clave que el PM valida para optimizar la calidad de recuperación documental.
+                </p>
+            </div>
+        </article>
+
+        <!-- TERM 8 -->
+        <article class="term-card">
+            <div class="term-header">
+                <div class="term-title-wrapper">
+                    <span class="term-number">08</span>
+                    <h2 class="term-title">RAG (Retrieval-Augmented Generation)</h2>
+                </div>
+                <span class="badge-category badge-architecture">Arquitectura</span>
+            </div>
+            
+            <p class="section-definition">
+                Una arquitectura de software que inyecta evidencia factual del negocio en el prompt en tiempo real basándose en búsquedas semánticas sobre una base de datos vectorial de PDFs oficiales. De esta forma, el LLM sintetiza la respuesta con trazabilidad total.
+            </p>
+
+            <div class="section-metaphor">
+                <div class="metaphor-icon-wrapper">
+                    <i data-lucide="help-circle"></i>
+                </div>
+                <p class="metaphor-content">
+                    <strong>La Metáfora:</strong> En lugar de exigir a un estudiante que rinda un examen de regulaciones aduaneras complejas de memoria, le permites responder el examen sentándose con el libro oficial abierto en su escritorio para buscar la respuesta exacta.
+                </p>
+            </div>
+
+            <div class="section-insight">
+                <div class="insight-icon-wrapper">
+                    <i data-lucide="target"></i>
+                </div>
+                <p class="insight-content">
+                    <strong>Perspectiva del PM:</strong> Es la arquitectura estándar de las corporaciones para desplegar bots que no alucinen. Permite actualizar la documentación instantáneamente sin incurrir en entrenamientos caros, y ofrece justificación de fuentes confiables de negocio.
+                </p>
+            </div>
+        </article>
+
+        <!-- TERM 9 -->
+        <article class="term-card">
+            <div class="term-header">
+                <div class="term-title-wrapper">
+                    <span class="term-number">09</span>
+                    <h2 class="term-title">Alucinación (Hallucination)</h2>
+                </div>
+                <span class="badge-category badge-strategy">Estrategia</span>
+            </div>
+            
+            <p class="section-definition">
+                El fenómeno estadístico en el cual un LLM genera con total elocuencia, coherencia ortográfica y asertividad una respuesta, pero conteniendo datos, fechas o afirmaciones de negocio que son fácticamente falsos o inexistentes.
+            </p>
+
+            <div class="section-metaphor">
+                <div class="metaphor-icon-wrapper">
+                    <i data-lucide="help-circle"></i>
+                </div>
+                <p class="metaphor-content">
+                    <strong>La Metáfora:</strong> Un candidato elocuente en televisión respondiendo una pregunta difícil sobre economía con total seguridad y gesticulación perfecta, pero inventando números del presupuesto para no admitir que no sabe la respuesta verdadera.
+                </p>
+            </div>
+
+            <div class="section-insight">
+                <div class="insight-icon-wrapper">
+                    <i data-lucide="target"></i>
+                </div>
+                <p class="insight-content">
+                    <strong>Perspectiva del PM:</strong> El principal riesgo de cara a clientes. Se debe estructurar la ingeniería de prompts y la búsqueda semántica del RAG con validadores e instrucciones del sistema estrictas que prohíban la libre deducción de respuestas.
+                </p>
+            </div>
+        </article>
+
+        <!-- TERM 10 -->
+        <article class="term-card">
+            <div class="term-header">
+                <div class="term-title-wrapper">
+                    <span class="term-number">10</span>
+                    <h2 class="term-title">Golden Dataset</h2>
+                </div>
+                <span class="badge-category badge-strategy">Estrategia</span>
+            </div>
+            
+            <p class="section-definition">
+                Un conjunto curado, inmutable y consensuado de preguntas reales de usuario asociadas a respuestas perfectas certificadas por expertos humanos de negocio. Actúa como el estándar de control de calidad ineludible de la aplicación de IA.
+            </p>
+
+            <div class="section-metaphor">
+                <div class="metaphor-icon-wrapper">
+                    <i data-lucide="help-circle"></i>
+                </div>
+                <p class="metaphor-content">
+                    <strong>La Metáfora:</strong> El examen maestro y la clave de respuestas oficiales que se utiliza para calificar y calificar a todos los alumnos que rinden una prueba de manera estandarizada y justa.
+                </p>
+            </div>
+
+            <div class="section-insight">
+                <div class="insight-icon-wrapper">
+                    <i data-lucide="target"></i>
+                </div>
+                <p class="insight-content">
+                    <strong>Perspectiva del PM:</strong> No se valida una aplicación probabilística de IA de forma manual chateando al azar. Se audita de forma automatizada contra el Golden Dataset en el pipeline de CI/CD para medir con rigurosidad estadística el impacto de cambios técnicos.
+                </p>
+            </div>
+        </article>
+    </div>
+
+    <!-- Initialize Lucide icons on page load -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

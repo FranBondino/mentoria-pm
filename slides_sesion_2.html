@@ -1,0 +1,1937 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA Generativa &amp; Arquitectura RAG - 15 Slides Interactivos</title>
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* CSS RESET & VARIABLES */
+        :root {
+            --bg-primary: #090d16;
+            --bg-secondary: #0f172a;
+            --bg-card: rgba(15, 23, 42, 0.6);
+            --border-card: rgba(255, 255, 255, 0.05);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --color-blue: #3b82f6;
+            --color-blue-glow: rgba(59, 130, 246, 0.4);
+            --color-green: #10b981;
+            --color-green-glow: rgba(16, 185, 129, 0.4);
+            --color-purple: #8b5cf6;
+            --color-purple-glow: rgba(139, 92, 246, 0.4);
+            --color-red: #ef4444;
+            --color-red-glow: rgba(239, 68, 68, 0.4);
+            --color-orange: #f97316;
+            --color-orange-glow: rgba(249, 115, 22, 0.4);
+            --font-display: 'Plus Jakarta Sans', 'Inter', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        /* Lucide Icons Custom styling */
+        .lucide {
+            width: 24px;
+            height: 24px;
+            stroke-width: 2px;
+            color: currentColor;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .icon-sm {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2px;
+        }
+        .icon-lg {
+            width: 32px;
+            height: 32px;
+            stroke-width: 1.5px;
+        }
+        .icon-xl {
+            width: 48px;
+            height: 48px;
+            stroke-width: 1.2px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(30, 27, 75, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(15, 23, 42, 0.6) 0%, transparent 50%);
+        }
+
+        /* PROGRESS BAR */
+        .progress-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.03);
+            z-index: 100;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--color-blue), var(--color-purple));
+            box-shadow: 0 0 10px var(--color-blue-glow);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* MAIN SLIDE CONTAINER */
+        .slides-wrapper {
+            position: relative;
+            flex-grow: 1;
+            width: 100%;
+            height: calc(100vh - 80px);
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            display: none;
+            pointer-events: none;
+            transform: translateX(50px);
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 1.5rem 3rem 3rem;
+            box-sizing: border-box;
+            overflow-y: auto;
+            z-index: 1;
+        }
+
+        /* Collapsible spacers */
+        .slide::before,
+        .slide::after {
+            content: '';
+            flex: 1;
+            min-height: 0.5rem;
+        }
+
+        /* Scrollbar */
+        .slide::-webkit-scrollbar {
+            width: 6px;
+        }
+        .slide::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .slide::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        .slide::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .slide.active {
+            opacity: 1;
+            display: flex;
+            pointer-events: auto;
+            transform: translateX(0);
+            z-index: 10;
+        }
+
+        .slide.prev {
+            transform: translateX(-50px);
+        }
+
+        /* COMMON TEXT COMPONENTS */
+        .slide-title {
+            font-family: var(--font-display);
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            text-align: center;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #ffffff 60%, #c084fc 80%, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .slide-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            max-width: 850px;
+            line-height: 1.5;
+        }
+
+        /* GLASS CARD STYLE */
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* BENTO GRID LAYOUTS */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.2rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        /* SLIDE 1: PORTADA */
+        .cover-container {
+            text-align: center;
+            max-width: 900px;
+            margin-bottom: 2rem;
+        }
+
+        .global-title {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--color-purple);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 1rem;
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: rgba(139, 92, 246, 0.08);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            border-radius: 30px;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.05);
+        }
+
+        .cover-h1 {
+            font-family: var(--font-display);
+            font-size: 3.4rem;
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -0.04em;
+            margin-bottom: 1.2rem;
+            background: linear-gradient(135deg, #ffffff 40%, #c084fc 70%, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cover-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            line-height: 1.5;
+        }
+
+        .badge-session {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            color: #c084fc;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* SLIDE 2: DESMITIFICAR LLMs */
+        .contrast-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .contrast-card {
+            padding: 2rem;
+            position: relative;
+        }
+
+        .contrast-card-left {
+            border-left: 4px solid var(--color-red);
+            background: rgba(239, 68, 68, 0.02);
+        }
+
+        .contrast-card-right {
+            border-left: 4px solid var(--color-green);
+            background: rgba(16, 185, 129, 0.02);
+        }
+
+        .contrast-header {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .contrast-item {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            font-size: 0.92rem;
+            line-height: 1.4;
+        }
+
+        .contrast-item-icon {
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .contrast-item-text strong {
+            display: block;
+            color: #ffffff;
+            margin-bottom: 0.15rem;
+        }
+
+        .contrast-item-text span {
+            color: var(--text-secondary);
+        }
+
+        /* SLIDE 3: TOKENS INTEGRACIÓN INTERACTIVA */
+        .token-visual-box {
+            background: rgba(9, 13, 22, 0.6);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 1.2rem;
+            font-family: monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-top: 1.2rem;
+            min-height: 80px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .token-span {
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .token-col-1 { background-color: rgba(59, 130, 246, 0.25); border: 1px solid rgba(59, 130, 246, 0.4); color: #93c5fd; }
+        .token-col-2 { background-color: rgba(139, 92, 246, 0.25); border: 1px solid rgba(139, 92, 246, 0.4); color: #c084fc; }
+        .token-col-3 { background-color: rgba(249, 115, 22, 0.25); border: 1px solid rgba(249, 115, 22, 0.4); color: #fdbb74; }
+        .token-col-4 { background-color: rgba(16, 185, 129, 0.25); border: 1px solid rgba(16, 185, 129, 0.4); color: #a7f3d0; }
+
+        .btn-action-sm {
+            padding: 0.4rem 1rem;
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 700;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 0.8rem;
+        }
+
+        .btn-action-sm:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* SLIDE 4: HEATMAP LOST IN THE MIDDLE */
+        .heatmap-container {
+            width: 100%;
+            background: rgba(9, 13, 22, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .heatmap-bar {
+            height: 40px;
+            border-radius: 8px;
+            background: linear-gradient(90deg, 
+                var(--color-green) 0%, 
+                var(--color-blue) 15%, 
+                #1e293b 50%, 
+                var(--color-blue) 85%, 
+                var(--color-green) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .heatmap-label-box {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .heatmap-cursor {
+            position: absolute;
+            top: -6px;
+            width: 4px;
+            height: 52px;
+            background: #ffffff;
+            box-shadow: 0 0 8px #ffffff;
+            cursor: pointer;
+        }
+
+        /* SLIDE 6: METADATA FILTERING MOCK */
+        .filter-mock-container {
+            background: rgba(9, 13, 22, 0.4);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .filter-header-mock {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .filter-tag-mock {
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-tag-mock.active {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.3);
+            color: #ffffff;
+        }
+
+        /* SLIDE 7: CHUNKING & OVERLAP */
+        .chunking-container {
+            background: rgba(9, 13, 22, 0.4);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .chunk-block {
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 0.8rem;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            background: rgba(255,255,255,0.01);
+            position: relative;
+        }
+
+        .overlap-highlight {
+            background-color: rgba(249, 115, 22, 0.15);
+            border: 1px dashed rgba(249, 115, 22, 0.3);
+            border-radius: 4px;
+            padding: 0 4px;
+            color: #fdba74;
+        }
+
+        /* SLIDE 12: DECISION TREE ALUCINACIONES */
+        .decision-tree-container {
+            background: rgba(9, 13, 22, 0.4);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 1.5rem;
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .decision-node {
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .decision-flow-row {
+            display: flex;
+            gap: 2rem;
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* RAG FLOW GRAPHICS */
+        .rag-interactive-container {
+            width: 100%;
+            max-width: 1100px;
+            background: rgba(15, 23, 42, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .rag-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 0.8rem;
+        }
+
+        .rag-tab {
+            padding: 0.5rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .rag-tab.active {
+            color: var(--color-purple);
+            background: rgba(139, 92, 246, 0.06);
+            border-color: rgba(139, 92, 246, 0.15);
+        }
+
+        .rag-steps-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            height: 120px;
+            margin-bottom: 1rem;
+        }
+
+        .rag-flow-line {
+            position: absolute;
+            top: 30px;
+            left: 10%;
+            width: 80%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.05);
+            z-index: 1;
+        }
+
+        .rag-flow-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+            width: 140px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .rag-node-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #0f172a;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            transition: all 0.4s ease;
+        }
+
+        .rag-flow-node.active .rag-node-circle {
+            border-color: var(--color-purple);
+            background: rgba(139, 92, 246, 0.15);
+            color: #ffffff;
+            box-shadow: 0 0 20px var(--color-purple-glow);
+            transform: scale(1.1);
+        }
+
+        .rag-node-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .rag-node-desc {
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            margin-top: 0.15rem;
+        }
+
+        .rag-step-explanation-box {
+            background: rgba(9, 13, 22, 0.4);
+            border-radius: 12px;
+            padding: 1.2rem;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            text-align: left;
+            min-height: 80px;
+        }
+
+        .rag-explanation-title {
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--color-purple);
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .rag-explanation-text {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* BENTO & PRD GRID */
+        .prd-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 1.2rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .prd-card-title {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .prd-card-desc {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            line-height: 1.45;
+        }
+
+        .prd-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .prd-badge-blue { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa; }
+        .prd-badge-purple { background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.2); color: #c084fc; }
+
+        .prd-item-list {
+            margin-top: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .prd-item-row {
+            padding: 0.5rem 0.8rem;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            font-size: 0.82rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .prd-item-label {
+            font-weight: 600;
+            color: #f1f5f9;
+        }
+
+        .prd-item-val {
+            color: var(--text-secondary);
+        }
+
+        /* GOBERNANZA & ROLEPLAY */
+        .governance-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .gov-card {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 1.5rem;
+        }
+
+        .gov-icon {
+            padding: 0.6rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .gov-card-security .gov-icon { background: rgba(59, 130, 246, 0.1); color: var(--color-blue); }
+        .gov-card-accuracy .gov-icon { background: rgba(16, 185, 129, 0.1); color: var(--color-green); }
+        .gov-card-evals .gov-icon { background: rgba(249, 115, 22, 0.1); color: var(--color-orange); }
+
+        .gov-title {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .gov-desc {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            line-height: 1.45;
+        }
+
+        .interview-container {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .interview-qa-card {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+        }
+
+        .interview-q {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .interview-q-icon {
+            color: var(--color-orange);
+            flex-shrink: 0;
+        }
+
+        .interview-a {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            border-left: 3px solid var(--color-purple);
+            padding-left: 1rem;
+            margin-left: 0.2rem;
+        }
+
+        .interview-a strong {
+            color: #ffffff;
+        }
+
+        /* ROADMAP */
+        .roadmap-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            gap: 1.2rem;
+            width: 100%;
+            max-width: 1100px;
+            margin-top: 1rem;
+        }
+
+        .roadmap-card {
+            flex: 1;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        .roadmap-card.active {
+            border-color: rgba(139, 92, 246, 0.3);
+            background: rgba(139, 92, 246, 0.03);
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.05);
+        }
+
+        .roadmap-card.done {
+            border-color: rgba(16, 185, 129, 0.2);
+            background: rgba(16, 185, 129, 0.01);
+        }
+
+        .roadmap-step {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.8rem;
+        }
+
+        .roadmap-card.active .roadmap-step { color: var(--color-purple); }
+        .roadmap-card.done .roadmap-step { color: var(--color-green); }
+
+        .roadmap-title {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .roadmap-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .consigna-banner {
+            width: 100%;
+            max-width: 1100px;
+            margin-top: 1.5rem;
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.05), rgba(59, 130, 246, 0.05));
+            border-left: 4px solid var(--color-purple);
+            padding: 1.2rem 1.5rem;
+            border-radius: 0 16px 16px 0;
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+
+        .consigna-banner h4 {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* VECTOR SPACE SLIDE 5 */
+        .vector-space {
+            height: 180px;
+            margin: 1rem auto;
+            position: relative;
+            max-width: 600px;
+            border-left: 2px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .vector-dot {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .vector-dot:hover {
+            transform: scale(1.5);
+        }
+
+        .vector-dot::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 0.15rem 0.4rem;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            color: #ffffff;
+        }
+
+        .vector-visualization {
+            grid-column: span 3;
+            background: rgba(9, 13, 22, 0.5);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .vector-axis-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* CONTROLS BAR (BOTTOM) */
+        .controls-bar {
+            height: 80px;
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-card);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 3rem;
+            z-index: 100;
+            box-shadow: 0 -8px 32px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .controls-left, .controls-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-control {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            padding: 0.6rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-control:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .btn-control:active:not(:disabled) {
+            transform: translateY(1px);
+        }
+
+        .btn-control:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .slides-menu-btn {
+            position: relative;
+        }
+
+        .slides-dropdown {
+            position: absolute;
+            bottom: 60px;
+            right: 0;
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5);
+            width: 280px;
+            max-height: 380px;
+            overflow-y: auto;
+            display: none;
+            z-index: 200;
+            padding: 0.5rem;
+        }
+
+        .slides-dropdown.open {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 0.6rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+        }
+
+        .dropdown-item.active {
+            background: rgba(139, 92, 246, 0.08);
+            color: #c084fc;
+            font-weight: 600;
+        }
+
+        .dropdown-item-num {
+            font-family: var(--font-display);
+            font-weight: 700;
+            opacity: 0.5;
+            width: 15px;
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 1rem 1.5rem 5rem;
+            }
+            .slide-title {
+                font-size: 1.6rem;
+            }
+            .grid-3, .grid-2, .contrast-container, .bento-grid-2, .prd-grid, .governance-container, .roadmap-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .controls-bar {
+                padding: 0 1rem;
+                height: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PROGRESS BAR -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <!-- MAIN SLIDES CONTAINER -->
+    <div class="slides-wrapper">
+
+        <!-- SLIDE 1: PORTADA -->
+        <div class="slide active" id="slide-1">
+            <div class="cover-container">
+                <span class="global-title">De la Gestión Tradicional a la Era de la IA</span>
+                <h1 class="cover-h1">IA Generativa &amp; Arquitectura RAG</h1>
+                <p class="cover-subtitle">Sesión 2: Cómo estructurar propuestas estratégicas de Inteligencia Artificial Generativa y entender la arquitectura RAG basada en datos privados.</p>
+                <div class="badge-session">
+                    <i data-lucide="brain" class="icon-sm"></i>
+                    <span>15 Slides de Alta Fidelidad</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: DESMITIFICANDO LLMs -->
+        <div class="slide" id="slide-2">
+            <h2 class="slide-title">Desmitificando los LLMs</h2>
+            <p class="slide-subtitle">Separando la ficción mediática de la realidad científica y probabilística de las APIs.</p>
+            
+            <div class="contrast-container">
+                <div class="glass-card contrast-card contrast-card-left">
+                    <h3 class="contrast-header" style="color: var(--color-red);">
+                        <i data-lucide="x-circle"></i>
+                        <span>El Mito: "Cerebro Mágico"</span>
+                    </h3>
+                    <div class="contrast-item">
+                        <i data-lucide="alert-triangle" class="contrast-item-icon" style="color: var(--color-red);"></i>
+                        <div class="contrast-item-text">
+                            <strong>Razonamiento consciente:</strong>
+                            <span>Creer que la IA entiende, deduce y razona de forma consciente y autónoma.</span>
+                        </div>
+                    </div>
+                    <div class="contrast-item">
+                        <i data-lucide="alert-triangle" class="contrast-item-icon" style="color: var(--color-red);"></i>
+                        <div class="contrast-item-text">
+                            <strong>Base de datos omnisciente:</strong>
+                            <span>Asumir que conoce las normativas privadas y contratos de tu compañía por defecto.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card contrast-card contrast-card-right">
+                    <h3 class="contrast-header" style="color: var(--color-green);">
+                        <i data-lucide="check-circle"></i>
+                        <span>La Realidad: Next-Token Prediction</span>
+                    </h3>
+                    <div class="contrast-item">
+                        <i data-lucide="activity" class="contrast-item-icon" style="color: var(--color-green);"></i>
+                        <div class="contrast-item-text">
+                            <strong>Motor probabilístico:</strong>
+                            <span>El modelo predice cuál es el sub-carácter o token estadísticamente más probable que debe seguir a un texto.</span>
+                        </div>
+                    </div>
+                    <div class="contrast-item">
+                        <i data-lucide="database" class="contrast-item-icon" style="color: var(--color-green);"></i>
+                        <div class="contrast-item-text">
+                            <strong>Alucinación factual:</strong>
+                            <span>Ante un vacío de datos, el LLM generará una respuesta elocuente pero ficticia para completar el patrón.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: LA ECONOMÍA DE LA IA: TOKENS -->
+        <div class="slide" id="slide-3">
+            <h2 class="slide-title">Tokens: La Economía de la IA</h2>
+            <p class="slide-subtitle">Los modelos de lenguaje no procesan palabras completas. Conoce cómo impacta la segmentación semántica en tus costos.</p>
+            
+            <div class="grid-2">
+                <div class="glass-card">
+                    <h3 class="bento-card-title" style="margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="coins" style="color: var(--color-orange);"></i>
+                        <span>La Unidad de Facturación</span>
+                    </h3>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+                        Aproximadamente <strong>1000 tokens equivalen a 750 palabras</strong>. Las APIs cobran tarifas asimétricas: los tokens del prompt (Input) son mucho más baratos que los tokens generados por el modelo (Output).
+                    </p>
+                    <button class="btn-action-sm" onclick="toggleTokenizeDemo()">Tokenizar Texto en Vivo</button>
+                    
+                    <div class="token-visual-box" id="token-box">
+                        Hacé clic en el botón para ver cómo la IA segmenta y tokeniza las palabras.
+                    </div>
+                </div>
+
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 class="bento-card-title" style="margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="zap" style="color: var(--color-blue);"></i>
+                            <span>Prompt Caching</span>
+                        </h3>
+                        <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+                            Una optimización a nivel de arquitectura backend. Almacena en caché los prompts extensos del sistema que no cambian (ej. las directrices y manuales base), reduciendo costos de facturación de entrada hasta un <strong>50%</strong> y acelerando las respuestas.
+                        </p>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.01); border-left: 3px solid var(--color-blue); padding: 0.8rem; border-radius: 4px; font-size: 0.82rem; margin-top: 1rem;">
+                        <strong>Perspectiva PM:</strong> Controlar el solapamiento de tokens y estructurar prompts de sistema eficientes evita que el presupuesto de tu producto se consuma linealmente.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: VENTANAS DE CONTEXTO & LOST IN THE MIDDLE -->
+        <div class="slide" id="slide-4">
+            <h2 class="slide-title">Ventanas de Contexto &amp; Sesgo de Atención</h2>
+            <p class="slide-subtitle">Las limitaciones de memoria en prompts masivos y cómo los LLMs pierden la atención en el centro geométrico del contexto.</p>
+            
+            <div class="grid-2">
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 class="bento-card-title" style="margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="layout" style="color: var(--color-purple);"></i>
+                            <span>Ventana de Contexto (Límite Físico)</span>
+                        </h3>
+                        <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+                            Define la memoria a corto plazo del modelo. Aunque las ventanas modernas son masivas, el rendimiento de la IA se degrada drásticamente cuanto más grande es el contexto inyectado en una sola llamada de API.
+                        </p>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.01); border-left: 3px solid var(--color-purple); padding: 0.8rem; border-radius: 4px; font-size: 0.82rem; margin-top: 1rem;">
+                        <strong>El desk-analogy:</strong> Si tu escritorio de trabajo es infinito, puedes poner 50 manuales abiertos. Sin embargo, encontrar un dato específico en el manual central te llevará mucho más tiempo (latencia).
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h3 class="bento-card-title" style="margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="trending-down" style="color: var(--color-red);"></i>
+                        <span>El Fenómeno "Lost in the Middle"</span>
+                    </h3>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.45;">
+                        Los LLMs recuerdan de forma sobresaliente (99% de precisión) la información ubicada al <strong>inicio</strong> y al <strong>final</strong> de la ventana de contexto, pero sufren una pérdida de retención del <strong>40%</strong> en los datos del medio.
+                    </p>
+                    
+                    <div class="heatmap-container">
+                        <div class="heatmap-bar">
+                            <div class="heatmap-cursor" style="left: 50%;"></div>
+                        </div>
+                        <div class="heatmap-label-box">
+                            <span style="color: var(--color-green);">Inicio (99%)</span>
+                            <span style="color: var(--color-red);">Medio (40%)</span>
+                            <span style="color: var(--color-green);">Final (99%)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: EMBEDDINGS -->
+        <div class="slide" id="slide-5">
+            <h2 class="slide-title">Embeddings: Traducción Semántica</h2>
+            <p class="slide-subtitle">La clave geométrica para que las computadoras entiendan el significado conceptual y las asociaciones del lenguaje natural.</p>
+            
+            <div class="grid-3">
+                <div class="glass-card text-center" style="padding: 1.2rem;">
+                    <div class="vector-step-number">01</div>
+                    <h3 class="vector-step-title">Text Input</h3>
+                    <p class="vector-step-desc">Se ingresa una frase o párrafo: "Liberar despacho de granos en Rosario".</p>
+                </div>
+                <div class="glass-card text-center" style="padding: 1.2rem;">
+                    <div class="vector-step-number">02</div>
+                    <h3 class="vector-step-title">Embedding Model</h3>
+                    <p class="vector-step-desc">El modelo traduce el texto en una lista de coordenadas matemáticas (1536 números).</p>
+                </div>
+                <div class="glass-card text-center" style="padding: 1.2rem;">
+                    <div class="vector-step-number">03</div>
+                    <h3 class="vector-step-title">Mapa de Ideas</h3>
+                    <p class="vector-step-desc">Las ideas similares se ubican geométricamente cerca en el espacio de alta dimensión.</p>
+                </div>
+
+                <div class="vector-visualization glass-card">
+                    <span class="vector-axis-label" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%) rotate(-90deg);">Dimensión Logística (Y)</span>
+                    <div class="vector-space">
+                        <div class="vector-dot" style="left: 15%; bottom: 75%; background: var(--color-blue);" data-label="Puerto de Rosario"></div>
+                        <div class="vector-dot" style="left: 20%; bottom: 70%; background: var(--color-blue);" data-label="Terminal Portuaria"></div>
+                        <div class="vector-dot" style="left: 12%; bottom: 65%; background: var(--color-blue);" data-label="Despacho de Aduana"></div>
+                        
+                        <div class="vector-dot" style="left: 75%; bottom: 20%; background: var(--color-green);" data-label="Carga de Granos"></div>
+                        <div class="vector-dot" style="left: 80%; bottom: 25%; background: var(--color-green);" data-label="Soja y Maíz"></div>
+                        <div class="vector-dot" style="left: 72%; bottom: 15%; background: var(--color-green);" data-label="Carta de Porte"></div>
+                        
+                        <div class="vector-dot" style="left: 45%; bottom: 50%; background: var(--color-red);" data-label="Automóvil Deportivo"></div>
+                    </div>
+                    <span class="vector-axis-label" style="display: block; margin-top: 0.5rem;">Dimensión Agrícola (X)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: BASES VECTORIALES & METADATA FILTERING -->
+        <div class="slide" id="slide-6">
+            <h2 class="slide-title">Bases Vectoriales &amp; Metadata Filtering</h2>
+            <p class="slide-subtitle">La memoria a largo plazo persistente de la IA y cómo acelerar búsquedas reduciendo ruido mediante filtros semánticos.</p>
+            
+            <div class="grid-2">
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 class="bento-card-title" style="margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="database" style="color: var(--color-purple);"></i>
+                            <span>Persistencia Semántica</span>
+                        </h3>
+                        <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+                            Las bases de datos vectoriales (Pinecone, PGVector) guardan millones de embeddings y permiten realizar búsquedas semánticas (similitud de coseno) en milisegundos.
+                        </p>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.01); border-left: 3px solid var(--color-purple); padding: 0.8rem; border-radius: 4px; font-size: 0.82rem; margin-top: 1rem;">
+                        <strong>Perspectiva PM:</strong> La base vectorial constituye el activo estratégico central de conocimiento intelectual privado de tu compañía.
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h3 class="bento-card-title" style="margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="filter" style="color: var(--color-blue);"></i>
+                        <span>Metadata Filtering</span>
+                    </h3>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.45;">
+                        Pre-filtrar los datos vectoriales por metadatos estructurados (puerto, año, despachante) para limitar la búsqueda semántica y optimizar la precisión de recuperación.
+                    </p>
+                    
+                    <div class="filter-mock-container">
+                        <div class="filter-header-mock">
+                            <span class="filter-tag-mock active" id="f-tag-1" onclick="toggleMockFilter('f-tag-1')">Puerto: Rosario</span>
+                            <span class="filter-tag-mock" id="f-tag-2" onclick="toggleMockFilter('f-tag-2')">Año: 2026</span>
+                            <span class="filter-tag-mock" id="f-tag-3" onclick="toggleMockFilter('f-tag-3')">Doc: Aduana</span>
+                        </div>
+                        <p style="font-size: 0.72rem; color: var(--text-secondary); font-family: monospace;" id="filter-status-text">
+                            Ejecutando búsqueda semántica optimizada filtrando en: [Puerto: Rosario]
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: CHUNKING & OVERLAP -->
+        <div class="slide" id="slide-7">
+            <h2 class="slide-title">Chunking: Estrategias de Fragmentación</h2>
+            <p class="slide-subtitle">Cómo cortar documentos extensos sin quebrar el sentido gramatical y la importancia del solapamiento.</p>
+            
+            <div class="grid-2">
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 class="bento-card-title" style="margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="scissors" style="color: var(--color-orange);"></i>
+                            <span>Estrategias de Segmentación</span>
+                        </h3>
+                        <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+                            Dividir PDFs complejos (como un reglamento aduanero) en trozos discretos de 1000 caracteres. Si el corte ocurre en la mitad de una regla de tarifas, la información se vuelve inútil.
+                        </p>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.01); border-left: 3px solid var(--color-orange); padding: 0.8rem; border-radius: 4px; font-size: 0.82rem; margin-top: 1rem;">
+                        <strong>Balance Crítico:</strong> Mucho chunking fragmenta la coherencia. Poco chunking satura el contexto y encarece las llamadas de API.
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h3 class="bento-card-title" style="margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="layers" style="color: var(--color-blue);"></i>
+                        <span>Overlap (Solapamiento)</span>
+                    </h3>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.45;">
+                        Duplicar el 10% del texto del final de un fragmento A al inicio del fragmento B para actuar como un "puente" semántico.
+                    </p>
+                    
+                    <div class="chunking-container">
+                        <div class="chunk-block" style="margin-bottom: 0.5rem;">
+                            <strong>Fragmento A:</strong> "Se requiere autorización para la barcaza en el puerto de Rosario antes del <span class="overlap-highlight">despacho de aduana del puerto</span>..."
+                        </div>
+                        <div class="chunk-block">
+                            <strong>Fragmento B:</strong> "...<span class="overlap-highlight">despacho de aduana del puerto</span>, que aplica aranceles preferenciales para la carga de granos."
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: RAG FASE 1 - INGESTION -->
+        <div class="slide" id="slide-8">
+            <h2 class="slide-title">Anatomía de RAG: Fase 1 (Ingestión)</h2>
+            <p class="slide-subtitle">La etapa Batch de procesamiento y almacenamiento offline del conocimiento privado del negocio.</p>
+            
+            <div class="rag-interactive-container">
+                <div class="rag-tabs">
+                    <div class="rag-tab active" onclick="switchRagSlide(8)">Fase 1: Ingestión del Dato (Batch)</div>
+                    <div class="rag-tab" onclick="switchRagSlide(9)">Fase 2: Consulta de Usuario (Live)</div>
+                </div>
+
+                <div class="rag-steps-flow">
+                    <div class="rag-flow-line"></div>
+                    
+                    <div class="rag-flow-node active" onclick="highlightRagStep(0, 'ingestion')">
+                        <div class="rag-node-circle">📄</div>
+                        <span class="rag-node-title">1. Documentos</span>
+                        <span class="rag-node-desc">PDFs de Aduana</span>
+                    </div>
+                    <div class="rag-flow-node" onclick="highlightRagStep(1, 'ingestion')">
+                        <div class="rag-node-circle">✂️</div>
+                        <span class="rag-node-title">2. Chunking</span>
+                        <span class="rag-node-desc">Trozos de 250 pal.</span>
+                    </div>
+                    <div class="rag-flow-node" onclick="highlightRagStep(2, 'ingestion')">
+                        <div class="rag-node-circle">🧬</div>
+                        <span class="rag-node-title">3. Embedding</span>
+                        <span class="rag-node-desc">Vectorización</span>
+                    </div>
+                    <div class="rag-flow-node" onclick="highlightRagStep(3, 'ingestion')">
+                        <div class="rag-node-circle">💾</div>
+                        <span class="rag-node-title">4. Vector DB</span>
+                        <span class="rag-node-desc">Guardado en Pinecone</span>
+                    </div>
+                </div>
+
+                <div class="rag-step-explanation-box">
+                    <div class="rag-explanation-title" id="rag-exp-title-ingestion">
+                        <i data-lucide="info" class="icon-sm"></i>
+                        <span>Paso 1: Documentación de Negocio</span>
+                    </div>
+                    <p class="rag-explanation-text" id="rag-exp-text-ingestion">
+                        Se recopilan los documentos oficiales y privados que regulan el negocio (ej. PDFs de aduanas, normativas portuarias, reglamentos internos de Cargill). Estos archivos actúan como la fuente única de verdad (Ground Truth).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: RAG FASE 2 - CONSULTA -->
+        <div class="slide" id="slide-9">
+            <h2 class="slide-title">Anatomía de RAG: Fase 2 (Consulta)</h2>
+            <p class="slide-subtitle">Cómo el sistema RAG orquesta en tiempo real la búsqueda semántica para alimentar al LLM con evidencia física.</p>
+            
+            <div class="rag-interactive-container">
+                <div class="rag-tabs">
+                    <div class="rag-tab" onclick="switchRagSlide(8)">Fase 1: Ingestión del Dato (Batch)</div>
+                    <div class="rag-tab active" onclick="switchRagSlide(9)">Fase 2: Consulta de Usuario (Live)</div>
+                </div>
+
+                <div class="rag-steps-flow">
+                    <div class="rag-flow-line"></div>
+                    
+                    <div class="rag-flow-node active" onclick="highlightRagStep(0, 'query')">
+                        <div class="rag-node-circle">❓</div>
+                        <span class="rag-node-title">1. Pregunta</span>
+                        <span class="rag-node-desc">Consulta de usuario</span>
+                    </div>
+                    <div class="rag-flow-node" onclick="highlightRagStep(1, 'query')">
+                        <div class="rag-node-circle">🔍</div>
+                        <span class="rag-node-title">2. Recuperación</span>
+                        <span class="rag-node-desc">Búsqueda Semántica</span>
+                    </div>
+                    <div class="rag-flow-node" onclick="highlightRagStep(2, 'query')">
+                        <div class="rag-node-circle">📝</div>
+                        <span class="rag-node-title">3. Prompt Enriquecido</span>
+                        <span class="rag-node-desc">Pregunta + Contexto</span>
+                    </div>
+                    <div class="rag-flow-node" onclick="highlightRagStep(3, 'query')">
+                        <div class="rag-node-circle">🤖</div>
+                        <span class="rag-node-title">4. LLM &amp; Respuesta</span>
+                        <span class="rag-node-desc">Generación precisa</span>
+                    </div>
+                </div>
+
+                <div class="rag-step-explanation-box">
+                    <div class="rag-explanation-title" id="rag-exp-title-query">
+                        <i data-lucide="info" class="icon-sm"></i>
+                        <span>Paso 1: Pregunta en Lenguaje Natural</span>
+                    </div>
+                    <p class="rag-explanation-text" id="rag-exp-text-query">
+                        El usuario realiza una pregunta sobre el negocio, por ejemplo: "¿Qué documentación de aduana se requiere para habilitar una barcaza en el puerto de Rosario?".
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: EL MOCK PRD -->
+        <div class="slide" id="slide-10">
+            <h2 class="slide-title">Taller: El Mock PRD (Cargill AI)</h2>
+            <p class="slide-subtitle">Construcción práctica de las especificaciones y del backlog del "Cargill Customs Bot".</p>
+            
+            <div class="prd-grid">
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div class="prd-card-title">
+                            <i data-lucide="file-text" style="color: var(--color-blue);"></i>
+                            <span>Especificación del Producto</span>
+                        </div>
+                        <p class="prd-card-desc">
+                            Asistente RAG que asiste a los analistas comerciales y despachantes de Cargill a verificar normativas portuarias antes de movilizar mercadería.
+                        </p>
+                    </div>
+                    
+                    <div class="prd-item-list">
+                        <div class="prd-item-row">
+                            <span class="prd-item-label">Core Feature</span>
+                            <span class="prd-item-val">Auditoría semántica de aduanas fluviales</span>
+                        </div>
+                        <div class="prd-item-row">
+                            <span class="prd-item-label">Data Inputs</span>
+                            <span class="prd-item-val">Reglamentos de terminales y resoluciones oficiales</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div class="prd-card-title">
+                            <i data-lucide="activity" style="color: var(--color-purple);"></i>
+                            <span>Definición de Terminado de IA (DoD)</span>
+                        </div>
+                        <p class="prd-card-desc">
+                            Reglas e indicadores de aceptación técnica del bot.
+                        </p>
+                    </div>
+                    
+                    <div class="prd-item-list" style="margin-top: 1rem;">
+                        <div class="prd-item-row">
+                            <span class="prd-item-label">Chunking / Overlap</span>
+                            <span class="prd-badge prd-badge-blue">1000 ch / 10% overlap</span>
+                        </div>
+                        <div class="prd-item-row">
+                            <span class="prd-item-label">Vector Database</span>
+                            <span class="prd-badge prd-badge-purple">Pinecone (Vectores 1536d)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: GOBERNANZA & PRIVACIDAD -->
+        <div class="slide" id="slide-11">
+            <h2 class="slide-title">Gobernanza de IA &amp; Data Leakage</h2>
+            <p class="slide-subtitle">Cómo asegurar que la información corporativa sensible no sea filtrada y se procese bajo estándares estrictos.</p>
+            
+            <div class="governance-container">
+                <div class="glass-card gov-card gov-card-security" style="grid-column: span 3; display: flex; flex-direction: row; gap: 1.5rem; align-items: center; text-align: left;">
+                    <div class="gov-icon" style="flex-shrink: 0; margin-bottom: 0;">
+                        <i data-lucide="lock" class="icon-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="gov-title">Uso Obligatorio de Enterprise SLAs</h3>
+                        <p class="gov-desc">
+                            Las políticas de seguridad exigen consumir modelos bajo contratos corporativos especiales (ej. Azure OpenAI o APIs Enterprise con retención de datos en cero). Esto garantiza que el prompt introducido no sea retenido, analizado, ni utilizado para re-entrenar modelos públicos comerciales.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: MITIGACIÓN DE ALUCINACIONES -->
+        <div class="slide" id="slide-12">
+            <h2 class="slide-title">Mitigación de Alucinaciones: Umbrales</h2>
+            <p class="slide-subtitle">El control lógico de confianza semántica para obligar al bot a abstenerse si no dispone de registros.</p>
+            
+            <div class="grid-2">
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 class="bento-card-title" style="margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="shield-alert" style="color: var(--color-red);"></i>
+                            <span>Confidence Thresholds</span>
+                        </h3>
+                        <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+                            Cada búsqueda semántica en la base de datos vectorial devuelve una puntuación de similitud semántica. Como PMs, calibraremos un umbral estricto (ej. <strong>0.75</strong>).
+                        </p>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.01); border-left: 3px solid var(--color-red); padding: 0.8rem; border-radius: 4px; font-size: 0.82rem; margin-top: 1rem;">
+                        <strong>Lógica No-Answer:</strong> Si el score es menor al umbral, el bot se abstiene e indica de forma segura: "No dispongo de esa información oficial en mi base documental".
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h3 class="bento-card-title" style="margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="git-branch" style="color: var(--color-blue);"></i>
+                        <span>Flujo de Decisión Lógica</span>
+                    </h3>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 0.8rem;">
+                        Así es la compuerta de seguridad lógica que protege el sistema:
+                    </p>
+                    
+                    <div class="decision-tree-container">
+                        <div class="decision-node">Pregunta del Usuario</div>
+                        <div class="decision-node" style="background: rgba(139,92,246,0.1); border-color: var(--color-purple);">Búsqueda Vectorial (Score)</div>
+                        <div class="decision-flow-row">
+                            <div class="decision-node" style="background: rgba(16,185,129,0.15); border-color: var(--color-green);">Score &ge; 0.75<br><span style="font-size:0.7rem; color:var(--text-secondary);">Envia al LLM</span></div>
+                            <div class="decision-node" style="background: rgba(239,68,68,0.15); border-color: var(--color-red);">Score &lt; 0.75<br><span style="font-size:0.7rem; color:var(--text-secondary);">Bloquea y Rechaza</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 13: EVALUACIÓN DE CALIDAD: GOLDEN DATASET -->
+        <div class="slide" id="slide-13">
+            <h2 class="slide-title">Evaluación de Calidad: Golden Dataset</h2>
+            <p class="slide-subtitle">Cómo estructurar auditorías cuantitativas sistemáticas sobre software probabilístico de IA.</p>
+            
+            <div class="governance-container">
+                <div class="glass-card gov-card gov-card-evals">
+                    <div class="gov-icon">
+                        <i data-lucide="target" class="icon-lg"></i>
+                    </div>
+                    <h3 class="gov-title">Golden Dataset</h3>
+                    <p class="gov-desc">
+                        Un conjunto curado de 50 a 100 preguntas típicas asociadas a respuestas perfectas certificadas por expertos del dominio, utilizado como benchmark del producto.
+                    </p>
+                </div>
+
+                <div class="glass-card gov-card gov-card-accuracy">
+                    <div class="gov-icon">
+                        <i data-lucide="activity" class="icon-lg"></i>
+                    </div>
+                    <h3 class="gov-title">Evals en CI/CD</h3>
+                    <p class="gov-desc">
+                        Ante cada cambio de prompt o base de datos, corremos el Golden Dataset en el pipeline de CI/CD para medir estadísticas de fidelidad al contexto (Context Adherence) de forma objetiva.
+                    </p>
+                </div>
+
+                <div class="glass-card gov-card gov-card-security">
+                    <div class="gov-icon">
+                        <i data-lucide="eye" class="icon-lg"></i>
+                    </div>
+                    <h3 class="gov-title">Observabilidad Activa</h3>
+                    <p class="gov-desc">
+                        Monitoreo continuo de latencia, costo en dólares de tokens y desvíos semánticos en producción mediante herramientas especializadas como Langfuse o Arize.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 14: ROLEPLAY DE ENTREVISTA -->
+        <div class="slide" id="slide-14">
+            <h2 class="slide-title">Roleplay: Defensa Técnica de IA</h2>
+            <p class="slide-subtitle">Entrena tu discurso estratégico para entrevistas técnicas con reclutadores de IT y líderes de ingeniería.</p>
+            
+            <div class="interview-container">
+                <div class="interview-qa-card">
+                    <h3 class="interview-q">
+                        <i data-lucide="help-circle" class="interview-q-icon"></i>
+                        <span>¿Por qué no realizar Fine-Tuning para alimentar al modelo con nuestras normativas portuarias?</span>
+                    </h3>
+                    <p class="interview-a">
+                        <strong>Respuesta Estrella:</strong> "El Fine-Tuning no es adecuado para inyectar conocimientos fácticos cambiantes, ya que el modelo sigue alucinando de memoria estática. El Fine-Tuning se utiliza para ajustar estilo, tono o formatos de salida estructurados. Para garantizar precisión absoluta y actualización en tiempo real, la propuesta correcta consiste en implementar una arquitectura <strong>RAG</strong> combinada con una <strong>base de datos vectorial</strong>."
+                    </p>
+                </div>
+
+                <div class="interview-qa-card">
+                    <h3 class="interview-q">
+                        <i data-lucide="help-circle" class="interview-q-icon"></i>
+                        <span>¿Cómo mitigan los costos de API si el volumen de usuarios escala linealmente?</span>
+                    </h3>
+                    <p class="interview-a">
+                        <strong>Respuesta Estrella:</strong> "Implementamos tres estrategias de optimización: 1) <strong>Prompt Caching</strong> para reducir la facturación de entrada de reglas fijas; 2) <strong>Caché Semántica</strong> a nivel de backend para responder consultas repetidas frecuentes sin llamar al LLM; y 3) Políticas estrictas de <strong>Rate Limits</strong> por perfil de usuario corporativo."
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 15: PROXIMOS PASOS & RUTA DE APRENDIZAJE -->
+        <div class="slide" id="slide-15">
+            <h2 class="slide-title">Tu Ruta y Valor como IT Product/Project Manager</h2>
+            <p class="slide-subtitle">Consolida tu perfil técnico diferenciando tu alcance de RAG actual y el roadmap de automatización que vendrá.</p>
+            
+            <div class="grid-2">
+                <!-- PM VALUE CARD -->
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 class="prd-card-title">
+                            <i data-lucide="award" style="color: var(--color-green);"></i>
+                            <span>El Súper-Poder del IT PM en IA</span>
+                        </h3>
+                        <p class="prd-card-desc" style="margin-bottom: 1rem;">
+                            Comprender RAG y tokens no es para programar; es para liderar proyectos con viabilidad real y tomar decisiones estratégicas:
+                        </p>
+                    </div>
+                    
+                    <div class="prd-item-list">
+                        <div class="prd-item-row" style="align-items: flex-start; gap: 0.5rem;">
+                            <i data-lucide="check-circle" class="icon-sm" style="color: var(--color-green); margin-top: 2px;"></i>
+                            <div>
+                                <strong style="color: #ffffff; display: block; font-size: 0.8rem;">Estimar Presupuestos de API:</strong>
+                                <span style="font-size: 0.75rem; color: var(--text-secondary);">Prevenir desvíos de costos calculando tokens, caching y solapamientos.</span>
+                            </div>
+                        </div>
+                        <div class="prd-item-row" style="align-items: flex-start; gap: 0.5rem;">
+                            <i data-lucide="check-circle" class="icon-sm" style="color: var(--color-green); margin-top: 2px;"></i>
+                            <div>
+                                <strong style="color: #ffffff; display: block; font-size: 0.8rem;">Definir Criterios de Aceptación (DoD):</strong>
+                                <span style="font-size: 0.75rem; color: var(--text-secondary);">Establecer umbrales de alucinación y datasets de prueba automatizados.</span>
+                            </div>
+                        </div>
+                        <div class="prd-item-row" style="align-items: flex-start; gap: 0.5rem;">
+                            <i data-lucide="check-circle" class="icon-sm" style="color: var(--color-green); margin-top: 2px;"></i>
+                            <div>
+                                <strong style="color: #ffffff; display: block; font-size: 0.8rem;">Gobernanza y Privacidad:</strong>
+                                <span style="font-size: 0.75rem; color: var(--text-secondary);">Redactar requerimientos de Enterprise SLAs para evitar fugas de datos.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ROADMAP DIFFERENCES CARD -->
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 class="prd-card-title">
+                            <i data-lucide="milestone" style="color: var(--color-purple);"></i>
+                            <span>Diferenciación del Roadmap Técnico</span>
+                        </h3>
+                        <p class="prd-card-desc" style="margin-bottom: 0.8rem;">
+                            Diferencia claramente el alcance de cada fase del programa para tus entrevistas estratégicas:
+                        </p>
+                    </div>
+                    
+                    <div class="prd-item-list">
+                        <div class="prd-item-row" style="border-left: 3px solid var(--color-purple); background: rgba(139, 92, 246, 0.03);">
+                            <div>
+                                <strong style="color: #ffffff; font-size: 0.8rem;">Sesión 2: IA Pasiva (Hoy)</strong>
+                                <span style="display: block; font-size: 0.7rem; color: var(--text-secondary);">RAG, bases vectoriales e inyección de datos privados para responder de forma exacta (Libro Abierto).</span>
+                            </div>
+                        </div>
+                        <div class="prd-item-row" style="border-left: 3px solid var(--color-blue);">
+                            <div>
+                                <strong style="color: #ffffff; font-size: 0.8rem;">Sesión 3: IA Activa (Siguiente)</strong>
+                                <span style="display: block; font-size: 0.7rem; color: var(--text-secondary);">Sistemas Agénticos Autónomos que llaman a APIs externas y toman decisiones operativas (Acción).</span>
+                            </div>
+                        </div>
+                        <div class="prd-item-row" style="border-left: 3px solid var(--color-orange);">
+                            <div>
+                                <strong style="color: #ffffff; font-size: 0.8rem;">Sesión 4: IA Escala (Cierre)</strong>
+                                <span style="display: block; font-size: 0.7rem; color: var(--text-secondary);">Arquitectura en la nube, observabilidad avanzada (Evals), auditoría de deriva y Enterprise SLAs.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="consigna-banner" style="margin-top: 1rem;">
+                <h4>
+                    <i data-lucide="edit-3" class="icon-sm"></i>
+                    <span>La Consigna Semanal (Mock PRD)</span>
+                </h4>
+                <p style="font-size: 0.82rem; line-height: 1.4;">
+                    Completa la plantilla del <strong>Mock PRD del "Cargill Customs Bot"</strong> especificando los parámetros de chunking, overlap, umbral de confianza y Enterprise SLA. Este documento será tu principal activo de portafolio para adjuntar a tu CV.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CONTROLS BAR (BOTTOM) -->
+    <div class="controls-bar">
+        <div class="controls-left">
+            <button class="btn-control" id="btn-prev" onclick="prevSlide()" disabled>
+                <i data-lucide="chevron-left"></i>
+            </button>
+            <div class="slide-counter" id="slide-counter">1 / 15</div>
+            <button class="btn-control" id="btn-next" onclick="nextSlide()">
+                <i data-lucide="chevron-right"></i>
+            </button>
+        </div>
+        
+        <div class="controls-right">
+            <div class="slides-menu-btn">
+                <button class="btn-control" onclick="toggleDropdown()">
+                    <i data-lucide="menu"></i>
+                </button>
+                <div class="slides-dropdown" id="slides-dropdown">
+                    <!-- Dropdown Items 1 to 15 -->
+                    <div class="dropdown-item active" onclick="goToSlide(1)"><span class="dropdown-item-num">1</span><span>Portada de la Mentoría</span></div>
+                    <div class="dropdown-item" onclick="goToSlide(2)"><span class="dropdown-item-num">2</span><span>Desmitificando los LLMs</span></div>
+                    <div class="dropdown-item" onclick="goToSlide(3)"><span class="dropdown-item-num">3</span><span>La Economía de los Tokens</span></div>
+                    <div class="dropdown-item" onclick="goToSlide(4)"><span class="dropdown-item-num">4</span><span>Ventana &amp; Lost in the Middle</span></div>
+                    <div class="dropdown-item" onclick="goToSlide(5)"><span class="dropdown-item-num">5</span><span>Embeddings y Vectores</span></div>
+                    <div class="dropdown-item" onclick="goToSlide(6)"><span class="dropdown-item-num">6</span><span>Bases de Datos Vectoriales</span></div>
+                    <div class="dropdown-item" onclick="goToSlide(7)"><span class="dropdown-item-num">7</span><span>Estrategias de Chunking</span></div>
+                    <div class="dropdown-item" onclick="goToSlide(8)"><span class="dropdown-item-num">8</span><span>RAG Fase 1: Ingestión</span></div>
+                    <div class="dropdown-item" onclick="goToSlide(9)"><span class="dropdown-item-num">9</span><span>RAG Fase 2: Consulta</span></div>
+                    <div class="dropdown-item" onclick="goToSlide(10)"><span class="dropdown-item-num">10</span><span>Taller: El Mock PRD</span></div>
+                    <div class="dropdown-item" onclick="goToSlide(11)"><span class="dropdown-item-num">11</span><span>Gobernanza &amp; Privacidad</span></div>
+                    <div class="dropdown-item" onclick="goToSlide(12)"><span class="dropdown-item-num">12</span><span>Mitigación de Alucinaciones</span></div>
+                    <div class="dropdown-item" onclick="goToSlide(13)"><span class="dropdown-item-num">13</span><span>Evaluación: Golden Dataset</span></div>
+                    <div class="dropdown-item" onclick="goToSlide(14)"><span class="dropdown-item-num">14</span><span>Roleplay de Entrevista</span></div>
+                    <div class="dropdown-item" onclick="goToSlide(15)"><span class="dropdown-item-num">15</span><span>Próximos Pasos</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT NAVIGATION & DYNAMICS -->
+    <script>
+        let currentSlideIndex = 1;
+        const totalSlides = 15;
+
+        // Initialize Lucide
+        lucide.createIcons();
+        updateProgressBar();
+
+        function showSlide(index) {
+            const activeSlide = document.querySelector('.slide.active');
+            if (activeSlide) activeSlide.classList.remove('active');
+
+            const targetSlide = document.getElementById(`slide-${index}`);
+            if (targetSlide) targetSlide.classList.add('active');
+
+            currentSlideIndex = index;
+            document.getElementById('slide-counter').textContent = `${currentSlideIndex} / ${totalSlides}`;
+            
+            document.getElementById('btn-prev').disabled = (currentSlideIndex === 1);
+            document.getElementById('btn-next').disabled = (currentSlideIndex === totalSlides);
+
+            const dropdownItems = document.querySelectorAll('.dropdown-item');
+            dropdownItems.forEach((item, idx) => {
+                if (idx + 1 === currentSlideIndex) item.classList.add('active');
+                else item.classList.remove('active');
+            });
+
+            updateProgressBar();
+        }
+
+        function prevSlide() {
+            if (currentSlideIndex > 1) showSlide(currentSlideIndex - 1);
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < totalSlides) showSlide(currentSlideIndex + 1);
+        }
+
+        function goToSlide(index) {
+            showSlide(index);
+            toggleDropdown(false);
+        }
+
+        function toggleDropdown(state) {
+            const dropdown = document.getElementById('slides-dropdown');
+            if (state !== undefined) {
+                if (state) dropdown.classList.add('open');
+                else dropdown.classList.remove('open');
+            } else {
+                dropdown.classList.toggle('open');
+            }
+        }
+
+        function updateProgressBar() {
+            const bar = document.getElementById('progress-bar');
+            const percent = ((currentSlideIndex - 1) / (totalSlides - 1)) * 100;
+            bar.style.width = `${percent}%`;
+        }
+
+        window.addEventListener('click', function(e) {
+            if (!e.target.closest('.slides-menu-btn')) toggleDropdown(false);
+        });
+
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevSlide();
+            }
+        });
+
+        // --- INTERACTIVE: TOKENS DEMO ---
+        let isTokenized = false;
+        function toggleTokenizeDemo() {
+            const box = document.getElementById('token-box');
+            if (!isTokenized) {
+                box.innerHTML = `
+                    <span class="token-span token-col-1">El</span>
+                    <span class="token-span token-col-2">pu</span>
+                    <span class="token-span token-col-3">erto</span>
+                    <span class="token-span token-col-4">de</span>
+                    <span class="token-span token-col-1">San</span>
+                    <span class="token-span token-col-2">Lo</span>
+                    <span class="token-span token-col-3">ren</span>
+                    <span class="token-span token-col-4">zo</span>
+                    <span class="token-span token-col-1">requi</span>
+                    <span class="token-span token-col-2">ere</span>
+                    <span class="token-span token-col-3">habili</span>
+                    <span class="token-span token-col-4">tación</span>
+                    <span class="token-span token-col-1">de</span>
+                    <span class="token-span token-col-2">adu</span>
+                    <span class="token-span token-col-3">ana</span>
+                    <span class="token-span token-col-4">fluvial.</span>
+                `;
+                isTokenized = true;
+            } else {
+                box.textContent = "El puerto de San Lorenzo requiere habilitación de aduana fluvial.";
+                isTokenized = false;
+            }
+        }
+
+        // --- INTERACTIVE: MOCK FILTER ---
+        function toggleMockFilter(tagId) {
+            const tag = document.getElementById(tagId);
+            tag.classList.toggle('active');
+            
+            const activeTags = [];
+            if (document.getElementById('f-tag-1').classList.contains('active')) activeTags.push('Puerto: Rosario');
+            if (document.getElementById('f-tag-2').classList.contains('active')) activeTags.push('Año: 2026');
+            if (document.getElementById('f-tag-3').classList.contains('active')) activeTags.push('Doc: Aduana');
+            
+            const statusBox = document.getElementById('filter-status-text');
+            if (activeTags.length > 0) {
+                statusBox.textContent = `Ejecutando búsqueda semántica optimizada filtrando en: [${activeTags.join(' y ')}]`;
+            } else {
+                statusBox.textContent = "Ejecutando búsqueda semántica pura en toda la base (sin optimización de metadatos).";
+            }
+        }
+
+        // --- RAG PIPELINE INTERACTIVO DATA ---
+        const ragStepsData = {
+            ingestion: [
+                {
+                    title: "Paso 1: Documentación de Negocio",
+                    text: "Se recopilan los documentos oficiales y privados que regulan el negocio (ej. PDFs de aduanas, normativas portuarias, reglamentos internos de Cargill). Estos archivos actúan como la fuente única de verdad (Ground Truth)."
+                },
+                {
+                    title: "Paso 2: Chunking (Fragmentación)",
+                    text: "Los archivos PDF extensos se dividen en fragmentos de texto pequeños y uniformes (aproximadamente 250 palabras u 1000 caracteres) con un leve solapamiento (overlap) para no perder el contexto de oraciones cortadas en las uniones."
+                },
+                {
+                    title: "Paso 3: Embeddings de Texto",
+                    text: "Cada fragmento de texto se pasa por el modelo de Embeddings, convirtiendo el lenguaje natural legible en un vector numérico que representa su significado semántico en un mapa geométrico."
+                },
+                {
+                    title: "Paso 4: Base de Datos Vectorial",
+                    text: "Los vectores matemáticos se indexan y guardan en una Base de Datos Vectorial (ej. Pinecone). Esta base de datos se convertirá en la biblioteca de consulta a largo plazo que la IA utilizará en tiempo real."
+                }
+            ],
+            query: [
+                {
+                    title: "Paso 1: Pregunta en Lenguaje Natural",
+                    text: "El usuario realiza una pregunta sobre el negocio, por ejemplo: '¿Qué documentación de aduana se requiere para habilitar una barcaza en el puerto de Rosario?'."
+                },
+                {
+                    title: "Paso 2: Búsqueda Semántica",
+                    text: "La pregunta se convierte en vector de inmediato. El sistema compara geométricamente su vector con los vectores almacenados en la base vectorial, localizando y recuperando los 3 fragmentos de PDFs más similares conceptualmente."
+                },
+                {
+                    title: "Paso 3: Prompt Enriquecido",
+                    text: "El sistema ensambla un prompt unificado que inyecta la pregunta original del usuario junto a los 3 fragmentos recuperados de los documentos oficiales como 'contexto de soporte' dentro de la ventana de contexto."
+                },
+                {
+                    title: "Paso 4: Generación Precisa de Respuesta",
+                    text: "El LLM lee el prompt enriquecido y redacta la respuesta final limitándose rigurosamente a sintetizar la información contenida en el contexto. Esto garantiza una respuesta exacta, libre de alucinaciones y con citas de fuente comprobables."
+                }
+            ]
+        };
+
+        function highlightRagStep(stepIdx, tabType) {
+            const activeSlideId = tabType === 'ingestion' ? 'slide-8' : 'slide-9';
+            const nodes = document.querySelectorAll(`#${activeSlideId} .rag-flow-node`);
+            
+            nodes.forEach(node => node.classList.remove('active'));
+            nodes[stepIdx].classList.add('active');
+
+            const stepInfo = ragStepsData[tabType][stepIdx];
+            document.getElementById(`rag-exp-title-${tabType}`).innerHTML = `
+                <i data-lucide="info" class="icon-sm"></i>
+                <span>${stepInfo.title}</span>
+            `;
+            document.getElementById(`rag-exp-text-${tabType}`).textContent = stepInfo.text;
+            
+            lucide.createIcons();
+        }
+
+        function switchRagSlide(targetSlideIdx) {
+            showSlide(targetSlideIdx);
+        }
+    </script>
+</body>
+</html>
