@@ -131,12 +131,12 @@
             z-index: 1;
         }
 
-        /* Collapsible spacers */
-        .slide::before,
-        .slide::after {
-            content: '';
-            flex: 1;
-            min-height: 0.5rem;
+        /* Collapsible spacers for perfect vertical centering without cut-off */
+        .slide-title, .cover-container {
+            margin-top: auto;
+        }
+        .slide > *:last-child {
+            margin-bottom: auto;
         }
 
         /* Scrollbar */
@@ -1050,7 +1050,7 @@
             .slide-title {
                 font-size: 1.6rem;
             }
-            .grid-3, .grid-2, .contrast-container, .prd-grid, .governance-container, .roadmap-container {
+            .grid-3, .grid-2, .contrast-container, .prd-grid, .governance-container, .roadmap-container, .roadmap-session-grid {
                 grid-template-columns: 1fr;
                 gap: 1rem;
             }
@@ -1076,7 +1076,7 @@
             .glass-card {
                 padding: 0.9rem 1.2rem;
             }
-            .grid-3, .grid-2, .contrast-container, .prd-grid, .governance-container, .roadmap-container {
+            .grid-3, .grid-2, .contrast-container, .prd-grid, .governance-container, .roadmap-container, .roadmap-session-grid {
                 gap: 0.8rem;
             }
             .vector-space {
@@ -1105,10 +1105,7 @@
                 padding: 1rem;
                 gap: 0.6rem;
             }
-            .slide::before,
-            .slide::after {
-                flex: 0.2; /* Shrink spacers to allocate more room for visual cards */
-            }
+            /* Vertical spacers removed for robust margin auto centering */
         }
 
         /* Vertical Media Query: Small laptops and highly constrained viewports */
@@ -1124,10 +1121,7 @@
                 font-size: 0.8rem;
                 margin-bottom: 0.5rem;
             }
-            .slide::before,
-            .slide::after {
-                display: none; /* Deactivate vertical spacers completely to avoid overflow */
-            }
+            /* Vertical spacers deactivated in favor of margin auto centering */
             .btn-action-sm {
                 margin-top: 0.4rem;
                 padding: 0.3rem 0.8rem;
@@ -1140,6 +1134,123 @@
                 height: 110px;
                 margin: 0.2rem auto;
             }
+        /* LIGHTBOX MODAL REFOCUSED AS PREMIUM FLOATING POPUP */
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            z-index: 5000; /* Extremely high z-index to overlay fullscreen slides */
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(6, 9, 15, 0.75); /* Translucent, not opaque */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .lightbox-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .lightbox-card {
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            width: 85%;
+            max-width: 720px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 
+                        0 0 50px rgba(139, 92, 246, 0.15);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+        
+        .lightbox-overlay.active .lightbox-card {
+            transform: scale(1);
+        }
+        
+        .lightbox-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 0.8rem;
+        }
+        
+        .lightbox-title {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #ffffff;
+            background: linear-gradient(135deg, #ffffff 40%, var(--color-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .lightbox-close-btn {
+            color: var(--text-secondary);
+            font-size: 28px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: color 0.2s ease, transform 0.2s ease;
+            line-height: 1;
+            padding: 0 4px;
+        }
+        
+        .lightbox-close-btn:hover {
+            color: #ffffff;
+            transform: scale(1.1);
+        }
+        
+        .lightbox-body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #020617;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 0.6rem;
+            overflow: hidden;
+        }
+        
+        .lightbox-content-img {
+            max-width: 100%;
+            max-height: 52vh;
+            object-fit: contain;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: block;
+        }
+        
+        .lightbox-caption {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-family: var(--font-body);
+            font-weight: 500;
+            line-height: 1.4;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 0.8rem;
+        }
+        
+        /* Clickable image pointer */
+        .glass-card img, .rag-interactive-container img {
+            cursor: zoom-in;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .glass-card img:hover, .rag-interactive-container img:hover {
+            transform: scale(1.03);
+            border-color: var(--color-purple) !important;
         }
     </style>
 </head>
@@ -1155,13 +1266,52 @@
 
         <!-- SLIDE 1: PORTADA -->
         <div class="slide active" id="slide-1">
-            <div class="cover-container">
+            <div class="cover-container" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.5rem; width: 100%;">
                 <span class="global-title">De la Gestión Tradicional a la Era de la IA</span>
                 <h1 class="cover-h1">IA Generativa &amp; Arquitectura RAG</h1>
-                <p class="cover-subtitle">Sesión 2: Cómo estructurar propuestas estratégicas de Inteligencia Artificial Generativa y entender la arquitectura RAG basada en datos privados.</p>
-                <div class="badge-session">
+                <p class="cover-subtitle" style="margin-bottom: 1rem;">Sesión 2: Cómo estructurar propuestas estratégicas de Inteligencia Artificial Generativa y entender la arquitectura RAG basada en datos privados.</p>
+                <div class="badge-session" style="margin-bottom: 1rem;">
                     <i data-lucide="brain" class="icon-sm"></i>
                     <span>15 Slides de Alta Fidelidad</span>
+                </div>
+                
+                <!-- ROADMAP BENTO GRID FOR SESSION 2 -->
+                <div class="roadmap-session-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; width: 100%; max-width: 1050px; text-align: left; margin-top: 1rem;">
+                    <div class="glass-card" style="padding: 1.2rem; border-left: 3px solid var(--color-orange); margin: 0; display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+                        <div>
+                            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--color-orange); font-weight: 700; text-transform: uppercase;">01. Límites Físicos</span>
+                            <h4 style="font-size: 0.9rem; font-weight: 700; color: #ffffff; margin: 0.4rem 0;">Next-Token &amp; Tokens</h4>
+                            <p style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.4;">Desmitificamos el 'hype' y analizamos el costo de APIs, caching y Lost in the Middle.</p>
+                        </div>
+                        <span style="font-size: 0.65rem; color: var(--color-orange); margin-top: 0.8rem; font-weight: 600; display: block;">Duración: 10 min</span>
+                    </div>
+                    
+                    <div class="glass-card" style="padding: 1.2rem; border-left: 3px solid var(--color-blue); margin: 0; display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+                        <div>
+                            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--color-blue); font-weight: 700; text-transform: uppercase;">02. Bloques de RAG</span>
+                            <h4 style="font-size: 0.9rem; font-weight: 700; color: #ffffff; margin: 0.4rem 0;">Embeddings &amp; Vectores</h4>
+                            <p style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.4;">El GPS de las ideas, cosine similarity, filtrado de metadatos y fragmentación con overlap.</p>
+                        </div>
+                        <span style="font-size: 0.65rem; color: var(--color-blue); margin-top: 0.8rem; font-weight: 600; display: block;">Duración: 15 min</span>
+                    </div>
+                    
+                    <div class="glass-card" style="padding: 1.2rem; border-left: 3px solid var(--color-purple); margin: 0; display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+                        <div>
+                            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--color-purple); font-weight: 700; text-transform: uppercase;">03. Taller Práctico</span>
+                            <h4 style="font-size: 0.9rem; font-weight: 700; color: #ffffff; margin: 0.4rem 0;">Mock PRD Cargill</h4>
+                            <p style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.4;">Especificamos en un documento formal los requisitos, datos e indicadores de aceptación de la IA.</p>
+                        </div>
+                        <span style="font-size: 0.65rem; color: var(--color-purple); margin-top: 0.8rem; font-weight: 600; display: block;">Duración: 15 min</span>
+                    </div>
+                    
+                    <div class="glass-card" style="padding: 1.2rem; border-left: 3px solid var(--color-green); margin: 0; display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+                        <div>
+                            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--color-green); font-weight: 700; text-transform: uppercase;">04. Gobernanza</span>
+                            <h4 style="font-size: 0.9rem; font-weight: 700; color: #ffffff; margin: 0.4rem 0;">Evals &amp; QA</h4>
+                            <p style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.4;">Evitamos alucinaciones con umbrales, Golden Datasets y roleplay para entrevistas IT.</p>
+                        </div>
+                        <span style="font-size: 0.65rem; color: var(--color-green); margin-top: 0.8rem; font-weight: 600; display: block;">Duración: 20 min</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1219,21 +1369,31 @@
         <!-- SLIDE 3: LA ECONOMÍA DE LA IA: TOKENS -->
         <div class="slide" id="slide-3">
             <h2 class="slide-title">Tokens: La Economía de la IA</h2>
-            <p class="slide-subtitle">Los modelos de lenguaje no procesan palabras completas. Conoce cómo impacta la segmentación semántica en tus costos.</p>
+            <p class="slide-subtitle">Los modelos de lenguaje no procesan palabras completas. Conocé cómo impacta la segmentación semántica en tus costos.</p>
             
             <div class="grid-2">
-                <div class="glass-card">
-                    <h3 class="bento-card-title" style="margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
-                        <i data-lucide="coins" style="color: var(--color-orange);"></i>
-                        <span>La Unidad de Facturación</span>
-                    </h3>
-                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
-                        Aproximadamente <strong>1000 tokens equivalen a 750 palabras</strong>. Las APIs cobran tarifas asimétricas: los tokens del prompt (Input) son mucho más baratos que los tokens generados por el modelo (Output).
-                    </p>
-                    <button class="btn-action-sm" onclick="toggleTokenizeDemo()">Tokenizar Texto en Vivo</button>
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 class="bento-card-title" style="margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="coins" style="color: var(--color-orange);"></i>
+                            <span>La Unidad de Facturación</span>
+                        </h3>
+                        <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem;">
+                            Aproximadamente <strong>1000 tokens equivalen a 750 palabras</strong>. Las APIs cobran tarifas asimétricas: los tokens de entrada (Input Context) son mucho más baratos que los tokens generados por el modelo (Output Generation).
+                        </p>
+                        <button class="btn-action-sm" onclick="toggleTokenizeDemo()" style="margin-bottom: 1rem;">Tokenizar Texto en Vivo</button>
+                        
+                        <div class="token-visual-box" id="token-box" style="margin-bottom: 1.2rem;">
+                            Hacé clic en el botón para ver cómo la IA segmenta y tokeniza las palabras.
+                        </div>
+                    </div>
                     
-                    <div class="token-visual-box" id="token-box">
-                        Hacé clic en el botón para ver cómo la IA segmenta y tokeniza las palabras.
+                    <div style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem; display: flex; gap: 1rem; align-items: flex-start;">
+                        <img src="bpe_vs_word_comparison.png" alt="BPE vs Word Comparison (Mecánica de Tokens)" onclick="openLightbox(this)" style="width: 140px; height: 110px; object-fit: cover; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 10px rgba(0,0,0,0.5);" />
+                        <div style="font-size: 0.72rem; color: var(--text-secondary); line-height: 1.35;">
+                            <strong style="color: #ffffff; display: block; margin-bottom: 0.2rem;">Mecánica del BPE (Byte Pair Encoding)</strong>
+                            Para evitar un colapso por "explosión de vocabulario" de millones de palabras, el modelo divide palabras como "despachador" en raíces conceptuales ("despach") y sufijos gramaticales ("-ador"). Esto reduce el vocabulario a 100k tokens reusables, tolera errores ortográficos y procesa términos nuevos de forma veloz.
+                        </div>
                     </div>
                 </div>
 
@@ -1267,13 +1427,21 @@
                             <i data-lucide="layout" style="color: var(--color-purple);"></i>
                             <span>Ventana de Contexto (Límite Físico)</span>
                         </h3>
-                        <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+                        <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem;">
                             Define la memoria a corto plazo del modelo. Aunque las ventanas modernas son masivas, el rendimiento de la IA se degrada drásticamente cuanto más grande es el contexto inyectado en una sola llamada de API.
                         </p>
                     </div>
                     
-                    <div style="background: rgba(255,255,255,0.01); border-left: 3px solid var(--color-purple); padding: 0.8rem; border-radius: 4px; font-size: 0.82rem; margin-top: 1rem;">
-                        <strong>El desk-analogy:</strong> Si tu escritorio de trabajo es infinito, puedes poner 50 manuales abiertos. Sin embargo, encontrar un dato específico en el manual central te llevará mucho más tiempo (latencia).
+                    <div style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem; display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1rem;">
+                        <img src="lost_in_the_middle_heatmap.png" alt="Fenómeno Lost in the Middle (Curva U de Atención)" onclick="openLightbox(this)" style="width: 140px; height: 110px; object-fit: cover; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 10px rgba(0,0,0,0.5);" />
+                        <div style="font-size: 0.72rem; color: var(--text-secondary); line-height: 1.35;">
+                            <strong style="color: #ffffff; display: block; margin-bottom: 0.2rem;">Pérdida de Atención Central</strong>
+                            Los modelos concentran casi toda su atención cognitiva (99% de precisión) en los extremos (primeros y últimos párrafos), perdiendo hasta un 40% de retención en el centro geométrico del contexto.
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.01); border-left: 3px solid var(--color-purple); padding: 0.8rem; border-radius: 4px; font-size: 0.82rem;">
+                        <strong>El desk-analogy:</strong> Si tu escritorio de trabajo es infinito, podés poner 50 manuales abiertos. Sin embargo, encontrar un dato específico en el manual central te va a llevar mucho más tiempo (latencia).
                     </div>
                 </div>
 
@@ -1322,7 +1490,7 @@
                     <p class="vector-step-desc">Las ideas similares se ubican geométricamente cerca en el espacio de alta dimensión.</p>
                 </div>
 
-                <div class="vector-visualization glass-card">
+                <div class="vector-visualization glass-card" style="grid-column: span 2;">
                     <span class="vector-axis-label" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%) rotate(-90deg);">Dimensión Logística (Y)</span>
                     <div class="vector-space">
                         <div class="vector-dot" style="left: 15%; bottom: 75%; background: var(--color-blue);" data-label="Puerto de Rosario"></div>
@@ -1336,6 +1504,19 @@
                         <div class="vector-dot" style="left: 45%; bottom: 50%; background: var(--color-red);" data-label="Automóvil Deportivo"></div>
                     </div>
                     <span class="vector-axis-label" style="display: block; margin-top: 0.5rem;">Dimensión Agrícola (X)</span>
+                </div>
+
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; padding: 1.2rem; grid-column: span 1;">
+                    <div>
+                        <h3 class="bento-card-title" style="margin-bottom: 0.8rem; font-size: 0.95rem; display: flex; align-items: center; gap: 0.4rem; justify-content: center;">
+                            <i data-lucide="sparkles" style="color: var(--color-purple);"></i>
+                            <span>Radar Semántico 3D</span>
+                        </h3>
+                        <img src="embeddings_semantic_radar.png" alt="Radar Semántico 3D (Similitud por Coseno)" onclick="openLightbox(this)" style="width: 100%; max-height: 120px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 15px rgba(0,0,0,0.5);" />
+                    </div>
+                    <p style="font-size: 0.72rem; color: var(--text-secondary); line-height: 1.35; margin-top: 0.8rem; text-align: left;">
+                        <strong>Cercanía por Coseno:</strong> El modelo mapea conceptos en 1536 dimensiones. Términos afines de logística fluvial ("Barcaza", "Remolcador") quedan con un score de similitud de 0.89, mientras "Deportivo" queda aislado en 0.12.
+                    </p>
                 </div>
             </div>
         </div>
@@ -1464,14 +1645,21 @@
                     </div>
                 </div>
 
-                <div class="rag-step-explanation-box">
-                    <div class="rag-explanation-title" id="rag-exp-title-ingestion">
-                        <i data-lucide="info" class="icon-sm"></i>
-                        <span>Paso 1: Documentación de Negocio</span>
+                <div style="display: flex; gap: 1.2rem; margin-top: 1rem; align-items: stretch; width: 100%;">
+                    <div class="rag-step-explanation-box" style="flex: 2; margin-top: 0;">
+                        <div class="rag-explanation-title" id="rag-exp-title-ingestion">
+                            <i data-lucide="info" class="icon-sm"></i>
+                            <span>Paso 1: Documentación de Negocio</span>
+                        </div>
+                        <p class="rag-explanation-text" id="rag-exp-text-ingestion">
+                            Se recopilan los documentos oficiales y privados que regulan el negocio (ej. PDFs de aduanas, normativas portuarias, reglamentos internos de Cargill). Estos archivos actúan como la fuente única de verdad (Ground Truth).
+                        </p>
                     </div>
-                    <p class="rag-explanation-text" id="rag-exp-text-ingestion">
-                        Se recopilan los documentos oficiales y privados que regulan el negocio (ej. PDFs de aduanas, normativas portuarias, reglamentos internos de Cargill). Estos archivos actúan como la fuente única de verdad (Ground Truth).
-                    </p>
+                    
+                    <div class="glass-card" style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0.8rem; margin: 0; text-align: center;">
+                        <img src="rag_architecture_diagram.png" alt="Arquitectura RAG Completa: Fase de Ingestión Batch (Offline)" onclick="openLightbox(this)" style="width: 100%; max-height: 80px; object-fit: cover; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 10px rgba(0,0,0,0.5);" />
+                        <span style="font-size: 0.65rem; color: var(--text-secondary); margin-top: 0.3rem; display: flex; align-items: center; gap: 0.2rem; justify-content: center;"><i data-lucide="zoom-in" style="width: 12px; height: 12px;"></i>Click para ampliar</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1512,14 +1700,21 @@
                     </div>
                 </div>
 
-                <div class="rag-step-explanation-box">
-                    <div class="rag-explanation-title" id="rag-exp-title-query">
-                        <i data-lucide="info" class="icon-sm"></i>
-                        <span>Paso 1: Pregunta en Lenguaje Natural</span>
+                <div style="display: flex; gap: 1.2rem; margin-top: 1rem; align-items: stretch; width: 100%;">
+                    <div class="rag-step-explanation-box" style="flex: 2; margin-top: 0;">
+                        <div class="rag-explanation-title" id="rag-exp-title-query">
+                            <i data-lucide="info" class="icon-sm"></i>
+                            <span>Paso 1: Pregunta en Lenguaje Natural</span>
+                        </div>
+                        <p class="rag-explanation-text" id="rag-exp-text-query">
+                            El usuario realiza una pregunta sobre el negocio, por ejemplo: "¿Qué documentación de aduana se requiere para habilitar una barcaza en el puerto de Rosario?".
+                        </p>
                     </div>
-                    <p class="rag-explanation-text" id="rag-exp-text-query">
-                        El usuario realiza una pregunta sobre el negocio, por ejemplo: "¿Qué documentación de aduana se requiere para habilitar una barcaza en el puerto de Rosario?".
-                    </p>
+                    
+                    <div class="glass-card" style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0.8rem; margin: 0; text-align: center;">
+                        <img src="rag_architecture_diagram.png" alt="Arquitectura RAG Completa: Fase de Recuperación y Consulta Live (Online)" onclick="openLightbox(this)" style="width: 100%; max-height: 80px; object-fit: cover; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 10px rgba(0,0,0,0.5);" />
+                        <span style="font-size: 0.65rem; color: var(--text-secondary); margin-top: 0.3rem; display: flex; align-items: center; gap: 0.2rem; justify-content: center;"><i data-lucide="zoom-in" style="width: 12px; height: 12px;"></i>Click para ampliar</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2019,6 +2214,40 @@
         function switchRagSlide(targetSlideIdx) {
             showSlide(targetSlideIdx);
         }
+
+        // --- INTERACTIVE: LIGHTBOX MODAL ---
+        function openLightbox(imgElement) {
+            const lightbox = document.getElementById('image-lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxCaption = document.getElementById('lightbox-caption');
+            
+            lightboxImg.src = imgElement.src;
+            lightboxCaption.textContent = imgElement.alt || "Imagen Ampliada";
+            
+            lightbox.classList.add('active');
+        }
+        
+        function closeLightbox(event) {
+            // Close only if clicking outside the card (on the overlay) or clicking the close button
+            if (!event || event.target.id === 'image-lightbox' || event.target.classList.contains('lightbox-close-btn')) {
+                const lightbox = document.getElementById('image-lightbox');
+                lightbox.classList.remove('active');
+            }
+        }
     </script>
+    
+    <!-- LIGHTBOX MODAL FOR IMAGES -->
+    <div id="image-lightbox" class="lightbox-overlay" onclick="closeLightbox(event)">
+        <div class="lightbox-card" onclick="event.stopPropagation()">
+            <div class="lightbox-header">
+                <span class="lightbox-title">Ilustración Técnica</span>
+                <span class="lightbox-close-btn" onclick="closeLightbox()">&times;</span>
+            </div>
+            <div class="lightbox-body">
+                <img class="lightbox-content-img" id="lightbox-img" src="" alt="Ampliada">
+            </div>
+            <div id="lightbox-caption" class="lightbox-caption"></div>
+        </div>
+    </div>
 </body>
 </html>

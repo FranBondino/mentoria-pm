@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía del Mentor: Sesión 2 - IA Generativa &amp; RAG (Scripts y Guiones)</title>
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root {
+            --bg-primary: #090d16;
+            --bg-secondary: #0f172a;
+            --bg-card: rgba(15, 23, 42, 0.7);
+            --border-card: rgba(255, 255, 255, 0.05);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --color-blue: #3b82f6;
+            --color-blue-glow: rgba(59, 130, 246, 0.3);
+            --color-purple: #8b5cf6;
+            --color-purple-glow: rgba(139, 92, 246, 0.3);
+            --color-green: #10b981;
+            --color-green-glow: rgba(16, 185, 129, 0.3);
+            --color-orange: #f97316;
+            --color-orange-glow: rgba(249, 115, 22, 0.3);
+            --font-display: 'Plus Jakarta Sans', 'Inter', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        .lucide {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2px;
+            color: currentColor;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            display: flex;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(30, 27, 75, 0.3) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(15, 23, 42, 0.5) 0%, transparent 50%);
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 320px;
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border-card);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-badge {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--color-purple);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 0.8rem;
+        }
+
+        .sidebar-title {
+            font-family: var(--font-display);
+            font-size: 1.35rem;
+            font-weight: 800;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #ffffff 40%, var(--color-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-card);
+            border-radius: 8px;
+            padding: 0.6rem 1rem 0.6rem 2.2rem;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.15);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            width: 16px;
+            height: 16px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .nav-section-title {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 1.2rem;
+            margin-bottom: 0.5rem;
+            padding-left: 0.5rem;
+        }
+
+        .nav-item a {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.6rem 0.8rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-item a:hover {
+            background: rgba(255, 255, 255, 0.03);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .nav-item.active a {
+            background: rgba(139, 92, 246, 0.08);
+            color: #ffffff;
+            font-weight: 600;
+            border-left: 3px solid var(--color-purple);
+            border-radius: 0 8px 8px 0;
+            padding-left: 0.7rem;
+        }
+
+        .nav-item-num {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--color-purple);
+            font-weight: 700;
+            width: 18px;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            margin-left: 320px;
+            flex-grow: 1;
+            padding: 3rem 4rem;
+            max-width: 1100px;
+            box-sizing: border-box;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .header-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .header-badge {
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            text-transform: uppercase;
+        }
+
+        .badge-blue { background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.15); color: #60a5fa; }
+        .badge-green { background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.15); color: #34d399; }
+
+        h1 {
+            font-family: var(--font-display);
+            font-size: 2.6rem;
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #ffffff 50%, #c084fc 80%, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 850px;
+        }
+
+        /* SECTIONS */
+        section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 2rem;
+        }
+
+        h2 {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        h2::before {
+            content: '';
+            width: 4px;
+            height: 1.5rem;
+            background: var(--color-purple);
+            border-radius: 2px;
+            display: inline-block;
+        }
+
+        /* GLASS CARD */
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+            padding-bottom: 0.8rem;
+        }
+
+        .card-title {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .card-title-badge {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            font-weight: 700;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #c084fc;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        /* METAPHOR CARDS & BLACKBOARDS */
+        .whiteboard-box {
+            background: #020617;
+            border: 1px dashed var(--color-blue);
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin: 1.2rem 0;
+        }
+
+        .wb-header {
+            font-family: var(--font-mono);
+            color: var(--color-blue);
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .wb-canvas {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: #94a3b8;
+            line-height: 1.4;
+            white-space: pre;
+            overflow-x: auto;
+            padding: 0.8rem;
+            background: #090d16;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        /* TABLES */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th {
+            background-color: var(--bg-secondary);
+            color: #ffffff;
+            text-align: left;
+            padding: 0.8rem 1rem;
+            font-family: var(--font-display);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-card);
+        }
+
+        td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid var(--border-card);
+            color: var(--text-secondary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* CODE BOX FOR COPYING */
+        .code-box {
+            position: relative;
+            background: #040813;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin: 1rem 0;
+        }
+
+        .code-text {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .btn-copy {
+            position: absolute;
+            top: 0.6rem;
+            right: 0.6rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            color: var(--text-primary);
+            padding: 0.3rem 0.6rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-family: var(--font-display);
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-copy:hover {
+            background: rgba(139, 92, 246, 0.15);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        /* VERBATIM SCRIPT CALLOUT */
+        .script-box {
+            background: rgba(139, 92, 246, 0.03);
+            border-left: 4px solid var(--color-purple);
+            border-radius: 0 12px 12px 0;
+            padding: 1.2rem 1.5rem;
+            margin-top: 0.8rem;
+            box-shadow: inset 0 0 10px rgba(139, 92, 246, 0.01);
+        }
+
+        .script-header {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #c084fc;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .script-text {
+            font-style: italic;
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* GENERAL UTILS */
+        .alert-tip {
+            border-left: 4px solid var(--color-green);
+            background: rgba(16, 185, 129, 0.02);
+            padding: 1rem 1.2rem;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-tip-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #34d399;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .alert-tip-desc {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            line-height: 1.45;
+        }
+
+        /* SLIDES INDEX CARD LIST */
+        .slides-scripts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .slide-script-card {
+            scroll-margin-top: 1rem;
+        }
+
+        .slide-meta-row {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .slide-meta-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--text-secondary);
+        }
+
+        .highlight-text {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border-card);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR NAVIGATION -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-badge">Mentor Copilot</span>
+            <div class="sidebar-title">Guía de Sesión 2</div>
+        </div>
+
+        <div class="search-box">
+            <i data-lucide="search" class="search-icon"></i>
+            <input type="text" id="search-input" class="search-input" placeholder="Buscar diapositiva o concepto..." onkeyup="filterContent()">
+        </div>
+
+        <nav>
+            <ul class="nav-menu">
+                <li class="nav-item active"><a href="#intro" onclick="setActiveNav(this)"><i data-lucide="info"></i><span>Introducción</span></a></li>
+                <li class="nav-item"><a href="#agenda" onclick="setActiveNav(this)"><i data-lucide="calendar"></i><span>Agenda (60 Min)</span></a></li>
+                <li class="nav-item"><a href="#diferencial" onclick="setActiveNav(this)"><i data-lucide="git-branch"></i><span>Diferencial de Sesiones</span></a></li>
+                <li class="nav-item"><a href="#notebooklm" onclick="setActiveNav(this)"><i data-lucide="cpu"></i><span>Copiloto NotebookLM</span></a></li>
+                <li class="nav-item"><a href="#metáforas" onclick="setActiveNav(this)"><i data-lucide="pen-tool"></i><span>Metáforas de Pizarra</span></a></li>
+                
+                <li class="nav-section-title">🎙️ Guiones de Diapositivas</li>
+                <li class="nav-item slide-nav-item"><a href="#slide-1" onclick="setActiveNav(this)"><span class="nav-item-num">1</span><span>Portada</span></a></li>
+                <li class="nav-item slide-nav-item"><a href="#slide-2" onclick="setActiveNav(this)"><span class="nav-item-num">2</span><span>Desmitificando LLMs</span></a></li>
+                <li class="nav-item slide-nav-item"><a href="#slide-3" onclick="setActiveNav(this)"><span class="nav-item-num">3</span><span>Economía de Tokens</span></a></li>
+                <li class="nav-item slide-nav-item"><a href="#slide-4" onclick="setActiveNav(this)"><span class="nav-item-num">4</span><span>Lost in the Middle</span></a></li>
+                <li class="nav-item slide-nav-item"><a href="#slide-5" onclick="setActiveNav(this)"><span class="nav-item-num">5</span><span>Embeddings</span></a></li>
+                <li class="nav-item slide-nav-item"><a href="#slide-6" onclick="setActiveNav(this)"><span class="nav-item-num">6</span><span>Bases Vectoriales</span></a></li>
+                <li class="nav-item slide-nav-item"><a href="#slide-7" onclick="setActiveNav(this)"><span class="nav-item-num">7</span><span>Estrategias Chunking</span></a></li>
+                <li class="nav-item slide-nav-item"><a href="#slide-8" onclick="setActiveNav(this)"><span class="nav-item-num">8</span><span>RAG Ingestión</span></a></li>
+                <li class="nav-item slide-nav-item"><a href="#slide-9" onclick="setActiveNav(this)"><span class="nav-item-num">9</span><span>RAG Consulta</span></a></li>
+                <li class="nav-item slide-nav-item"><a href="#slide-10" onclick="setActiveNav(this)"><span class="nav-item-num">10</span><span>Taller Mock PRD</span></a></li>
+                <li class="nav-item slide-nav-item"><a href="#slide-11" onclick="setActiveNav(this)"><span class="nav-item-num">11</span><span>Gobernanza &amp; Fuga</span></a></li>
+                <li class="nav-item slide-nav-item"><a href="#slide-12" onclick="setActiveNav(this)"><span class="nav-item-num">12</span><span>Alucinaciones</span></a></li>
+                <li class="nav-item slide-nav-item"><a href="#slide-13" onclick="setActiveNav(this)"><span class="nav-item-num">13</span><span>Evals &amp; Golden Dataset</span></a></li>
+                <li class="nav-item slide-nav-item"><a href="#slide-14" onclick="setActiveNav(this)"><span class="nav-item-num">14</span><span>Roleplay Entrevista</span></a></li>
+                <li class="nav-item slide-nav-item"><a href="#slide-15" onclick="setActiveNav(this)"><span class="nav-item-num">15</span><span>Tu Ruta y Valor</span></a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <div class="main-content">
+        <header>
+            <div class="header-meta">
+                <span class="header-badge badge-blue">Sesión 2</span>
+                <span class="header-badge badge-green">Estrategia de PM en IA</span>
+            </div>
+            <h1>Guía Completa del Mentor</h1>
+            <p class="subtitle">Estrategias pedagógicas, dinámicas en vivo, metáforas conceptuales y los guiones de voz paso a paso para liderar con fluidez la Sesión 2 de Claudio Vernuccio sobre IA Generativa y Arquitectura RAG.</p>
+        </header>
+
+        <!-- INTRODUCTION -->
+        <section id="intro">
+            <h2>Objetivo de la Sesión</h2>
+            <div class="glass-card">
+                <p>Capacitar al mentorado para hablar con propiedad matemática y arquitectónica sobre Inteligencia Artificial Generativa. Al finalizar esta sesión de 60 minutos, Claudio comprenderá físicamente cómo se procesa la información corporativa, los límites económicos del software probabilístico, y sabrá estructurar un <span class="highlight-text">PRD de IA</span> consistente para presentarlo como un activo de portafolio comercial en entrevistas internacionales.</p>
+            </div>
+        </section>
+
+        <!-- AGENDA -->
+        <section id="agenda">
+            <h2>Agenda de la Sesión (60 Minutos)</h2>
+            <div class="glass-card" style="overflow-x: auto; padding: 0.5rem 1.5rem;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Minutos</th>
+                            <th>Módulo</th>
+                            <th>Diapositivas</th>
+                            <th>Foco Pedagógico</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="highlight-text">00 - 05 min</td>
+                            <td>Introducción e Ideación</td>
+                            <td>Slide 1</td>
+                            <td>El cambio mental de PM tradicional a PM de IA.</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight-text">05 - 15 min</td>
+                            <td>Desmitificación y Límites</td>
+                            <td>Slides 2 - 4</td>
+                            <td>Next-Token, Tokens, Caching, Context Windows y "Lost in the Middle".</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight-text">15 - 30 min</td>
+                            <td>Los Bloques de RAG</td>
+                            <td>Slides 5 - 7</td>
+                            <td>Embeddings, Vectores, Metadata Filtering y Chunking con Overlap.</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight-text">30 - 45 min</td>
+                            <td>Taller Práctico RAG</td>
+                            <td>Slides 8 - 10</td>
+                            <td>Simulación del Cargill Customs Bot y la anatomía del PRD.</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight-text">45 - 55 min</td>
+                            <td>Gobernanza y QA</td>
+                            <td>Slides 11 - 13</td>
+                            <td>Enterprise SLAs, Thresholds, Golden Datasets y Observabilidad (Evals).</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight-text">55 - 60 min</td>
+                            <td>Roleplay y Cierre</td>
+                            <td>Slides 14 - 15</td>
+                            <td>Preguntas estrella de entrevistas IT y entrega de consigna de portafolio.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- DIFERENCIAL DE SESIONES -->
+        <section id="diferencial">
+            <h2>Diferencia de Alcance: Sesión 2 vs. Sesiones 3 y 4</h2>
+            <div class="glass-card">
+                <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">Para darle a Claudio una visión clara de su progresión y ayudarle a estructurar su speech comercial ante directores de tecnología, contrastamos las sesiones en esta tabla comparativa:</p>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Eje de Comparación</th>
+                                <th style="color: var(--color-purple);">Sesión 2: IA Pasiva &amp; RAG (Hoy)</th>
+                                <th style="color: var(--color-blue);">Sesión 3: IA Activa &amp; Agentes (Próxima)</th>
+                                <th style="color: var(--color-orange);">Sesión 4: IA a Escala &amp; CI/CD (Cierre)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="highlight-text">Foco Pedagógico</td>
+                                <td>Recuperación e inyección de datos de dominio de forma estática en prompts.</td>
+                                <td>Sistemas que ejecutan acciones, toman decisiones y llaman a APIs externas.</td>
+                                <td>Evaluación de calidad estadística (Evals), observabilidad y despliegue a producción.</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight-text">Arquitectura Clave</td>
+                                <td>RAG (Chunking + Embeddings + Vector Database).</td>
+                                <td>Loops de razonamiento (ReAct) + Orquestadores + Tool Calling.</td>
+                                <td>Pipelines de monitoreo continuo (Langfuse) + Evals automatizadas en CI/CD.</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight-text">Dinámica del Bot</td>
+                                <td><strong>De Libro Abierto</strong>: El LLM solo lee el material entregado y resume. No altera el mundo externo.</td>
+                                <td><strong>Ejecutor Autónomo</strong>: El bot puede modificar bases de datos, enviar correos, llamar APIs, etc.</td>
+                                <td><strong>Auditor y Guardián</strong>: Herramientas que controlan latencia, costos y previenen degradación del prompt.</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight-text">Entregable de Portafolio</td>
+                                <td>Mock PRD del "Cargill Customs Bot" especificando indexación y umbrales.</td>
+                                <td>PRD y Diagrama de Flujo del Agente de CRM y despachos de Soja en vivo.</td>
+                                <td>Pipeline automatizado de Evals en GitHub Actions con Golden Dataset.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- NOTEBOOKLM -->
+        <section id="notebooklm">
+            <h2>Co-Mentoring Técnico con NotebookLM</h2>
+            <div class="alert-tip">
+                <div class="alert-tip-title">
+                    <i data-lucide="sparkles"></i>
+                    <span>Estrategia Recomendada</span>
+                </div>
+                <div class="alert-tip-desc font-sans">
+                    Antes de la sesión, pídele a Claudio que suba la guía completa de la mentoría y el manual técnico de la arquitectura a <strong>NotebookLM</strong>. Utilicen el siguiente prompt exacto para simular un copiloto de consultas durante la clase.
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <div class="card-header">
+                    <span class="card-title"><i data-lucide="terminal"></i><span>Prompt Copiloto de Cargill</span></span>
+                    <button class="btn-copy" onclick="copyPromptText()"><i data-lucide="copy" class="icon-sm"></i><span>Copiar Prompt</span></button>
+                </div>
+                <div class="code-box">
+                    <div class="code-text" id="prompt-text">Actúa como un CTO y Arquitecto Principal de Inteligencia Artificial de Cargill. 
+Tu objetivo es auditar técnicamente mis propuestas para el "Cargill Customs Bot" (asistente RAG). 
+Cuando te haga una pregunta sobre la implementación de tokens, embeddings o límites de contexto, 
+respóndeme en un tono profesional, pragmático y exigente, contrastando mi rol de Product Manager con la viabilidad real del software.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- METAPHORS -->
+        <section id="metáforas">
+            <h2>Metáforas Visuales para la Pizarra Concepto</h2>
+            <p>Para facilitar el entendimiento conceptual sin abrumar con código matemático, dibujá o mostrá las siguientes analogías en la pizarra en tiempo real:</p>
+
+            <div class="glass-card">
+                <div class="card-title" style="margin-bottom: 0.8rem;"><i data-lucide="layout"></i><span>1. El escritorio del LLM (Ventana de Contexto &amp; Lost in the Middle)</span></div>
+                <div class="whiteboard-box">
+                    <div class="wb-header"><i data-lucide="monitor"></i><span>Pizarra - Heatmap de Atención</span></div>
+                    <div class="wb-canvas">┌──────────────────────────────────────────────────────────────────┐
+│                                                                  │
+│  [ RESOLUCIONES ]       [ lost in the middle ]       [ TARIFAS ] │
+│  Retención: 99%          Retención: ~40%             Retención: 99%
+│  (Zona Caliente)         (ZONA FRÍA / RUIDO)         (Zona Caliente)
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘</div>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <div class="card-title" style="margin-bottom: 0.8rem;"><i data-lucide="scissors"></i><span>2. El Balance de Chunking &amp; Overlap</span></div>
+                <div class="whiteboard-box">
+                    <div class="wb-header"><i data-lucide="terminal"></i><span>Pizarra - Segmentación con Solapamiento</span></div>
+                    <div class="wb-canvas">Documento Completo:
+[... puerto de San Lorenzo requiere habilitación de aduana fluvial de carga ...]
+
+Fragmento A (Chunk Size: 50):   [... puerto de San Lorenzo requiere habilitación de aduana ]
+                                                                 /\
+                                                                /  \ (Overlap 15%)
+                                                               \    /
+Fragmento B (Chunk Size: 50):                                  [ aduana fluvial de carga ...]</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCRIPT SLIDE BY SLIDE -->
+        <section id="guiones">
+            <h2>🎙️ Guion Verbatim Diapositiva por Diapositiva</h2>
+            <p style="margin-bottom: 2rem; color: var(--text-secondary);">A continuación tienes el libreto exacto que debes decir al momento de presentar cada slide durante la simulación con Claudio. Utiliza este texto para garantizar propiedad técnica, fluidez absoluta y un ritmo consistente.</p>
+
+            <div class="slides-scripts-list">
+
+                <!-- SLIDE 1 -->
+                <div class="glass-card slide-script-card" id="slide-1">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">01</span>
+                            <span>Portada (Ideación &amp; Propuestas de Valor con IA)</span>
+                        </div>
+                        <span class="card-title-badge">Slide 1</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 5 Min</span>
+                        <span class="slide-meta-tag">Introducción</span>
+                        <span class="slide-meta-tag">Mindset de IA</span>
+                        <span class="slide-meta-tag">Cargill Customs Bot</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"Claudio, bienvenido a la Sesión 2. En nuestro primer encuentro consolidamos las bases lógicas de las APIs, microservicios, Git y el ciclo de vida del software tradicional. Hoy daremos el salto más estratégico y cotizado en el mercado internacional actual: vamos a desmitificar e implementar Inteligencia Artificial Generativa a nivel empresarial. No lo haremos desde el lado de escribir 'prompts bonitos' en ChatGPT, sino desde el rol de un Product/Project Manager de tecnología que sabe diseñar e integrar valor real de negocio sobre arquitecturas robustas. Para ello, conceptualizaremos, especificaremos y daremos forma a tu primer gran activo de portafolio técnico: el <strong>'Cargill Customs Bot'</strong>, un asistente inteligente diseñado para optimizar el despacho fluvial de granos. Imagínate la transición de un Product Manager tradicional a uno de IA como el paso de construir una autopista de hormigón a capitanear un buque de exploración en alta mar. En el software tradicional, los carriles, las señales y el destino son fijos e inmutables (entradas estáticas y salidas deterministas). En cambio, en la IA, el mar es dinámico, las olas son probabilísticas y cambiantes, y nuestro rol no es controlar cada molécula de agua, sino calibrar los instrumentos de navegación (prompts, bases vectoriales, umbrales de confianza) para que el barco llegue a puerto seguro sin desvíos catastróficos. Al terminar esta sesión, sabrás estructurar un PRD de Inteligencia Artificial que dejará claro a cualquier CTO internacional que comprendés los costos de las APIs, los límites del hardware cognitivo y las estrategias de gobernanza empresarial. Pero para poder liderar con éxito esta integración sin caer en falsas expectativas, primero tenemos que abrir la sala de máquinas, demoler el mito popular y entender qué es exactamente lo que estamos comprando cuando consumimos Inteligencia Artificial. Pasemos a la siguiente diapositiva para desmitificar los modelos y entender su naturaleza probabilística real."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 2 -->
+                <div class="glass-card slide-script-card" id="slide-2">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">02</span>
+                            <span>Desmitificando los LLMs (Del Hype a la Probabilidad)</span>
+                        </div>
+                        <span class="card-title-badge">Slide 2</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 3 Min</span>
+                        <span class="slide-meta-tag">Next-Token Prediction</span>
+                        <span class="slide-meta-tag">Probabilidad</span>
+                        <span class="slide-meta-tag">Hype vs Realidad</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"El primer gran error de un Product Manager no técnico es antropomorfizar la Inteligencia Artificial: creer que 'piensa', 'comprende' o 'razona' como nosotros. Científicamente, un LLM no es un cerebro mágico, es un <strong>motor estadístico probabilístico ultragigante de predicción de la siguiente palabra o token más probable</strong>. Pensá en el teclado predictivo de tu teléfono celular, ese que cuando escribís 'hola, ¿cómo...' te sugiere 'estás?'. Ahora imaginate ese teclado predictivo multiplicado por miles de millones de parámetros y entrenado con toda la internet pública. Eso es un LLM. Otra analogía pedagógica útil es la de un <strong>pianista virtuoso y súper-entrenado que ha memorizado todas las partituras escritas por la humanidad</strong>: si tú presionas las primeras tres notas de una sinfonía, sus dedos instintivamente tocarán la cuarta nota porque es la secuencia que estadísticamente encaja mejor en su memoria muscular, no porque el pianista esté reflexionando sobre la belleza de la sinfonía o la melancolía del compositor. El modelo no sabe qué es la verdad, solo sabe cuál es la sub-palabra matemática más probable que debe seguir a la cadena de texto previa. En reuniones con directores y CTOs, tu rol como PM es bajar el hype: no vendemos magia, gestionamos software probabilístico que consume APIs tradicionales. Al entender que el LLM es un procesador estadístico, vemos la necesidad de rodearlo de sistemas de control rígidos para garantizar que sea útil en entornos corporativos. And dado que estamos consumiendo un servicio de predicción matemática a través de APIs de nube, cada predicción tiene un costo físico medible. ¿Cómo nos factura el proveedor de IA estas consultas? Pasemos a la diapositiva 3 para estudiar la economía de esta tecnología y su unidad de medida: los Tokens."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 3 -->
+                <div class="glass-card slide-script-card" id="slide-3">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">03</span>
+                            <span>La Economía de la IA: Arquitectura de Tokens</span>
+                        </div>
+                        <span class="card-title-badge">Slide 3</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 4 Min</span>
+                        <span class="slide-meta-tag">Tokens (1k = 750 palabras)</span>
+                        <span class="slide-meta-tag">Asimetría de APIs</span>
+                        <span class="slide-meta-tag">Prompt Caching</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text font-sans">"Para gestionar un producto de IA con éxito, tenés que dominar sus finanzas, y en este mundo la moneda de cambio son los <strong>Tokens</strong>. Los modelos de lenguaje no leen palabras crudas ni letras individuales; dividen el texto en bloques de sílabas o fragmentos lógicos llamados tokens (1000 tokens equivalen aproximadamente a 750 palabras). <strong>Miren por favor el gráfico técnico que les sumé en la diapositiva, abajo a la izquierda. Ahí ven la comparación exacta: a la izquierda, la 'explosión de vocabulario' que ocurre cuando un sistema ineficiente intenta memorizar de forma separada cada variante gramatical completa —como 'despachar', 'despachamos', 'despacharon', 'despachó'—, lo que termina sobrecargando la base de datos de la máquina. A la derecha, ven la alternativa ganadora: la mecánica BPE (Byte Pair Encoding) explicada como un juego de Lego, donde una única raíz conceptual naranja ('despach') se conecta dinámicamente con diferentes sufijos gramaticales en violeta ('-ador', '-ar', '-amos').</strong> Esto tiene tres ventajas gigantes de negocio: primero, tolera errores ortográficos porque puede identificar la raíz semántica; segundo, reduce el vocabulario de la máquina a apenas 100.000 piezas reutilizables aumentando la velocidad; y tercero, permite procesar palabras nuevas o extranjeras dividiéndolas en pequeños ladrillos lógicos conocidos. Pensar en tokens es como enviar telegramas en los años 1920, donde la oficina de correos te cobraba una tarifa asimétrica: un centavo por cada sílaba que ingresabas para dar contexto (Input), pero tres centavos por cada sílaba que el telegrafista de destino redactaba en la respuesta (Output). Esta asimetría de precios es clave en negocio: inyectar contexto es sumamente económico, pero generar respuestas es costoso y consume tiempo. Para que tu producto sea financieramente viable en Cargill, no podés enviarle un manual de 500 páginas en cada llamada de API. Debemos implementar técnicas como el <strong>Prompt Caching</strong>, que es como tener un <strong>'pase de temporada' o telepeaje VIP en la autopista</strong>: si los autos base son iguales (las instrucciones fijas del bot no cambian), la API las almacena en memoria y no nos cobra el peaje completo de lectura, descontándonos hasta el 50% de los costos de procesamiento en llamadas repetitivas de los usuarios. Ahora bien, si los tokens representan el costo por procesar información en nuestro escritorio, cabe preguntarnos: ¿qué tan grande puede ser ese escritorio y qué limitaciones físicas tiene la memoria de corto plazo del modelo? Avancemos a la diapositiva 4 para analizar la Ventana de Contexto y el crítico sesgo de 'Lost in the Middle'."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 4 -->
+                <div class="glass-card slide-script-card" id="slide-4">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">04</span>
+                            <span>Ventanas de Contexto &amp; "Lost in the Middle"</span>
+                        </div>
+                        <span class="card-title-badge">Slide 4</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 3 Min</span>
+                        <span class="slide-meta-tag">Context Window</span>
+                        <span class="slide-meta-tag">Curva U de Atención</span>
+                        <span class="slide-meta-tag">Ruido Semántico</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"La <strong>Ventana de Contexto</strong> es, literalmente, el tamaño físico del escritorio del LLM en memoria RAM temporal. Si el escritorio es pequeño, solo podés analizar una página a la vez; si es gigantesco (como en modelos modernos con millones de tokens), podés esparcir un archivador entero sobre la mesa. Sin embargo, aunque admitan contextos masivos, los modelos sufren una limitación de atención física conocida como <strong>'Lost in the Middle' (Perdido en el Medio)</strong>. <strong>Fíjense en el diagrama del scroll vertical que les incluí en la tarjeta de la diapositiva. La parte de arriba y de abajo brillan en un verde fluorescente saludable que indica un 99% de precisión en la recuperación de información. Pero miren el centro: brilla en color rojo de alerta porque la capacidad de recuperación del modelo colapsa a un bajísimo 40%. Es una zona fría, un punto ciego cognitivo literal.</strong> Imagina a un abogado cansado auditando un contrato de 1000 páginas de un tirón a las 3 de la mañana: recordará con precisión clínica del 99% las cláusulas del principio (por el primer café) y las del final (por la emoción de terminar e irse a dormir), pero su atención se desplomará al 40% al llegar a los detalles ubicados en el centro, en la página 500. El LLM opera igual: si saturás su prompt con información masiva, ignorará los datos intermedios. Es como buscar una aguja en un pajar tan grande que el propio buscador olvida qué estaba buscando a mitad de camino. Tu rol estratégico como PM no es arrojarle PDFs enteros al bot, sino diseñar un pipeline de datos que inyecte exactamente la hoja precisa en el escritorio de la IA en el momento correcto. Si no podemos tirarle un archivador masivo al LLM porque se pierde en el centro de las páginas, nuestro deber como estrategas es ser bibliotecarios ultra-eficientes que inyecten únicamente la página exacta que responde a la consulta del usuario. Pero, ¿cómo hace la computadora para comprender conceptualmente qué hojas son relevantes si el usuario pregunta usando sinónimos y lenguaje coloquial? En la diapositiva 5 descubriremos la magia de los Embeddings y los mapas conceptuales tridimensionales."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 5 -->
+                <div class="glass-card slide-script-card" id="slide-5">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">05</span>
+                            <span>Embeddings: Traduciendo Lenguaje a Coordenadas</span>
+                        </div>
+                        <span class="card-title-badge">Slide 5</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 5 Min</span>
+                        <span class="slide-meta-tag">Embeddings</span>
+                        <span class="slide-meta-tag">Vectores 1536d</span>
+                        <span class="slide-meta-tag">Similitud Semántica</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"Aquí es donde ocurre la magia de la traducción computacional. ¿Cómo logra una máquina procesar semánticamente que 'Puerto de Rosario' y 'Terminal Fluvial de Soja' están relacionados si no comparten una sola letra común? Lo logramos mediante <strong>Embeddings</strong>. Un modelo de embeddings toma cualquier texto (una palabra, un párrafo o una ley) y lo traduce a un vector matemático: una lista de 1536 coordenadas decimales. <strong>Miren a la derecha de la diapositiva, el gráfico del Radar Semántico 3D. Pueden ver con claridad cómo funciona el cálculo de 'Cercanía por Coseno': los conceptos logísticos afines como 'Barcaza', 'Puerto' y 'Remolcador' quedan agrupados geométricamente muy juntos en el mismo clúster de color azul, con un score de similitud altísimo de 0.89. Lo mismo ocurre con el clúster agrícola en verde de 'Soja' y 'Trigo'. En cambio, miren ese punto rojo aislado que representa a un 'Automóvil deportivo': geométricamente está ubicado en otra galaxia del radar con un bajísimo 0.12.</strong> Pensalo como un <strong>GPS conceptual de ideas en un centro comercial infinito</strong>. Imaginate un supermercado gigante de tres dimensiones: las manzanas van a estar muy cerca de las peras en el pasillo de verdulería; las galletitas estarán en panadería; y el papel higiénico estará en limpieza. Aunque 'manzana' y 'pera' se escriben diferente, sus 'coordenadas de supermercado' son casi idénticas en el espacio semántico. En cambio, 'manzana de casas' estará en la sección de inmobiliaria y la marca 'Apple' en tecnología. El embedding hace esto en 1536 pasillos conceptuales. Al vectorizar los manuales de Cargill, creamos un mapa conceptual donde las ideas afines de negocio quedan ubicadas en el mismo vecindario geométrico, habilitando búsquedas inteligentes que el software de palabra clave tradicional jamás podría resolver. Una vez que hemos transformado el lenguaje natural en coordenadas GPS tridimensionales de ideas, necesitamos un lugar ultraveloz donde almacenar y organizar estos millones de mapas numéricos de manera eficiente. Pasemos a la diapositiva 6 para explorar las Bases de Datos Vectoriales y el poderoso Filtrado por Metadatos."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 6 -->
+                <div class="glass-card slide-script-card" id="slide-6">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">06</span>
+                            <span>Bases de Datos Vectoriales &amp; Metadata Filtering</span>
+                        </div>
+                        <span class="card-title-badge">Slide 6</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 5 Min</span>
+                        <span class="slide-meta-tag">Vector DBs (Pinecone)</span>
+                        <span class="slide-meta-tag">Metadata Filtering</span>
+                        <span class="slide-meta-tag">Búsqueda Híbrida</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"Una vez que tenemos los manuales convertidos en coordenadas (vectores), necesitamos una biblioteca especializada para guardarlos: las <strong>Bases de Datos Vectoriales</strong> como Pinecone o Chroma. Pensalas como un <strong>almacén logístico robotizado de alta tecnología</strong>: los robots buscan los paquetes basándose únicamente en sus coordenadas tridimensionales en lugar de leer etiquetas físicas. El problema es que si hacemos una búsqueda semántica pura en millones de vectores, el robot podría traerte una resolución portuaria similar pero del año 2018 o de un puerto en Brasil, en lugar del reglamento de soja de Rosario de 2026. Para solucionar esto en entornos corporativos, implementamos <strong>Metadata Filtering (Filtrado de Metadatos)</strong>. Pensalo como una <strong>tarjeta de control de acceso o llave magnética en los pasillos de la biblioteca</strong>: antes de permitir que la IA busque semánticamente en las estanterías, aplicamos un filtro duro y estructurado por metadatos (como Puerto = 'Rosario', Año = '2026', Categoría = 'Reglamentos'). Esto actúa como un muro de contención física que restringe la búsqueda exclusivamente al estante exacto que nos interesa en microsegundos, garantizando velocidad y bajo costo en tokens. Pero antes de poder guardar la información de un extenso manual portuario en esta base vectorial, tenemos que enfrentar un desafío físico: no podemos guardar el libro entero en una sola coordenada. Tenemos que recortarlo en porciones digeribles. Avancemos a la diapositiva 7 para dominar las estrategias de Chunking y el solapamiento semántico de Overlap."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 7 -->
+                <div class="glass-card slide-script-card" id="slide-7">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">07</span>
+                            <span>Chunking: Estrategias de Fragmentación Documental</span>
+                        </div>
+                        <span class="card-title-badge">Slide 7</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 5 Min</span>
+                        <span class="slide-meta-tag">Chunking</span>
+                        <span class="slide-meta-tag">Overlap (10-20%)</span>
+                        <span class="slide-meta-tag">Coherencia Gramatical</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"Para meter la información privada de Cargill en la ventana de contexto, debemos segmentar los manuales en pedacitos manejables llamados <strong>Chunks</strong>. Pensalo como <strong>cortar una baguette gigante de pan en sándwiches individuales tamaño bocado</strong> para que un comensal no se atragante, o en tarjetas de estudio de 250 palabras cada una. Pero ojo: si hacés cortes mecánicos rígidos cada 1000 caracteres, podés tajar una resolución arancelaria o una fecha crítica justo por la mitad, destruyendo por completo su significado conceptual. Para evitar esto, como PMs debemos calibrar el <strong>Overlap (Solapamiento)</strong>. Esto es como la <strong>colocación de tejas en un techo o las escamas de un pez</strong>: repetimos un 10% o 15% del final de la ficha A al inicio de la ficha B. Si en la ficha A decíamos '...el impuesto portuario se aplica a partir de marzo de 2026', en la ficha B iniciaremos repitiendo '...a partir de marzo de 2026, la tasa de soja será del 5%'. Este solapamiento semántico garantiza que el significado se mantenga intacto sin importar por dónde corte la tijera del software. Ahora que comprendemos cómo cortar, solapar y vectorizar la información, es momento de ver cómo se ensambla todo esto en la arquitectura estrella de la IA corporativa: la arquitectura RAG. Pasemos a la diapositiva 8 para estudiar su Fase 1, la Ingestión o catalogación de datos offline."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 8 -->
+                <div class="glass-card slide-script-card" id="slide-8">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">08</span>
+                            <span>Anatomía de RAG: Fase 1 - Ingestión del Dato Privado</span>
+                        </div>
+                        <span class="card-title-badge">Slide 8</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 4 Min</span>
+                        <span class="slide-meta-tag">RAG Pipeline</span>
+                        <span class="slide-meta-tag">Ingestión Batch (Offline)</span>
+                        <span class="slide-meta-tag">Vectorización</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"Con todas estas herramientas construimos la arquitectura reina del entorno empresarial: <strong>RAG (Retrieval-Augmented Generation)</strong>. RAG nos permite inyectar información privada de la empresa en la IA de forma segura, veloz y sin incurrir en entrenamientos multimillonarios de modelos. Su primera fase es la <strong>Ingestión (offline o batch)</strong>. <strong>Si miran a la derecha de la diapositiva, verán nuestro esquema técnico de la Arquitectura RAG (el cual pueden clickear en cualquier momento para abrirlo en grande y analizarlo a pantalla completa). Este diagrama detalla visualmente cómo se estructuran nuestros pipelines offline.</strong> Pensalo como <strong>abastecer y catalogar una farmacia antes de abrir sus puertas al público</strong>. El farmacéutico no espera a que llegue el primer cliente para ver qué tiene; toma las cajas de medicamentos de los depósitos de Cargill (nuestros manuales y PDFs de aduanas), las fragmenta en dosis individuales (chunking con overlap), calcula sus códigos de barra químicos (embeddings) y las ordena meticulosamente en estantes específicos del almacén (Vector DB de Pinecone). El usuario de negocio aún no interactúa; estamos catalogando e indexando toda la biblioteca privada del negocio para dejarla en un estado de lista para la consulta. Con nuestra biblioteca de vectores catalogada e indexada en silencio en las estanterías de Pinecone, la base de datos está lista. Pero, ¿qué sucede cuando el usuario de negocio entra a la aplicación e interactúa en vivo? Avancemos a la diapositiva 9 para analizar la Fase 2 de RAG: la Consulta en tiempo real y la orquestación del examen a libro abierto."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 9 -->
+                <div class="glass-card slide-script-card" id="slide-9">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">09</span>
+                            <span>Anatomía de RAG: Fase 2 - Consulta en Tiempo Real</span>
+                        </div>
+                        <span class="card-title-badge">Slide 9</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 5 Min</span>
+                        <span class="slide-meta-tag">RAG Online (Live)</span>
+                        <span class="slide-meta-tag">Contexto Enriquecido</span>
+                        <span class="slide-meta-tag">Libro Abierto</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"La fase 2 de RAG ocurre en vivo (online) cuando el analista portuario hace una pregunta en el chat, por ejemplo: '¿Cuál es la tasa arancelaria de flete en Rosario para maíz?'. RAG soluciona esto bajo la lógica estricta de un <strong>examen universitario a libro abierto</strong>. <strong>Fíjense a la derecha de la diapositiva, en nuestro plano arquitectónico. El flujo en vivo de la consulta viaja en tiempo real: el usuario lanza la pregunta en lenguaje natural, el sistema calcula su embedding en milisegundos, busca en Pinecone los 3 chunks más similares semánticamente, los inyecta en el prompt y el LLM genera la respuesta precisa basado únicamente en esa evidencia factual.</strong> Es como si <strong>el profesor (el software RAG) corriera velozmente a las estanterías de la biblioteca, tomara las 3 hojas exactas del manual portuario, las apoyara abiertas sobre el escritorio del estudiante (la ventana de contexto del LLM) y le dijera: 'Respondé a esta pregunta basándote estrictamente en estas 3 páginas'</strong>. El LLM lee el prompt enriquecido con las páginas exactas de nuestro manual y redacta la respuesta final de forma coherente. Es un sistema hiper-confiable: la IA no adivina ni inventa; solo sintetiza la evidencia factual que le inyectamos en su escritorio. Esta arquitectura RAG es el estándar de oro en las grandes corporaciones. Pero para que tu equipo de desarrollo pueda construirla con precisión matemática y sin desvíos de presupuesto, debés plasmar estas reglas en un documento de requerimientos formal. Pasemos a la diapositiva 10 para iniciar nuestro taller práctico de diseño del Mock PRD del 'Cargill Customs Bot'."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 10 -->
+                <div class="glass-card slide-script-card" id="slide-10">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">10</span>
+                            <span>Taller: El Mock PRD del "Cargill Customs Bot"</span>
+                        </div>
+                        <span class="card-title-badge">Slide 10</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 6 Min</span>
+                        <span class="slide-meta-tag">Taller Live</span>
+                        <span class="slide-meta-tag">Especificación PRD</span>
+                        <span class="slide-meta-tag">Entregable LinkedIn</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"Pasemos de la teoría abstracta a la especificación de negocio en el mundo real. En este taller daremos forma al <strong>Mock PRD de nuestro 'Cargill Customs Bot'</strong>. Claudio, en este documento definiremos formalmente el problema de negocio: los despachantes de soja pierden horas buscando regulaciones dispersas en PDFs; detallaremos los inputs del sistema: normativas fluviales de la hidrovía y regulaciones de aduanas; y fijaremos las reglas técnicas de indexación para el equipo de desarrollo. Diseñar este PRD de IA te posiciona de inmediato como un PM de alto nivel. Pensalo como el <strong>plano arquitectónico detallado de un rascacielos</strong>: si dejas las cañerías o el cableado al azar de los constructores, el edificio colapsará o no tendrá agua en los pisos superiores. Como PM definís la altura de las cañerías (chunk size de 500 tokens), el grosor de los muros (metadatos de filtrado Pinecone) y la velocidad de los ascensores (SLA de latencia menor a 2 segundos). Este PRD será la joya de tu portafolio en LinkedIn. Al redactar los requerimientos de este PRD, te vas a dar cuenta de que la IA empresarial no solo debe ser veloz y precisa, sino fundamentalmente segura. Si enviamos datos confidenciales a la ligera, exponemos secretos corporativos. Avancemos a la diapositiva 11 para tratar la Gobernanza de Datos, la Privacidad y el valor crítico de los Enterprise SLAs."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 11 -->
+                <div class="glass-card slide-script-card" id="slide-11">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">11</span>
+                            <span>Gobernanza de IA, Privacidad &amp; Fuga de Datos (Leakage)</span>
+                        </div>
+                        <span class="card-title-badge">Slide 11</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 3 Min</span>
+                        <span class="slide-meta-tag">Gobernanza del Dato</span>
+                        <span class="slide-meta-tag">Enterprise SLAs</span>
+                        <span class="slide-meta-tag">Privacidad Cifrada</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"Como IT Product/Project Manager sénior, tu primera y más crítica responsabilidad es la seguridad de la información. Nunca, bajo ninguna circunstancia, debemos permitir que los empleados expongan datos confidenciales corporativos (tarifas, contratos, identidades de clientes) a modelos comerciales públicos sin acuerdos legales de privacidad. Hacer eso es como <strong>escribir las finanzas secretas de Cargill en una postal de cartón abierta y enviarla por correo tradicional</strong>: cualquiera en el trayecto puede leerla, y el cartero (el proveedor de IA) tiene todo el derecho de fotocopiar tus datos para re-entrenar sus servicios públicos, exponiendo tus secretos a la competencia. En tu PRD debés exigir explícitamente el uso de APIs corporativas bajo acuerdos de <strong>Enterprise SLAs (Service Level Agreements)</strong>. Pensalo como un <strong>camión blindado de transporte de caudales custodiado por un NDA inquebrantable</strong>: los datos viajan encriptados por túneles seguros y el proveedor tiene prohibido legal y técnicamente almacenar, retener o utilizar la información de tus consultas para entrenar sus futuros modelos comerciales. Establecer un túnel seguro con un Enterprise SLA nos blinda legalmente. Pero, ¿cómo protegemos al despachante portuario de que el bot invente información de forma elocuente cuando la base de datos no contiene la respuesta? Pasemos a la diapositiva 12 para estudiar cómo calibrar Umbrales de Confianza y la lógica segura del 'No-Answer'."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 12 -->
+                <div class="glass-card slide-script-card" id="slide-12">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">12</span>
+                            <span>Mitigación de Alucinaciones: Umbrales y Lógica "No-Answer"</span>
+                        </div>
+                        <span class="card-title-badge">Slide 12</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 3 Min</span>
+                        <span class="slide-meta-tag">Confidence Thresholds</span>
+                        <span class="slide-meta-tag">Lógica No-Answer</span>
+                        <span class="slide-meta-tag">Score de Similitud</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"En una operación crítica de comercio exterior, una alucinación (un dato inventado por la IA) puede costar millones de dólares en multas portuarias o retenciones de barcos. Para blindar el Cargill Customs Bot, debemos implementar <strong>Confidence Thresholds (Umbrales de Confianza)</strong>. Cuando el buscador semántico busca chunks en Pinecone, nos devuelve cada fragmento con un puntaje matemático de similitud semántica de 0 a 1. Pensalo como un <strong>detector de metales de alta precisión en un aeropuerto</strong>: si configurás el detector con sensibilidad muy baja, va a pasar de todo (las alucinaciones cruzarán la puerta); si lo configurás extremadamente sensible, detendrá a todos los pasajeros legítimos (el bot nunca responderá). Calibramos nuestro detector a un score intermedio exacto de 0.75. Si la pregunta del usuario no tiene nada que ver con los manuales (por ejemplo, nos pregunta una receta de cocina o sobre un puerto en África), el score semántico será bajo, por ejemplo, 0.45. El sistema actuará como un <strong>piloto de avión profesional ante una niebla espesa</strong>: en lugar de adivinar dónde está la pista (alucinar), se abstiene de aterrizar y responde de forma segura: 'No dispongo de registros autorizados para responder a su consulta'. La lógica del no-answer es nuestro paracaídas de seguridad. Calibrar el umbral a 0.75 salva a la compañía de multas millonarias por respuestas inventadas. Sin embargo, en un software probabilístico, un cambio en el prompt de ayer puede romper el comportamiento de hoy. ¿Cómo garantizamos la calidad de nuestro bot de forma estadística antes de lanzarlo a producción? Avancemos a la diapositiva 13 para explorar el Golden Dataset y las herramientas de Evals automatizadas en observabilidad."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 13 -->
+                <div class="glass-card slide-script-card" id="slide-13">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">13</span>
+                            <span>Evaluación: Golden Dataset y Observabilidad (Evals)</span>
+                        </div>
+                        <span class="card-title-badge">Slide 13</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 4 Min</span>
+                        <span class="slide-meta-tag">Golden Dataset (50 pares Q&amp;A)</span>
+                        <span class="slide-meta-tag">Langfuse</span>
+                        <span class="slide-meta-tag">CI/CD Benchmarks</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"La ingeniería de software probabilística difiere de la tradicional. No podés evaluar la calidad de un bot chateando manualmente cinco minutos antes de lanzarlo. Eso es como <strong>probar la seguridad de un nuevo modelo de automóvil dándole una vuelta rápida a la manzana</strong>: puede que frene bien, pero no tenés ninguna métrica científica de impacto. Necesitamos auditorías de calidad estadísticas basadas en un <strong>Golden Dataset</strong>. Este es un <strong>túnel de viento y un crash-test simulator en una planta de ensamblaje automotriz</strong>. Es un conjunto fijo e inmutable de 50 a 100 preguntas difíciles recolectadas de casos reales de Cargill, asociadas a sus correspondientes respuestas perfectas redactadas por expertos aduaneros (*Ground Truth*). Cada vez que tu equipo de ingenieros modifique el prompt base, cambie el embedding o actualice la base de datos vectorial, correremos de forma automatizada este crash-test semántico mediante herramientas de observabilidad como <strong>Langfuse</strong>, midiendo estadísticamente tres métricas críticas: adherencia al contexto (para asegurar que no alucine), relevancia de la respuesta y cobertura semántica. Si el score general se mantiene alto, el release está aprobado; si baja, se bloquea el despliegue de inmediato. Con un Golden Dataset integrado en tu pipeline de desarrollo, no lideras un experimento escolar; estás gestionando un producto enterprise auditable. Este nivel de dominio técnico te equipa con súper-poderes de negociación para cualquier entrevista de trabajo de alto impacto. Pasemos a la diapositiva 14 para simular un Roleplay de entrevista y entrenar tu defensa técnica ante las preguntas trampa de un CTO internacional."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 14 -->
+                <div class="glass-card slide-script-card" id="slide-14">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">14</span>
+                            <span>Roleplay: Defensa Técnica de IA en Entrevistas</span>
+                        </div>
+                        <span class="card-title-badge">Slide 14</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 2.5 Min</span>
+                        <span class="slide-meta-tag">Simulación de Entrevista</span>
+                        <span class="slide-meta-tag">CTO Audit</span>
+                        <span class="slide-meta-tag">Respuestas de Alto Impacto</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"Hagamos una simulación de entrevista de alto impacto. Imaginate que un CTO te pregunta en una entrevista internacional para un puesto de Senior AI Project Manager: 'Nuestra base de datos de productos cambia todos los días y el bot está alucinando y dando precios viejos. ¿Deberíamos hacer Fine-Tuning al modelo para solucionarlo?'. Tu respuesta inmediata debe ser un rotundo: <strong>'No, el Fine-Tuning es la estrategia incorrecta para actualizar conocimiento fáctico'</strong>. Pensalo como una partida de ajedrez donde sabés exactamente qué pieza mover ante el ataque del oponente. Explicás que **el fine-tuning es como enviar a un médico de vuelta a la universidad durante 6 años (fine-tuning) solo para que aprenda la ficha clínica del paciente que acaba de ingresar hoy al hospital. La estrategia correcta es un pipeline RAG con Metadata Filtering: mantenemos el modelo base inteligente (el médico graduado) y le acercamos en tiempo real la ficha médica actualizada del paciente directo a su camilla (su ventana de contexto)**. RAG inyecta el dato exacto hoy de forma barata y 100% precisa. Esta defensa técnica demuestra seniority estratégico y le ahorra miles de dólares a la compañía. Dominar esta defensa en entrevistas te consagra como un Project Manager altamente especializado. Para cerrar con broche de oro esta Sesión 2, pasemos a la diapositiva 15 para consolidar tu propuesta de valor y mapear el emocionante roadmap estratégico que nos espera en las próximas sesiones."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 15 -->
+                <div class="glass-card slide-script-card" id="slide-15">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">15</span>
+                            <span>Tu Ruta y Valor como IT Product/Project Manager</span>
+                        </div>
+                        <span class="card-title-badge">Slide 15</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 2.5 Min</span>
+                        <span class="slide-meta-tag">Diferencial de Negocio</span>
+                        <span class="slide-meta-tag">Roadmap de Sesiones</span>
+                        <span class="slide-meta-tag">Cierre</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"Para cerrar esta excelente Sesión 2, Claudio, consolidemos por qué este conocimiento te sitúa en la cima del mercado. Comprender tokens te capacita para auditar, estimar y defender presupuestos de APIs de IA en comités ejecutivos, evitando desvíos financieros en la corporación; dominar RAG y datasets de prueba te capacita para definir Criterios de Aceptación (DoD) sólidos para tu equipo de ingenieros de datos; y entender Enterprise SLAs y umbrales te posiciona como el líder de la gobernanza de riesgos tecnológicos de la compañía. <strong>Hacemos la transición de ser el albañil que coloca ladrillos de código al azar al Arquitecto Maestro que dibuja los planos de la smart city y coordina la infraestructura de transporte cognitivo</strong>. En tu hoja de ruta hacia el posicionamiento tech: hoy en la Sesión 2 dominaste la <strong>'IA Pasiva'</strong> mediante RAG para recuperar conocimiento estático privado. En la Sesión 3 daremos el salto hacia la <strong>'IA Activa'</strong> con Sistemas Agénticos Autónomos (agentes que tienen manos y pies, llaman a APIs y toman decisiones complejas de flujo de negocio). Y en la Sesión 4 consolidaremos la <strong>'IA a Escala'</strong>, implementando observabilidad técnica, pipelines de Evals en CI/CD y despliegue robusto en la nube. ¡Excelente semana, completá la plantilla del Mock PRD en GitHub y nos vemos en la Sesión 3!"</div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <!-- JAVASCRIPT FOR SEARCH & NAVIGATION -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        function setActiveNav(element) {
+            const items = document.querySelectorAll('.nav-item');
+            items.forEach(item => item.classList.remove('active'));
+            element.parentElement.classList.add('active');
+        }
+
+        function filterContent() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const cards = document.querySelectorAll('.slide-script-card');
+            
+            cards.forEach(card => {
+                const title = card.querySelector('.card-title').textContent.toLowerCase();
+                const tags = card.querySelector('.slide-meta-row').textContent.toLowerCase();
+                const scriptText = card.querySelector('.script-text').textContent.toLowerCase();
+                
+                if (title.includes(query) || tags.includes(query) || scriptText.includes(query)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function copyPromptText() {
+            const text = document.getElementById('prompt-text').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.querySelector('.btn-copy');
+                btn.innerHTML = `<i data-lucide="check" class="icon-sm"></i><span>¡Copiado!</span>`;
+                lucide.createIcons();
+                setTimeout(() => {
+                    btn.innerHTML = `<i data-lucide="copy" class="icon-sm"></i><span>Copiar Prompt</span>`;
+                    lucide.createIcons();
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
