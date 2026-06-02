@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actividad Semanal: Mock PRD Cargill Customs Bot</title>
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* CSS RESET & VARIABLES */
+        :root {
+            --bg-primary: #090d16;
+            --bg-secondary: #0f172a;
+            --bg-card: rgba(15, 23, 42, 0.65);
+            --bg-input: rgba(8, 12, 22, 0.9);
+            --border-card: rgba(255, 255, 255, 0.05);
+            --border-input: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --color-blue: #3b82f6;
+            --color-blue-glow: rgba(59, 130, 246, 0.3);
+            --color-green: #10b981;
+            --color-green-glow: rgba(16, 185, 129, 0.3);
+            --color-purple: #8b5cf6;
+            --color-purple-glow: rgba(139, 92, 246, 0.3);
+            --color-red: #ef4444;
+            --color-red-glow: rgba(239, 68, 68, 0.3);
+            --color-orange: #f97316;
+            --color-orange-glow: rgba(249, 115, 22, 0.3);
+            --font-display: 'Plus Jakarta Sans', 'Inter', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'Fira Code', monospace;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(30, 27, 75, 0.4) 0%, transparent 45%),
+                radial-gradient(circle at 90% 80%, rgba(15, 23, 42, 0.5) 0%, transparent 45%);
+            background-attachment: fixed;
+        }
+
+        /* HEADER BANNER */
+        header {
+            border-bottom: 1px solid var(--border-card);
+            background: rgba(9, 13, 22, 0.8);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            padding: 1rem 2rem;
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title-area {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-badge {
+            background: linear-gradient(135deg, var(--color-blue), var(--color-purple));
+            color: #fff;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+        }
+
+        .header-text h1 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-text p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* PROGRESS TRACKER */
+        .progress-widget {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-card);
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+        }
+
+        .progress-bar-bg {
+            width: 120px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--color-blue), var(--color-green));
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        .progress-text {
+            font-size: 0.8rem;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            color: var(--color-green);
+        }
+
+        /* MAIN CONTENT GRID */
+        .main-container {
+            max-width: 1400px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+        }
+
+        /* SIDE NAVIGATION */
+        aside {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .nav-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
+            padding: 1.25rem;
+            backdrop-filter: blur(16px);
+        }
+
+        .nav-card h2 {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            padding-left: 0.5rem;
+        }
+
+        .nav-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            list-style: none;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .nav-item:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.02);
+            border-color: rgba(255, 255, 255, 0.03);
+        }
+
+        .nav-item.active {
+            color: var(--color-blue);
+            background: var(--color-blue-glow);
+            border-color: rgba(59, 130, 246, 0.2);
+            font-weight: 600;
+        }
+
+        .nav-item.completed {
+            color: var(--color-green);
+        }
+
+        .nav-item.completed.active {
+            background: var(--color-green-glow);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .instructor-card {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(59, 130, 246, 0.05));
+            border: 1px solid rgba(139, 92, 246, 0.1);
+            border-radius: 16px;
+            padding: 1.25rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .instructor-card::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            right: -20%;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, var(--color-purple) 0%, transparent 70%);
+            opacity: 0.15;
+            filter: blur(10px);
+        }
+
+        .instructor-card h3 {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--color-purple);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .instructor-card p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* CONTENT AREA */
+        main {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 20px;
+            padding: 2.5rem;
+            backdrop-filter: blur(16px);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* GLOW BACKGROUNDS FOR MAIN PANEL */
+        .panel-glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, var(--color-blue-glow) 0%, transparent 70%);
+            top: -100px;
+            right: -100px;
+            z-index: -1;
+            pointer-events: none;
+            filter: blur(40px);
+            opacity: 0.3;
+            transition: var(--transition);
+        }
+
+        /* SECTIONS WRAPPERS */
+        .section-panel {
+            display: none;
+            flex-direction: column;
+            gap: 2rem;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .section-panel.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* SECTION HEADER */
+        .section-header {
+            border-bottom: 1px solid var(--border-card);
+            padding-bottom: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header h2 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* FORM ELEMENTS */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .label-desc {
+            font-weight: 400;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-left: auto;
+        }
+
+        input[type="text"], select, textarea {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-input);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            padding: 0.8rem 1rem;
+            width: 100%;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        input[type="text"]:focus, select:focus, textarea:focus {
+            border-color: var(--color-blue);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.15);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 110px;
+            line-height: 1.5;
+        }
+
+        /* EDUCATIONAL INFO BOX */
+        .info-box {
+            background: rgba(139, 92, 246, 0.03);
+            border: 1px solid rgba(139, 92, 246, 0.1);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            font-size: 0.825rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+        }
+
+        .info-box i {
+            color: var(--color-purple);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* DYNAMIC EXPLANATORY PANEL */
+        .dynamic-panel {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            transition: var(--transition);
+        }
+
+        .dynamic-panel-header {
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dynamic-panel-desc {
+            font-size: 0.8rem;
+            line-height: 1.45;
+            color: var(--text-secondary);
+        }
+
+        /* CHECKLIST CONTAINER */
+        .checklist-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--border-card);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .checklist-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .checklist-item input[type="checkbox"] {
+            margin-top: 3px;
+            accent-color: var(--color-green);
+            cursor: pointer;
+        }
+
+        .checklist-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .checklist-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .checklist-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* GOLDEN DATASET TABLE */
+        .dataset-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid var(--border-card);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .dataset-table th {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 0.8rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-align: left;
+            border-bottom: 1px solid var(--border-card);
+        }
+
+        .dataset-table td {
+            padding: 0.8rem;
+            border-bottom: 1px solid var(--border-card);
+            background: rgba(8, 12, 22, 0.4);
+            vertical-align: top;
+        }
+
+        .dataset-num {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            color: var(--color-purple);
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-top: 0.8rem;
+        }
+
+        /* FOOTER ACTIONS */
+        .footer-actions {
+            border-top: 1px solid var(--border-card);
+            padding-top: 1.5rem;
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-card);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .btn-primary {
+            background: var(--color-blue);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.55);
+        }
+
+        .btn-success {
+            background: var(--color-green);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.55);
+        }
+
+        /* PREVIEW PANEL */
+        .preview-box {
+            background: var(--bg-input);
+            border: 1px solid var(--border-input);
+            border-radius: 12px;
+            padding: 1.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-primary);
+            line-height: 1.6;
+            max-height: 450px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .export-actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* ANIMATED ALERT */
+        .toast-notification {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--color-green);
+            box-shadow: 0 5px 25px rgba(16, 185, 129, 0.2);
+            color: var(--text-primary);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .toast-notification.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+            aside {
+                display: none; /* simple hidden for screen size in desktop presentation */
+            }
+        }
+
+        /* PDF PRINT STYLES */
+        @media print {
+            body {
+                background: #fff !important;
+                color: #000 !important;
+                font-size: 11pt;
+            }
+            header, aside, .footer-actions, .progress-widget, .info-box, .dynamic-panel, .export-actions-grid, .preview-label {
+                display: none !important;
+            }
+            main {
+                border: none !important;
+                padding: 0 !important;
+                background: transparent !important;
+            }
+            .section-panel {
+                display: flex !important;
+                page-break-after: always;
+                gap: 1.5rem !important;
+            }
+            input[type="text"], select, textarea {
+                background: #fff !important;
+                color: #000 !important;
+                border: 1px solid #ccc !important;
+                border-radius: 0 !important;
+                padding: 0.5rem !important;
+            }
+            .dataset-table {
+                background: #fff !important;
+                border: 1px solid #ccc !important;
+            }
+            .dataset-table td, .dataset-table th {
+                border: 1px solid #ccc !important;
+                background: #fff !important;
+                color: #000 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="toast-notification">
+        <i data-lucide="check-circle" style="color: var(--color-green);"></i>
+        <span id="toast-message">Copiado al portapapeles con éxito</span>
+    </div>
+
+    <header>
+        <div class="header-container">
+            <div class="header-title-area">
+                <div class="logo-badge">SESIÓN 2</div>
+                <div class="header-text">
+                    <h1>Actividad Semanal: Mock PRD - Cargill Customs Bot</h1>
+                    <p>Mentoría PM de IA / Claudio Vernuccio</p>
+                </div>
+            </div>
+            
+            <div class="progress-widget">
+                <span class="progress-text" id="progress-val">0%</span>
+                <div class="progress-bar-bg">
+                    <div id="progress-fill" class="progress-bar-fill"></div>
+                </div>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Completado</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        
+        <!-- SIDEBAR NAVIGATION -->
+        <aside>
+            <div class="nav-card">
+                <h2>Secciones</h2>
+                <ul class="nav-list">
+                    <li class="nav-item active" onclick="switchSection(0)">
+                        <i class="icon-sm" data-lucide="compass"></i>
+                        <span>1. Visión & Datos</span>
+                    </li>
+                    <li class="nav-item" onclick="switchSection(1)">
+                        <i class="icon-sm" data-lucide="database"></i>
+                        <span>2. Ingestión & Chunks</span>
+                    </li>
+                    <li class="nav-item" onclick="switchSection(2)">
+                        <i class="icon-sm" data-lucide="sliders"></i>
+                        <span>3. Inferencia & SLA</span>
+                    </li>
+                    <li class="nav-item" onclick="switchSection(3)">
+                        <i class="icon-sm" data-lucide="check-square"></i>
+                        <span>4. QA & DoD</span>
+                    </li>
+                    <li class="nav-item" onclick="switchSection(4)">
+                        <i class="icon-sm" data-lucide="award"></i>
+                        <span>5. Golden Dataset</span>
+                    </li>
+                    <li class="nav-item" onclick="switchSection(5)">
+                        <i class="icon-sm" data-lucide="file-text"></i>
+                        <span>6. Exportar PRD</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="instructor-card">
+                <h3>
+                    <i class="icon-sm" data-lucide="terminal"></i>
+                    Co-Mentoring Tip
+                </h3>
+                <p>Completá esta planilla pensando como un Product Manager senior que negocia con ingenieros y defiende la calidad técnica y la gobernanza del producto.</p>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT WORKSPACE -->
+        <main>
+            <div class="panel-glow" id="glow-effect"></div>
+
+            <!-- SECTION 1: VISION & DATOS -->
+            <div class="section-panel active" id="sec-0">
+                <div class="section-header">
+                    <h2><i data-lucide="compass" style="color: var(--color-blue);"></i> 1. Visión del Producto & Fuentes de Datos</h2>
+                    <p>Definí cuál es el problema que viene a resolver el bot de Cargill y con qué documentos entrenados/indexados operará en su base de conocimiento.</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-problema">
+                        Problema de Negocio
+                        <span class="label-desc">¿Por qué es necesario este bot en la operación?</span>
+                    </label>
+                    <textarea id="input-problema" placeholder="Ej: Los despachantes fluviales de granos de Cargill pierden de 3 a 5 horas diarias buscando regulaciones arancelarias, normativas de Hidrovía y aduanas en más de 20 PDFs extensos y dispersos. Esto genera demoras en la liquidación de fletes y aumenta el riesgo de multas portuarias por interpretación errónea..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-solucion">
+                        Solución Propuesta (Cargill Customs Bot)
+                        <span class="label-desc">La propuesta basada en IA</span>
+                    </label>
+                    <textarea id="input-solucion" placeholder="Ej: Desarrollar un bot de chat RAG conectado a la Vector DB corporativa para responder consultas regulatorias en tiempo real en menos de 2 segundos, inyectando fragmentos oficiales específicos sobre la Ventana de Contexto del LLM..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-datos">
+                        Fuentes de Datos Críticas (Inputs del Sistema)
+                        <span class="label-desc">¿Qué documentos de dominio privado se van a indexar?</span>
+                    </label>
+                    <textarea id="input-datos" placeholder="Ej:
+1. Manual de Tarifas de la Hidrovía Paraná-Paraguay (Edición 2026).
+2. Código Aduanero de la República Argentina (Sección Exportaciones).
+3. Resoluciones internas de Cargill sobre contingencias climáticas y demoras de fletes marítimos."></textarea>
+                </div>
+
+                <div class="info-box">
+                    <i data-lucide="help-circle"></i>
+                    <div>
+                        <strong>Regla de Oro de Negocio:</strong> "No se puede automatizar el caos". Antes de conectar la base de datos, asegurate de que los manuales oficiales de Cargill estén consolidados y vigentes.
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: INGESTION & CHUNKS -->
+            <div class="section-panel" id="sec-1">
+                <div class="section-header">
+                    <h2><i data-lucide="database" style="color: var(--color-purple);"></i> 2. Estrategia de Ingestión y Chunking</h2>
+                    <p>Determiná cómo segmentará el sistema los manuales para guardarlos en la base de datos vectorial sin perder contexto.</p>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="select-chunking">Algoritmo de Chunking</label>
+                        <select id="select-chunking" onchange="updateChunkingPanel()">
+                            <option value="recursive" selected>Recursive Character Chunking (Recomendado)</option>
+                            <option value="fixed">Fixed-size Chunking (Cortes rígidos)</option>
+                            <option value="semantic">Semantic Chunking (Por similitud de significado)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="select-size">Tamaño de Fragmento (Chunk Size)</label>
+                        <select id="select-size" onchange="updateChunkingPanel()">
+                            <option value="200">200 tokens (~150 palabras)</option>
+                            <option value="500" selected>500 tokens (~375 palabras - Recomendado)</option>
+                            <option value="1000">1000 tokens (~750 palabras)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="select-overlap">Solapamiento (Overlap)</label>
+                        <select id="select-overlap" onchange="updateChunkingPanel()">
+                            <option value="0">0% (Sin repetición)</option>
+                            <option value="5">5% de solapamiento</option>
+                            <option value="15" selected>15% de solapamiento (Recomendado)</option>
+                            <option value="25">25% de solapamiento</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="input-chunk-just">Justificación Técnica del Chunking</label>
+                        <input type="text" id="input-chunk-just" placeholder="Ej: Se utiliza 15% de overlap para garantizar que las leyes y tablas arancelarias no se corten en la costura semántica de los chunks.">
+                    </div>
+                </div>
+
+                <div class="dynamic-panel" id="chunking-panel">
+                    <div class="dynamic-panel-header">
+                        <i data-lucide="zap" style="color: var(--color-purple);" class="icon-sm"></i>
+                        <span id="chunk-panel-title">Recursive Character Chunking (500 tokens / 15% overlap)</span>
+                    </div>
+                    <p class="dynamic-panel-desc" id="chunk-panel-desc">
+                        Esta configuración es el estándar de oro en RAG corporativo. Al utilizar Recursive Character Chunking, el pipeline cortará los manuales respetando primero los párrafos, luego las oraciones y finalmente los espacios. El overlap de 15% (75 tokens) asegura que si una resolución tarifaria aduanera de Cargill queda dividida entre dos fragmentos, los valores de flete mantendrán la cohesión en la costura del corte, previniendo alucinaciones de precios por pérdida de contexto.
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <i data-lucide="alert-triangle" style="color: var(--color-orange);"></i>
+                    <div>
+                        <strong>Cuidado con Lost in the Middle:</strong> Si elegís fragmentos demasiado grandes (como 2000 tokens), meterás demasiada información en la Ventana de Contexto del LLM, haciendo que pierda atención en la zona intermedia y falle la respuesta.
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: INFERENCIA & SLA -->
+            <div class="section-panel" id="sec-2">
+                <div class="section-header">
+                    <h2><i data-lucide="sliders" style="color: var(--color-orange);"></i> 3. Inferencia, Umbrales y Enterprise SLA</h2>
+                    <p>Calibrá las variables de seguridad de la API de IA para evitar alucinaciones graves y fugas de datos confidenciales.</p>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="select-threshold">Umbral de Confianza (Threshold)</label>
+                        <select id="select-threshold" onchange="updateInferencePanel()">
+                            <option value="0.50">0.50 (Muy flexible, propicio a alucinaciones)</option>
+                            <option value="0.75" selected>0.75 (Precisión balanceada para aduanas - Recomendado)</option>
+                            <option value="0.90">0.90 (Muy estricto, puede no responder consultas válidas)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="select-sla">Gobernanza & Enterprise SLA</label>
+                        <select id="select-sla" onchange="updateInferencePanel()">
+                            <option value="public">API Pública (Los datos entrenan futuros modelos públicos)</option>
+                            <option value="enterprise" selected>Enterprise SLA con Zero-Retention (Recomendado)</option>
+                            <option value="local">Modelo local en servidores de Cargill (On-Premise)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-metadata">
+                        Filtros de Metadatos Obligatorios (Metadata Filtering)
+                        <span class="label-desc">¿Qué tags de búsqueda dura usará la base vectorial?</span>
+                    </label>
+                    <input type="text" id="input-metadata" placeholder="Ej: Puerto (Rosario, Campana), Año (2026), Tipo de Documento (Aduana, Hidrovía)">
+                </div>
+
+                <div class="form-group">
+                    <label for="input-leakage">
+                        Estrategia de Prevención de Fuga de Datos (Data Leakage)
+                        <span class="label-desc">¿Cómo protegemos las cotizaciones y datos internos?</span>
+                    </label>
+                    <textarea id="input-leakage" placeholder="Ej: Implementación de encriptación TLS en tránsito y AES-256 en reposo. Uso exclusivo de endpoints privados bajo Enterprise SLA en Azure OpenAI. Desidentificación automática de información comercial sensible antes del embedding."></textarea>
+                </div>
+
+                <div class="dynamic-panel" id="inference-panel">
+                    <div class="dynamic-panel-header">
+                        <i data-lucide="shield" style="color: var(--color-orange);" class="icon-sm"></i>
+                        <span id="inference-panel-title">Umbral 0.75 + Enterprise SLA (Zero-Retention)</span>
+                    </div>
+                    <p class="dynamic-panel-desc" id="inference-panel-desc">
+                        El umbral de confianza a 0.75 asegura que solo se enviarán al LLM aquellos fragmentos que tengan una alta similitud de coseno semántica con la consulta aduanera. Si el score es inferior, el sistema ejecuta la lógica "No-Answer" evitando inventar datos. Además, el Enterprise SLA con Zero-Retention garantiza contractualmente que las consultas de flete y resoluciones arancelarias de Cargill no se almacenarán en servidores externos ni se utilizarán para entrenar modelos públicos comerciales.
+                    </p>
+                </div>
+            </div>
+
+            <!-- SECTION 4: QA & DOD -->
+            <div class="section-panel" id="sec-3">
+                <div class="section-header">
+                    <h2><i data-lucide="check-square" style="color: var(--color-green);"></i> 4. Calidad, DoD & Criterios de Aceptación</h2>
+                    <p>Definí la definición de terminado (Definition of Done) para exigirle al equipo de desarrollo antes de desplegar el bot a producción.</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Checklist de DoD Técnico (Seleccioná los que aplicarás como PM)</label>
+                    <div class="checklist-container">
+                        <label class="checklist-item">
+                            <input type="checkbox" id="chk-dod-1" checked onchange="updateProgress()">
+                            <div class="checklist-content">
+                                <span class="checklist-title">Umbral de confianza a 0.75 implementado</span>
+                                <span class="checklist-desc">Inferencia de RAG calibrada para bloquear scores menores ante consultas fuera de dominio.</span>
+                            </div>
+                        </label>
+
+                        <label class="checklist-item">
+                            <input type="checkbox" id="chk-dod-2" checked onchange="updateProgress()">
+                            <div class="checklist-content">
+                                <span class="checklist-title">Pipeline RAG con solapamiento (Overlap) del 15% activo</span>
+                                <span class="checklist-desc">Configuración del ingestador vectorial para no cortar sentencias arancelarias a la mitad.</span>
+                            </div>
+                        </label>
+
+                        <label class="checklist-item">
+                            <input type="checkbox" id="chk-dod-3" checked onchange="updateProgress()">
+                            <div class="checklist-content">
+                                <span class="checklist-title">Enterprise SLA con Zero-Retention activo</span>
+                                <span class="checklist-desc">Contrato firmado y API enrutada a endpoints seguros para evitar Data Leakage.</span>
+                            </div>
+                        </label>
+
+                        <label class="checklist-item">
+                            <input type="checkbox" id="chk-dod-4" checked onchange="updateProgress()">
+                            <div class="checklist-content">
+                                <span class="checklist-title">Metadata Filtering obligatorio en base vectorial</span>
+                                <span class="checklist-desc">Filtro duro pre-búsqueda semántica para acotar resultados por Puerto y Año del documento.</span>
+                            </div>
+                        </label>
+
+                        <label class="checklist-item">
+                            <input type="checkbox" id="chk-dod-5" onchange="updateProgress()">
+                            <div class="checklist-content">
+                                <span class="checklist-title">Golden Dataset de pruebas con al menos 50 preguntas difíciles</span>
+                                <span class="checklist-desc">Base de testeo inmutable con respuestas Ground Truth validadas por expertos en aduanas.</span>
+                            </div>
+                        </label>
+
+                        <label class="checklist-item">
+                            <input type="checkbox" id="chk-dod-6" onchange="updateProgress()">
+                            <div class="checklist-content">
+                                <span class="checklist-title">Evals automáticas de fidelidad en CI/CD integradas en GitHub Actions</span>
+                                <span class="checklist-desc">Fallo automático del pipeline si el promedio de Context Adherence cae por debajo del 90% en Langfuse.</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-adicionales-dod">Criterios de Aceptación Propios (Opcional)</label>
+                    <input type="text" id="input-adicionales-dod" placeholder="Ej: La latencia total del bot no debe superar los 2.0 segundos para el 95% de las llamadas.">
+                </div>
+            </div>
+
+            <!-- SECTION 5: GOLDEN DATASET -->
+            <div class="section-panel" id="sec-4">
+                <div class="section-header">
+                    <h2><i data-lucide="award" style="color: var(--color-blue);"></i> 5. Golden Dataset de Pruebas Iniciales</h2>
+                    <p>Redactá preguntas difíciles de pruebas unitarias y de integración que los ingenieros correrán para auditar la precisión del bot.</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Definí 5 Preguntas Clave y sus respuestas deseadas (Ground Truth)</label>
+                    <table class="dataset-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">ID</th>
+                                <th>Pregunta de Prueba del Despachante</th>
+                                <th>Respuesta Ground Truth (Esperada Oficial)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="dataset-num">#1</span></td>
+                                <td><input type="text" id="ds-q-1" value="¿Cuál es la tasa de peaje en la Hidrovía Paraná para barcazas de bandera nacional?" placeholder="Pregunta 1"></td>
+                                <td><textarea id="ds-a-1" placeholder="Ej: Según el Tarifario 2026 de Hidrovía Paraná, Sección A, la tasa de peaje para barcazas nacionales es de USD 1.47 por Tonelada de Registro Bruto (TRB). No aplica IVA.">Según el Tarifario 2026 de Hidrovía Paraná, la tasa de peaje para barcazas de bandera nacional es de USD 1.47 por Tonelada de Registro Bruto (TRB).</textarea></td>
+                            </tr>
+                            <tr>
+                                <td><span class="dataset-num">#2</span></td>
+                                <td><input type="text" id="ds-q-2" value="¿Cómo se aplica la exención del arancel a la importación temporaria de Soja?" placeholder="Pregunta 2"></td>
+                                <td><textarea id="ds-a-2" placeholder="Ej: Según el Código Aduanero Art 250, la exención aplica si el grano se procesa industrialmente dentro de los 360 días corridos de ingresado..."></textarea></td>
+                            </tr>
+                            <tr>
+                                <td><span class="dataset-num">#3</span></td>
+                                <td><input type="text" id="ds-q-3" value="¿Qué pasa si un remolcador excede el tiempo límite de espera en el Puerto de San Martín?" placeholder="Pregunta 3"></td>
+                                <td><textarea id="ds-a-3" placeholder="Ej: Se penalizará con una multa diaria de USD 500 según reglamento interno de Cargill de contingencias de fletes..."></textarea></td>
+                            </tr>
+                            <tr>
+                                <td><span class="dataset-num">#4</span></td>
+                                <td><input type="text" id="ds-q-4" value="¿Cuáles son los metadatos obligatorios para buscar resoluciones del año 2024?" placeholder="Pregunta 4"></td>
+                                <td><textarea id="ds-a-4" placeholder="Ej: Se debe filtrar por metadato año: 2024 y puerto: Rosario/Campana en la consulta de Pinecone..."></textarea></td>
+                            </tr>
+                            <tr>
+                                <td><span class="dataset-num">#5</span></td>
+                                <td><input type="text" id="ds-q-5" value="¿Qué debe responder el bot si le pregunto sobre regulaciones portuarias de Brasil?" placeholder="Pregunta 5"></td>
+                                <td><textarea id="ds-a-5" placeholder="Ej: Dado que el umbral de confianza será menor a 0.75, el bot debe responder: 'No dispongo de registros autorizados para responder a su consulta sobre regulaciones de Brasil'..."></textarea></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION 6: VIEW & EXPORT -->
+            <div class="section-panel" id="sec-5">
+                <div class="section-header">
+                    <h2><i data-lucide="file-text" style="color: var(--color-green);"></i> 6. Vista Previa & Exportar Entregable</h2>
+                    <p>Revisá el formato final del PRD generado de forma dinámica y exportalo en Markdown o PDF para tu portafolio.</p>
+                </div>
+
+                <div class="form-group">
+                    <span class="preview-label" style="font-size: 0.85rem; font-weight: 700;">Vista Previa del Documento Markdown</span>
+                    <div class="preview-box" id="prd-preview">Cargando vista previa...</div>
+                </div>
+
+                <div class="export-actions-grid">
+                    <button class="btn-primary" onclick="copyMarkdown()">
+                        <i data-lucide="copy"></i>
+                        Copiar Markdown
+                    </button>
+                    <button class="btn-success" onclick="downloadMarkdown()">
+                        <i data-lucide="download"></i>
+                        Descargar archivo .md
+                    </button>
+                    <button class="btn-secondary" onclick="window.print()">
+                        <i data-lucide="printer"></i>
+                        Imprimir / Guardar PDF
+                    </button>
+                </div>
+            </div>
+
+            <!-- ACTIONS FOOTER -->
+            <div class="footer-actions">
+                <button class="btn-secondary" id="btn-back" onclick="navigate(-1)">
+                    <i data-lucide="chevron-left"></i>
+                    Atrás
+                </button>
+                <button class="btn-primary" id="btn-next" onclick="navigate(1)">
+                    Siguiente
+                    <i data-lucide="chevron-right"></i>
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // NAVIGATION & PROGRESS STATE
+        let currentSection = 0;
+        const totalSections = 6;
+        const navItems = document.querySelectorAll('.nav-item');
+        const panels = document.querySelectorAll('.section-panel');
+        const glow = document.getElementById('glow-effect');
+
+        // Fields definitions for progress tracking
+        const requiredFields = [
+            'input-problema', 'input-solucion', 'input-datos',
+            'input-chunk-just', 'input-metadata', 'input-leakage'
+        ];
+
+        function init() {
+            // Setup listeners for progress tracking
+            requiredFields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('input', updateProgress);
+            });
+            
+            // Listeners for checkboxes and inputs
+            document.querySelectorAll('input[type="checkbox"]').forEach(el => {
+                el.addEventListener('change', updateProgress);
+            });
+            document.querySelectorAll('input[type="text"]').forEach(el => {
+                el.addEventListener('input', updateProgress);
+            });
+
+            // Initial UI update
+            updateProgress();
+            updateChunkingPanel();
+            updateInferencePanel();
+            lucide.createIcons();
+            updateButtons();
+        }
+
+        function switchSection(index) {
+            navItems[currentSection].classList.remove('active');
+            panels[currentSection].classList.remove('active');
+
+            currentSection = index;
+
+            navItems[currentSection].classList.add('active');
+            panels[currentSection].classList.add('active');
+
+            // Dynamic background glow based on section index
+            const glows = [
+                'radial-gradient(circle, var(--color-blue-glow) 0%, transparent 70%)',
+                'radial-gradient(circle, var(--color-purple-glow) 0%, transparent 70%)',
+                'radial-gradient(circle, var(--color-orange-glow) 0%, transparent 70%)',
+                'radial-gradient(circle, var(--color-green-glow) 0%, transparent 70%)',
+                'radial-gradient(circle, var(--color-blue-glow) 0%, transparent 70%)',
+                'radial-gradient(circle, var(--color-green-glow) 0%, transparent 70%)'
+            ];
+            glow.style.background = glows[index];
+
+            if (currentSection === 5) {
+                compileMarkdown();
+            }
+
+            updateButtons();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function navigate(direction) {
+            const target = currentSection + direction;
+            if (target >= 0 && target < totalSections) {
+                switchSection(target);
+            }
+        }
+
+        function updateButtons() {
+            const btnBack = document.getElementById('btn-back');
+            const btnNext = document.getElementById('btn-next');
+
+            if (currentSection === 0) {
+                btnBack.style.visibility = 'hidden';
+            } else {
+                btnBack.style.visibility = 'visible';
+            }
+
+            if (currentSection === totalSections - 1) {
+                btnNext.innerHTML = 'Ver PRD <i class="icon-sm" data-lucide="file-text"></i>';
+                btnNext.className = 'btn-success';
+                btnNext.onclick = () => switchSection(5);
+                lucide.createIcons();
+            } else {
+                btnNext.innerHTML = 'Siguiente <i class="icon-sm" data-lucide="chevron-right"></i>';
+                btnNext.className = 'btn-primary';
+                btnNext.onclick = () => navigate(1);
+                lucide.createIcons();
+            }
+        }
+
+        // DYNAMIC INFORMATIONAL UPDATES
+        function updateChunkingPanel() {
+            const algo = document.getElementById('select-chunking').value;
+            const size = document.getElementById('select-size').value;
+            const overlap = document.getElementById('select-overlap').value;
+            
+            const titleEl = document.getElementById('chunk-panel-title');
+            const descEl = document.getElementById('chunk-panel-desc');
+
+            let algoText = "";
+            let descText = "";
+
+            if (algo === 'recursive') {
+                algoText = "Recursive Character Chunking";
+                descText = "Excelente elección. El algoritmo recortará los documentos de Cargill de forma jerárquica respetando saltos de párrafo, puntos seguidos y espacios. Esto evita que una regulación de aduanas pierda coherencia. ";
+            } else if (algo === 'fixed') {
+                algoText = "Fixed-size Chunking (Cortes fijos)";
+                descText = "Atención: Los cortes mecánicos rígidos son rápidos pero ignoran la sintaxis gramatical. Es altamente probable que una cláusula arancelaria crítica o una fecha se corte por la mitad entre dos chunks, causando pérdida de significado y alucinaciones. ";
+            } else {
+                algoText = "Semantic Chunking (Por significado)";
+                descText = "Interesante. Divide el texto cuando detecta un cambio en el significado conceptual de las oraciones. Requiere un modelo de embeddings activo para calcular las divisiones, lo cual añade costo computacional y latencia en el proceso de ingesta. ";
+            }
+
+            descText += `Con un tamaño de fragmento de ${size} tokens y un solapamiento del ${overlap}% (${Math.round(size * overlap / 100)} tokens repetidos), la base vectorial mantendrá un balance óptimo entre precisión de recuperación de fletes fluviales y protección contra el fenómeno 'Lost in the Middle'.`;
+
+            titleEl.textContent = `${algoText} (${size} tokens | ${overlap}% overlap)`;
+            descEl.textContent = descText;
+        }
+
+        function updateInferencePanel() {
+            const threshold = document.getElementById('select-threshold').value;
+            const sla = document.getElementById('select-sla').value;
+
+            const titleEl = document.getElementById('inference-panel-title');
+            const descEl = document.getElementById('inference-panel-desc');
+
+            let thresholdText = "";
+            let slaText = "";
+
+            if (threshold === '0.50') {
+                thresholdText = "Umbral Flexible (0.50)";
+            } else if (threshold === '0.75') {
+                thresholdText = "Umbral Balanceado (0.75 - Recomendado)";
+            } else {
+                thresholdText = "Umbral Estricto (0.90)";
+            }
+
+            if (sla === 'public') {
+                slaText = "API Pública";
+            } else if (sla === 'enterprise') {
+                slaText = "Enterprise SLA (Zero-Retention)";
+            } else {
+                slaText = "Modelo local (On-Premise)";
+            }
+
+            let fullDesc = "";
+            if (threshold === '0.50') {
+                fullDesc += "Alerta de Negocio: Un umbral de 0.50 es demasiado laxo. La base vectorial aceptará chunks con baja coincidencia semántica, inyectando ruido e induciendo al LLM a alucinar resoluciones aduaneras incorrectas. ";
+            } else if (threshold === '0.75') {
+                fullDesc += "El umbral de 0.75 es el punto de calibración ideal para Cargill. Garantiza que solo los documentos altamente alineados con la consulta del analista de granos se inyecten sobre la Ventana de Contexto del modelo. Si no se alcanza, el bot ejecuta la lógica 'No-Answer' segura. ";
+            } else {
+                fullDesc += "Un umbral de 0.90 es sumamente conservador. Si bien previene alucinaciones al 100%, bloqueará consultas legítimas del puerto si el usuario utiliza sinónimos o lenguaje informal, restando utilidad comercial al bot. ";
+            }
+
+            if (sla === 'public') {
+                fullDesc += "Peligro de Data Leakage: Las tarifas de flete y resoluciones arancelarias privadas de Cargill serán expuestas a la nube del proveedor y utilizadas para re-entrenar modelos comerciales públicos. Esto constituye una violación directa a las políticas de compliance empresarial.";
+            } else if (sla === 'enterprise') {
+                fullDesc += "La política de Zero-Retention bajo Enterprise SLA (como Azure OpenAI) asegura contractualmente que tus datos viajan por canales cifrados con TLS y AES-256 en reposo, y se destruyen del servidor de procesamiento inmediatamente después de la inferencia, previniendo fugas comerciales.";
+            } else {
+                fullDesc += "El despliegue local (On-Premise) de modelos open-source (como Llama 3) elimina cualquier salida de datos de la red de Cargill, pero requiere una alta inversión en infraestructura de servidores físicos GPU y mantenimiento técnico continuo.";
+            }
+
+            titleEl.textContent = `${thresholdText} + ${slaText}`;
+            descEl.textContent = fullDesc;
+        }
+
+        // PROGRESS CALCULATION
+        function updateProgress() {
+            let completedCount = 0;
+            let totalCheckedItems = 0;
+
+            // Check textareas and inputs
+            requiredFields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.value.trim().length > 10) {
+                    completedCount++;
+                }
+            });
+
+            // Check dataset rows (at least 3 completed questions)
+            let qCount = 0;
+            for (let i = 1; i <= 5; i++) {
+                const q = document.getElementById(`ds-q-${i}`);
+                const a = document.getElementById(`ds-a-${i}`);
+                if (q && a && q.value.trim().length > 10 && a.value.trim().length > 10) {
+                    qCount++;
+                }
+            }
+            if (qCount >= 3) completedCount += 2; // weigh this heavier
+
+            // Check checkboxes (DoD)
+            let chkCount = 0;
+            document.querySelectorAll('.checklist-container input[type="checkbox"]').forEach(el => {
+                if (el.checked) chkCount++;
+            });
+            if (chkCount >= 3) completedCount++;
+
+            // Calculate percentage
+            const totalWeights = 9; // 6 fields + 2 (dataset) + 1 (DoD)
+            const percent = Math.min(100, Math.round((completedCount / totalWeights) * 100));
+
+            // Update sidebar styles for progress
+            updateNavCompletion();
+
+            document.getElementById('progress-val').textContent = `${percent}%`;
+            document.getElementById('progress-fill').style.width = `${percent}%`;
+        }
+
+        function updateNavCompletion() {
+            // Navigation completed checks
+            const s0 = document.getElementById('input-problema').value.length > 10 && document.getElementById('input-solucion').value.length > 10;
+            const s1 = document.getElementById('input-chunk-just').value.length > 10;
+            const s2 = document.getElementById('input-metadata').value.length > 5 && document.getElementById('input-leakage').value.length > 10;
+            const s3 = document.querySelectorAll('.checklist-container input[type="checkbox"]:checked').length >= 3;
+            
+            let qCount = 0;
+            for (let i = 1; i <= 5; i++) {
+                if (document.getElementById(`ds-q-${i}`).value.length > 10 && document.getElementById(`ds-a-${i}`).value.length > 10) qCount++;
+            }
+            const s4 = qCount >= 3;
+
+            if (s0) navItems[0].classList.add('completed'); else navItems[0].classList.remove('completed');
+            if (s1) navItems[1].classList.add('completed'); else navItems[1].classList.remove('completed');
+            if (s2) navItems[2].classList.add('completed'); else navItems[2].classList.remove('completed');
+            if (s3) navItems[3].classList.add('completed'); else navItems[3].classList.remove('completed');
+            if (s4) navItems[4].classList.add('completed'); else navItems[4].classList.remove('completed');
+        }
+
+        // COMPILING MARKDOWN OUTPUT
+        let globalMarkdownContent = "";
+
+        function compileMarkdown() {
+            const problema = document.getElementById('input-problema').value || "_(No completado aún)_";
+            const solucion = document.getElementById('input-solucion').value || "_(No completado aún)_";
+            const datos = document.getElementById('input-datos').value || "_(No completado aún)_";
+
+            const algo = document.getElementById('select-chunking').value;
+            const size = document.getElementById('select-size').value;
+            const overlap = document.getElementById('select-overlap').value;
+            const chunkJust = document.getElementById('input-chunk-just').value || "_(No completado aún)_";
+
+            const threshold = document.getElementById('select-threshold').value;
+            const sla = document.getElementById('select-sla').value;
+            const metadata = document.getElementById('input-metadata').value || "_(No completado aún)_";
+            const leakage = document.getElementById('input-leakage').value || "_(No completado aún)_";
+
+            // Checkboxes values
+            let dodList = "";
+            document.querySelectorAll('.checklist-container label').forEach(label => {
+                const chk = label.querySelector('input[type="checkbox"]');
+                const title = label.querySelector('.checklist-title').textContent;
+                if (chk) {
+                    dodList += `- [${chk.checked ? 'x' : ' '}] ${title}\n`;
+                }
+            });
+            const adicionalesDod = document.getElementById('input-adicionales-dod').value;
+            if (adicionalesDod) {
+                dodList += `- [x] ${adicionalesDod}\n`;
+            }
+
+            // Golden dataset values
+            let datasetRows = "";
+            for (let i = 1; i <= 5; i++) {
+                const q = document.getElementById(`ds-q-${i}`).value;
+                const a = document.getElementById(`ds-a-${i}`).value;
+                if (q.trim() || a.trim()) {
+                    datasetRows += `| **#${i}** | ${q || '_ vacío _'} | ${a || '_ vacío _'} |\n`;
+                }
+            }
+
+            globalMarkdownContent = `# PRODUCT REQUIREMENT DOCUMENT (PRD) - CARGILL CUSTOMS BOT
+**AI Product Manager**: Claudio Vernuccio
+**Proyecto**: Cargill Customs Bot (RAG Assistant for Grain Rivers & Ports)
+**Estado**: Completado / Especificado técnicamente
+
+---
+
+## 1. Visión de Negocio & Problema
+### Problema
+${problema}
+
+### Solución Propuesta
+${solucion}
+
+### Fuentes de Datos Críticas
+\`\`\`text
+${datos}
+\`\`\`
+
+---
+
+## 2. Ingestión y Estrategia de Chunking
+*   **Algoritmo seleccionado**: ${algo === 'recursive' ? 'Recursive Character Chunking' : algo === 'fixed' ? 'Fixed-size Chunking' : 'Semantic Chunking'}
+*   **Tamaño del Fragmento (Chunk Size)**: ${size} tokens
+*   **Solapamiento (Overlap)**: ${overlap}%
+*   **Justificación Técnica**:
+    ${chunkJust}
+
+---
+
+## 3. Inferencia, Gobernanza y Seguridad
+*   **Umbral de Confianza (Confidence Threshold)**: ${threshold} (Lógica No-Answer activa para puntuaciones inferiores)
+*   **Modelo de Gobernanza**: ${sla === 'public' ? 'API Pública (Inseguro - Fuga activa)' : sla === 'enterprise' ? 'Enterprise SLA (Azure OpenAI - Zero-Retention)' : 'Modelo local On-Premise'}
+*   **Filtros de Metadatos Obligatorios**: ${metadata}
+*   **Estrategia de Prevención de Data Leakage**:
+    ${leakage}
+
+---
+
+## 4. Definition of Done (DoD) & Criterios de Aceptación
+El desarrollo se considerará finalizado únicamente si cumple con la siguiente checklist técnica:
+${dodList}
+
+---
+
+## 5. Golden Dataset de Pruebas Unitarias
+
+| ID | Pregunta de Test (Despachante) | Respuesta Ground Truth (Esperada Oficial) |
+| :--- | :--- | :--- |
+${datasetRows}
+
+---
+*Documento autogenerado mediante la Plantilla Interactiva de la Mentoría de IA (Sesión 2).*`;
+
+            document.getElementById('prd-preview').textContent = globalMarkdownContent;
+        }
+
+        // UTILITY TRIGGERS
+        function copyMarkdown() {
+            compileMarkdown();
+            navigator.clipboard.writeText(globalMarkdownContent).then(() => {
+                showToast("Markdown copiado al portapapeles con éxito");
+            }).catch(err => {
+                showToast("Error al copiar al portapapeles", true);
+            });
+        }
+
+        function downloadMarkdown() {
+            compileMarkdown();
+            const blob = new Blob([globalMarkdownContent], { type: "text/markdown;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "mock_prd_cargill_customs_bot.md";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast("Archivo .md descargado correctamente");
+        }
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            
+            toastMsg.textContent = message;
+            if (isError) {
+                toast.style.borderColor = "var(--color-red)";
+                toast.querySelector('i').style.color = "var(--color-red)";
+            } else {
+                toast.style.borderColor = "var(--color-green)";
+                toast.querySelector('i').style.color = "var(--color-green)";
+            }
+
+            toast.classList.add('active');
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 3000);
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
