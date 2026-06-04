@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía del Mentor: Sesión 3 - Flujos Agénticos Avanzados &amp; Agentes (Scripts y Guiones)</title>
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root {
+            --bg-primary: #090d16;
+            --bg-secondary: #0f172a;
+            --bg-card: rgba(15, 23, 42, 0.7);
+            --border-card: rgba(255, 255, 255, 0.05);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --color-blue: #3b82f6;
+            --color-blue-glow: rgba(59, 130, 246, 0.3);
+            --color-purple: #8b5cf6;
+            --color-purple-glow: rgba(139, 92, 246, 0.3);
+            --color-green: #10b981;
+            --color-green-glow: rgba(16, 185, 129, 0.3);
+            --color-orange: #f97316;
+            --color-orange-glow: rgba(249, 115, 22, 0.3);
+            --font-display: 'Plus Jakarta Sans', 'Inter', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        .lucide {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2px;
+            color: currentColor;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            display: flex;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(30, 27, 75, 0.3) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(15, 23, 42, 0.5) 0%, transparent 50%);
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 320px;
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border-card);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-badge {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--color-purple);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 0.8rem;
+        }
+
+        .sidebar-title {
+            font-family: var(--font-display);
+            font-size: 1.35rem;
+            font-weight: 800;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #ffffff 40%, var(--color-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-card);
+            border-radius: 8px;
+            padding: 0.6rem 1rem 0.6rem 2.2rem;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.15);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            width: 16px;
+            height: 16px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .nav-section-title {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 1.2rem;
+            margin-bottom: 0.5rem;
+            padding-left: 0.5rem;
+        }
+
+        .nav-item a {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.6rem 0.8rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-item a:hover {
+            background: rgba(255, 255, 255, 0.03);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .nav-item.active a {
+            background: rgba(139, 92, 246, 0.08);
+            color: #ffffff;
+            font-weight: 600;
+            border-left: 3px solid var(--color-purple);
+            border-radius: 0 8px 8px 0;
+            padding-left: 0.7rem;
+        }
+
+        .nav-item-num {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--color-purple);
+            font-weight: 700;
+            width: 18px;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            margin-left: 320px;
+            flex-grow: 1;
+            padding: 3rem 4rem;
+            max-width: 1100px;
+            box-sizing: border-box;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .header-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .header-badge {
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            text-transform: uppercase;
+        }
+
+        .badge-blue { background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.15); color: #60a5fa; }
+        .badge-green { background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.15); color: #34d399; }
+
+        h1 {
+            font-family: var(--font-display);
+            font-size: 2.6rem;
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #ffffff 50%, #c084fc 80%, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 850px;
+        }
+
+        /* SECTIONS */
+        section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 2rem;
+        }
+
+        h2 {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        h2::before {
+            content: '';
+            width: 4px;
+            height: 1.5rem;
+            background: var(--color-purple);
+            border-radius: 2px;
+            display: inline-block;
+        }
+
+        /* GLASS CARD */
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+            padding-bottom: 0.8rem;
+        }
+
+        .card-title {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .card-title-badge {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            font-weight: 700;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #c084fc;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        /* WHITEBOARD */
+        .whiteboard-box {
+            background: #020617;
+            border: 1px dashed var(--color-blue);
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin: 1.2rem 0;
+        }
+
+        .wb-header {
+            font-family: var(--font-mono);
+            color: var(--color-blue);
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .wb-canvas {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: #94a3b8;
+            line-height: 1.4;
+            white-space: pre;
+            overflow-x: auto;
+            padding: 0.8rem;
+            background: #090d16;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        /* TABLES */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th {
+            background-color: var(--bg-secondary);
+            color: #ffffff;
+            text-align: left;
+            padding: 0.8rem 1rem;
+            font-family: var(--font-display);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-card);
+        }
+
+        td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid var(--border-card);
+            color: var(--text-secondary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* CODE BOX FOR COPYING */
+        .code-box {
+            position: relative;
+            background: #040813;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin: 1rem 0;
+        }
+
+        .code-text {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .btn-copy {
+            position: absolute;
+            top: 0.6rem;
+            right: 0.6rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            color: var(--text-primary);
+            padding: 0.3rem 0.6rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-family: var(--font-display);
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-copy:hover {
+            background: rgba(139, 92, 246, 0.15);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        /* VERBATIM SCRIPT CALLOUT */
+        .script-box {
+            background: rgba(139, 92, 246, 0.03);
+            border-left: 4px solid var(--color-purple);
+            border-radius: 0 12px 12px 0;
+            padding: 1.2rem 1.5rem;
+            margin-top: 0.8rem;
+            box-shadow: inset 0 0 10px rgba(139, 92, 246, 0.01);
+        }
+
+        .script-header {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #c084fc;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .script-text {
+            font-style: italic;
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* GENERAL UTILS */
+        .alert-tip {
+            border-left: 4px solid var(--color-green);
+            background: rgba(16, 185, 129, 0.02);
+            padding: 1rem 1.2rem;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-tip-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #34d399;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .alert-tip-desc {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            line-height: 1.45;
+        }
+
+        /* SLIDES INDEX CARD LIST */
+        .slides-scripts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .slide-script-card {
+            scroll-margin-top: 1rem;
+        }
+
+        .slide-meta-row {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .slide-meta-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--text-secondary);
+        }
+
+        .highlight-text {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border-card);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR NAVIGATION -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-badge">Mentor Copilot</span>
+            <div class="sidebar-title">Guía de Sesión 3</div>
+        </div>
+        <div class="search-box">
+            <i data-lucide="search" class="search-icon"></i>
+            <input type="text" id="search-input" class="search-input" placeholder="Buscar diapositiva o concepto..." onkeyup="filterContent()">
+        </div>
+        <nav>
+            <ul class="nav-menu">
+                <li class="nav-item active" id="nav-intro"><a href="#intro" onclick="setActiveNav('intro')"><i data-lucide="info"></i><span>Introducción</span></a></li>
+                <li class="nav-item" id="nav-agenda"><a href="#agenda" onclick="setActiveNav('agenda')"><i data-lucide="calendar"></i><span>Agenda (60 Min)</span></a></li>
+                <li class="nav-item" id="nav-diferencial"><a href="#diferencial" onclick="setActiveNav('diferencial')"><i data-lucide="git-branch"></i><span>Diferencial</span></a></li>
+                <li class="nav-item" id="nav-notebooklm"><a href="#notebooklm" onclick="setActiveNav('notebooklm')"><i data-lucide="cpu"></i><span>NotebookLM Prompt</span></a></li>
+                <li class="nav-item" id="nav-metaforas"><a href="#metaforas" onclick="setActiveNav('metaforas')"><i data-lucide="pen-tool"></i><span>Metáforas Pizarra</span></a></li>
+                <li class="nav-section-title">🎙️ Guiones de Diapositivas</li>
+                <li class="nav-item slide-nav-item" id="nav-slide-1"><a href="#slide-1" onclick="setActiveNav('slide-1')"><span class="nav-item-num">1</span><span>Portada</span></a></li>
+                <li class="nav-item slide-nav-item" id="nav-slide-2"><a href="#slide-2" onclick="setActiveNav('slide-2')"><span class="nav-item-num">2</span><span>IA Pasiva vs. Activa</span></a></li>
+                <li class="nav-item slide-nav-item" id="nav-slide-3"><a href="#slide-3" onclick="setActiveNav('slide-3')"><span class="nav-item-num">3</span><span>ReAct Loop</span></a></li>
+                <li class="nav-item slide-nav-item" id="nav-slide-4"><a href="#slide-4" onclick="setActiveNav('slide-4')"><span class="nav-item-num">4</span><span>Orchestrator-Workers</span></a></li>
+                <li class="nav-item slide-nav-item" id="nav-slide-5"><a href="#slide-5" onclick="setActiveNav('slide-5')"><span class="nav-item-num">5</span><span>Tool Calling</span></a></li>
+                <li class="nav-item slide-nav-item" id="nav-slide-6"><a href="#slide-6" onclick="setActiveNav('slide-6')"><span class="nav-item-num">6</span><span>Optimización KV Cache</span></a></li>
+                <li class="nav-item slide-nav-item" id="nav-slide-7"><a href="#slide-7" onclick="setActiveNav('slide-7')"><span class="nav-item-num">7</span><span>Human-in-the-loop</span></a></li>
+                <li class="nav-item slide-nav-item" id="nav-slide-8"><a href="#slide-8" onclick="setActiveNav('slide-8')"><span class="nav-item-num">8</span><span>Caso de Estudio</span></a></li>
+                <li class="nav-item slide-nav-item" id="nav-slide-9"><a href="#slide-9" onclick="setActiveNav('slide-9')"><span class="nav-item-num">9</span><span>Validación Pydantic</span></a></li>
+                <li class="nav-item slide-nav-item" id="nav-slide-10"><a href="#slide-10" onclick="setActiveNav('slide-10')"><span class="nav-item-num">10</span><span>Loops Infinitos</span></a></li>
+                <li class="nav-item slide-nav-item" id="nav-slide-11"><a href="#slide-11" onclick="setActiveNav('slide-11')"><span class="nav-item-num">11</span><span>Fallbacks &amp; Contingencia</span></a></li>
+                <li class="nav-item slide-nav-item" id="nav-slide-12"><a href="#slide-12" onclick="setActiveNav('slide-12')"><span class="nav-item-num">12</span><span>Taller: Mock PRD</span></a></li>
+                <li class="nav-item slide-nav-item" id="nav-slide-13"><a href="#slide-13" onclick="setActiveNav('slide-13')"><span class="nav-item-num">13</span><span>Integración APIs</span></a></li>
+                <li class="nav-item slide-nav-item" id="nav-slide-14"><a href="#slide-14" onclick="setActiveNav('slide-14')"><span class="nav-item-num">14</span><span>Defensa ante CTOs</span></a></li>
+                <li class="nav-item slide-nav-item" id="nav-slide-15"><a href="#slide-15" onclick="setActiveNav('slide-15')"><span class="nav-item-num">15</span><span>Hoja de Ruta</span></a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <div class="main-content">
+        <header>
+            <div class="header-meta">
+                <span class="header-badge badge-blue">Sesión 3</span>
+                <span class="header-badge badge-green">IA Activa &amp; Agentes</span>
+            </div>
+            <h1>Guía Completa del Mentor</h1>
+            <p class="subtitle">Estrategias pedagógicas, dinámicas en vivo, metáforas conceptuales y los guiones de voz paso a paso para liderar con fluidez la Sesión 3 de Claudio Vernuccio sobre Flujos Agénticos Avanzados y Casos de Uso Corporativos.</p>
+        </header>
+
+        <!-- INTRODUCTION -->
+        <section id="intro">
+            <h2>Objetivo de la Sesión</h2>
+            <div class="glass-card">
+                <p>Capacitar al mentorado para liderar el diseño de sistemas de <span class="highlight-text">IA Activa</span> (sistemas agénticos con autonomía). Al finalizar esta sesión de 60 minutos, Claudio comprenderá conceptual y físicamente cómo funcionan los loops de razonamiento cognitivo (ReAct), los patrones de diseño multi-agente (Orchestrator-Workers), la invocación dinámica de APIs mediante Tool Calling, y las compuertas indispensables de gobernanza y control (Human-in-the-loop, validación Pydantic, y control financiero contra loops infinitos). Esto le permitirá especificar un <span class="highlight-text">PRD Agéntico</span> formal y defender la arquitectura ante comités técnicos internacionales (CTOs).</p>
+            </div>
+        </section>
+
+        <!-- AGENDA -->
+        <section id="agenda">
+            <h2>Agenda de la Sesión (60 Minutos)</h2>
+            <div class="glass-card" style="overflow-x: auto; padding: 0.5rem 1.5rem;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Minutos</th>
+                            <th>Módulo</th>
+                            <th>Diapositivas</th>
+                            <th>Foco Pedagógico</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="highlight-text">00 - 05 min</td>
+                            <td>Introducción e Ideación</td>
+                            <td>Slide 1</td>
+                            <td>Transición de la IA Pasiva (RAG) a la IA Activa (Agentes).</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight-text">05 - 15 min</td>
+                            <td>Loops de Razonamiento</td>
+                            <td>Slides 2 - 3</td>
+                            <td>IA Pasiva vs. Activa y el loop cognitivo ReAct (Thought-Action-Observation).</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight-text">15 - 30 min</td>
+                            <td>Patrones y Conectividad</td>
+                            <td>Slides 4 - 6</td>
+                            <td>Arquitectura Orchestrator-Workers, Tool Calling y optimización de KV Cache.</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight-text">30 - 45 min</td>
+                            <td>Caso de Estudio y Estructuras</td>
+                            <td>Slides 7 - 9</td>
+                            <td>Human-in-the-loop, caso logístico de aduanas/silos y validación Pydantic.</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight-text">45 - 55 min</td>
+                            <td>Contención y Redundancia</td>
+                            <td>Slides 10 - 13</td>
+                            <td>Mitigación de loops infinitos, fallbacks, Mock PRD e integración segura de APIs.</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight-text">55 - 60 min</td>
+                            <td>Roleplay y Cierre</td>
+                            <td>Slides 14 - 15</td>
+                            <td>Preguntas estrella de entrevistas IT, comités de CTOs y consigna semanal.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- DIFERENCIAL DE SESIONES -->
+        <section id="diferencial">
+            <h2>Diferencia de Alcance: Sesión 2 vs. Sesión 3 vs. Sesión 4</h2>
+            <div class="glass-card">
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Eje de Comparación</th>
+                                <th style="color: var(--color-blue);">Sesión 2: IA Pasiva &amp; RAG</th>
+                                <th style="color: var(--color-purple);">Sesión 3: IA Activa &amp; Agentes (Hoy)</th>
+                                <th style="color: var(--color-orange);">Sesión 4: IA a Escala &amp; CI/CD</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="highlight-text">Foco Pedagógico</td>
+                                <td>Recuperación e inyección de datos de dominio de forma estática en prompts.</td>
+                                <td>Sistemas que ejecutan acciones, toman decisiones y llaman a APIs externas de forma autónoma.</td>
+                                <td>Evaluación de calidad estadística (Evals), observabilidad y despliegue continuo automatizado.</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight-text">Arquitectura Clave</td>
+                                <td>RAG (Chunking + Embeddings + Vector Database).</td>
+                                <td>Loops de razonamiento (ReAct) + Orquestadores + Tool Calling.</td>
+                                <td>Pipelines de monitoreo continuo (Langfuse) + Evals automatizadas en CI/CD.</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight-text">Dinámica del Bot</td>
+                                <td><strong>De Libro Abierto</strong>: El LLM solo lee el material entregado y resume. No altera el mundo externo.</td>
+                                <td><strong>Ejecutor Autónomo</strong>: El bot puede modificar bases de datos, enviar correos, llamar APIs, etc.</td>
+                                <td><strong>Auditor y Guardián</strong>: Herramientas que controlan latencia, costos y previenen la degradación del prompt.</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight-text">Actividad Semanal</td>
+                                <td>Mock PRD del "Cargill Customs Bot" especificando indexación y umbrales.</td>
+                                <td>PRD y Diagrama de Flujo del Agente de CRM y despachos de Soja en vivo.</td>
+                                <td>Pipeline automatizado de Evals en GitHub Actions con Golden Dataset.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- NOTEBOOKLM -->
+        <section id="notebooklm">
+            <h2>Co-Mentoring Técnico con NotebookLM</h2>
+            <div class="alert-tip">
+                <div class="alert-tip-title">
+                    <i data-lucide="sparkles"></i> <span>Estrategia Recomendada</span>
+                </div>
+                <div class="alert-tip-desc">
+                    Antes de la sesión, pídele a Claudio que suba la guía completa de la mentoría y el manual técnico de la arquitectura a <strong>NotebookLM</strong>. Utilicen el siguiente prompt exacto para simular un copiloto de consultas durante la clase.
+                </div>
+            </div>
+            <div class="glass-card">
+                <div class="card-header">
+                    <span class="card-title"><i data-lucide="terminal"></i><span>Prompt Copiloto de Cargill</span></span>
+                    <button class="btn-copy" onclick="copyPromptText()"><i data-lucide="copy" class="icon-sm"></i><span>Copiar Prompt</span></button>
+                </div>
+                <div class="code-box">
+                    <div class="code-text" id="prompt-text">Actúa como un CTO y Arquitecto Principal de Inteligencia Artificial de Cargill. Tu objetivo es auditar técnicamente mis propuestas para el "Cargill Logistics Agent" (asistente agéntico de aduanas y silos). Cuando te haga preguntas sobre la implementación de loops ReAct, tool calling, orquestadores, validación con Pydantic o gobernanza de costos por loops infinitos, respóndeme en un tono profesional, pragmático y exigente, contrastando mi rol de Product Manager con la viabilidad real de los sistemas de software agénticos corporativos.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- METAPHOR CARDS & BLACKBOARDS -->
+        <section id="metaforas">
+            <h2>Metáforas Visuales para la Pizarra</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">Dibuja o proyecta las siguientes analogías en la pizarra en tiempo real para facilitar el entendimiento conceptual:</p>
+            
+            <div class="glass-card">
+                <div class="card-title" style="margin-bottom: 0.8rem;"><i data-lucide="refresh-cw"></i><span>1. El Loop de Feedback Cognitivo (ReAct)</span></div>
+                <div class="whiteboard-box">
+                    <div class="wb-canvas">         ┌────────────────────────────────────────────────────────┐
+         │                                                        │
+         ▼                                                        │
+┌─────────────────┐      ┌─────────────────┐      ┌───────────────┴─┐
+│   Pensamiento   ├─────>│     Acción      ├─────>│   Observación   │
+│    (Thought)    │      │    (Action)     │      │  (Observation)  │
+│ "Necesito stock│      │   "Query SQL"   │      │ "Silo 4: 500t"  │
+└─────────────────┘      └─────────────────┘      └─────────────────┘</div>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <div class="card-title" style="margin-bottom: 0.8rem;"><i data-lucide="git-merge"></i><span>2. Compuerta de Aprobación Human-in-the-Loop (HITL)</span></div>
+                <div class="whiteboard-box">
+                    <div class="wb-canvas">[ Flujo Agéntico ] ───> [ ¿Desvío > 10% o Silo Nuevo? ] ──(Sí)──> [ PAUSA / COMPUERTA HITL ] ───> [ Aprobación Humana ] ───> [ ERP ]
+                                 │
+                                (No)
+                                 ▼
+                           [ Ejecutar ] ─────────────────────────────────────────────────────────> [ ERP ]</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDES LIST AND SCRIPTS -->
+        <section id="guiones">
+            <h2>🎙️ Guion Verbatim Diapositiva por Diapositiva</h2>
+            <p style="margin-bottom: 2rem; color: var(--text-secondary);">A continuación tienes el libreto exacto que debes decir al presentar cada slide durante la sesión con Claudio. Utiliza este texto para garantizar fluidez y propiedad técnica absoluta.</p>
+            
+            <div class="slides-scripts-list">
+                
+                <!-- SLIDE 1 -->
+                <div class="glass-card slide-script-card" id="slide-1">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">01</span>
+                            <span>Portada (Flujos Agénticos Avanzados &amp; IA Activa)</span>
+                        </div>
+                        <span class="card-title-badge">Slide 1</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 5 Min</span>
+                        <span class="slide-meta-tag">Introducción</span>
+                        <span class="slide-meta-tag">IA Activa</span>
+                        <span class="slide-meta-tag">Agentes</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"Claudio, bienvenido a la Sesión 3. En nuestro encuentro anterior consolidamos las bases de la IA Pasiva mediante la arquitectura RAG. Aprendiste a inyectar información de forma estructurada para que un modelo de lenguaje actúe bajo el esquema de un examen a libro abierto. Hoy daremos el salto evolutivo más importante del mercado de IA generativa contemporáneo: pasaremos de la 'IA Pasiva' a la 'IA Activa' con Sistemas Agénticos Autónomos. No nos limitaremos a crear bots que respondan preguntas amablemente; diseñaremos sistemas inteligentes capaces de planificar planes de acción, tomar decisiones ejecutivas autónomas e invocar APIs externas de forma dinámica para alterar el mundo real. Imagina esta transición como el paso de un archivero digital que te entrega el manual de regulaciones arancelarias a un analista aduanero proactivo que realiza el trámite ante la aduana, sincroniza el stock en el ERP, genera la documentación de embarque y agenda una reunión en tu calendario. Al terminar esta sesión, sabrás diseñar y especificar diagramas de flujo de agentes autónomos y redactar las reglas de control de costos, Human-in-the-loop y validación estructurada que exigen los directores de tecnología más exigentes a nivel internacional. Pasemos a la diapositiva 2 para contrastar la IA Pasiva de RAG con la IA Activa Agéntica."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 2 -->
+                <div class="glass-card slide-script-card" id="slide-2">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">02</span>
+                            <span>IA Pasiva vs. IA Activa (La Transición Evolutiva)</span>
+                        </div>
+                        <span class="card-title-badge">Slide 2</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 3 Min</span>
+                        <span class="slide-meta-tag">Comparación</span>
+                        <span class="slide-meta-tag">Objetivos</span>
+                        <span class="slide-meta-tag">Acción</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"Para liderar proyectos de IA con seniority, debes saber diferenciar ante un comité de tecnología el alcance real de RAG frente a un Agente Autónomo. En la IA Pasiva o RAG tradicional, el sistema está en un estado pasivo de espera: si el usuario no ingresa una consulta, no ocurre nada, y cuando lo hace, el bot se limita a leer documentos indexados y resumirlos en su ventana de contexto. El bot de RAG no puede 'hacer' nada fuera de su pantalla. En cambio, en la IA Activa o Agéntica, el usuario ingresa un objetivo de alto nivel (por ejemplo, 'Sincronizar los despachos de soja pendientes en Rosario y notificar al cliente'). A partir de este objetivo, el modelo no genera solo texto; genera un plan de acción dinámico, realiza llamadas a bases de datos relacionales, consume APIs externas y valida los resultados de sus acciones de forma recursiva hasta alcanzar la meta de negocio. La IA activa altera el estado del negocio. Pero, ¿cómo hace una máquina probabilística para planificar pasos de forma lógica y razonar sobre lo que debe hacer a continuación? Pasemos a la diapositiva 3 para estudiar la arquitectura cognitiva de los agentes: el loop ReAct."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 3 -->
+                <div class="glass-card slide-script-card" id="slide-3">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">03</span>
+                            <span>Loops de Razonamiento: La Arquitectura ReAct</span>
+                        </div>
+                        <span class="card-title-badge">Slide 3</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 5 Min</span>
+                        <span class="slide-meta-tag">ReAct Loop</span>
+                        <span class="slide-meta-tag">Pensamiento-Acción-Observación</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"La arquitectura cognitiva que permite a un agente actuar con autonomía se conoce como ReAct, propuesto por Yao et al. en 2022. Este patrón divide la ejecución de la IA en un loop recursivo de tres pasos: Pensamiento (Thought), Acción (Action) y Observación (Observation). Miren el gráfico de la diapositiva. Cuando le asignamos un objetivo, el agente primero genera un 'Pensamiento': analiza la meta y deduce qué herramienta necesita. Luego ejecuta una 'Acción': por ejemplo, realizar un query SQL a la tabla de despachos fluviales. El sistema retorna la respuesta de la base de datos, la cual el agente recibe en la 'Observación'. Basándose en esa observación, el agente vuelve al ciclo: genera un nuevo pensamiento sobre si necesita otra acción o si ya alcanzó el objetivo para emitir la respuesta final. <strong>Pensá en este loop bajo la analogía de un operario de mantenimiento de una central de energía</strong>: ante una alerta, el operario piensa qué válvula inspeccionar, camina y gira la válvula (Acción), lee el medidor de presión (Observación) y, basándose en esa lectura, piensa si debe girar otra válvula o si la presión se ha estabilizado. El agente opera con esa misma dinámica interactiva en milisegundos. Ahora bien, cuando el agente gestiona flujos complejos y múltiples departamentos, ¿cómo estructuramos su organización en equipos de desarrollo? Avancemos a la diapositiva 4 para analizar los patrones de diseño de agentes y el modelo Orchestrator-Workers."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 4 -->
+                <div class="glass-card slide-script-card" id="slide-4">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">04</span>
+                            <span>Patrones de Diseño Agénticos: Orchestrator-Workers &amp; Routing</span>
+                        </div>
+                        <span class="card-title-badge">Slide 4</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 5 Min</span>
+                        <span class="slide-meta-tag">Multi-Agentes</span>
+                        <span class="slide-meta-tag">Orchestrator-Workers</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"Al escalar sistemas agénticos corporativos, un único agente monolítico colapsará debido a la saturación de su ventana de contexto y a la variabilidad probabilística. Por ello, la arquitectura de vanguardia en 2026 se basa en patrones multi-agente, siendo el modelo <strong>Orchestrator-Workers</strong> (Orquestador y Trabajadores) el estándar enterprise. En este patrón, tenemos un agente Orquestador central encargado exclusivamente de fragmentar el objetivo del negocio en tareas menores y delegarlas a agentes Trabajadores especializados. Cada Trabajador tiene un prompt ultra-enfocado, un subset de herramientas limitado y un rol específico (ej. un especialista en SQL, otro en APIs de aduanas y otro en redactar correos). <strong>Pensalo como la distribución de trabajo en una terminal portuaria</strong>: no tenés a un único empleado manejando la grúa, cobrando las tarifas, firmando los recibos aduaneros y cargando los barcos simultáneamente (colapsaría). En cambio, tenés un Coordinador de Puerto (el Orquestador) que delega tareas específicas al Operador de Grúa, al Analista de Aduanas y al despachante logístico (los Trabajadores especializados). Esto reduce el ruido semántico y garantiza que cada tarea sea resuelta con máxima precisión y mínimos costos de cómputo. Pero para que estos trabajadores puedan interactuar con sistemas reales, necesitan extremidades digitales: la capacidad de llamar a APIs externas. Avancemos a la diapositiva 5 para dominar el Tool Calling."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 5 -->
+                <div class="glass-card slide-script-card" id="slide-5">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">05</span>
+                            <span>Tool Calling: Invocar APIs de Forma Dinámica</span>
+                        </div>
+                        <span class="card-title-badge">Slide 5</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 4 Min</span>
+                        <span class="slide-meta-tag">Tool Calling</span>
+                        <span class="slide-meta-tag">JSON Schema</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"La funcionalidad que conecta a la IA con el mundo real se denomina <strong>Tool Calling</strong> (Llamada a Herramientas). Los desarrolladores declaran un listado de funciones en formato JSON Schema al modelo de lenguaje (por ejemplo: consultar stock, enviar email o calcular aranceles). El LLM no ejecuta el código directamente (las APIs de OpenAI o Google no pueden conectarse a la base de datos de tu empresa por seguridad). En su lugar, el modelo decide de forma probabilística qué función es relevante y devuelve un JSON que especifica el nombre de la herramienta y los argumentos exactos necesarios. El servidor backend de tu empresa lee este JSON, ejecuta la función real de forma determinista y segura, y le devuelve el resultado en texto al modelo para que continúe su análisis. <strong>Pensalo como un panel de control con interruptores electrónicos en una cabina ferroviaria</strong>: el maquinista (el LLM) no sale físicamente de la cabina a mover las vías de hierro con sus manos; simplemente presiona el botón eléctrico 'Cambio de Vía 4' (JSON de Tool Call) y el sistema de automatización física del tren (el backend de la empresa) realiza el movimiento físico en las vías y le enciende una luz verde de confirmación en la cabina (Observación del resultado). Esto nos permite inyectar automatización de alto rendimiento sin comprometer la seguridad física del sistema. Pero cuando el agente comienza a iterar y llamar APIs de forma autónoma en loops dinámicos, la latencia y los costos de memoria pueden dispararse. Pasemos a la diapositiva 6 para analizar el impacto del KV Cache en arquitecturas agénticas."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 6 -->
+                <div class="glass-card slide-script-card" id="slide-6">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">06</span>
+                            <span>Latencia y Eficiencia: Optimización de KV Cache</span>
+                        </div>
+                        <span class="card-title-badge">Slide 6</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 3 Min</span>
+                        <span class="slide-meta-tag">KV Cache</span>
+                        <span class="slide-meta-tag">Latencia / TTFT</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"Desarrollar agentes autónomos introduce un desafío crítico en la experiencia del usuario: la <strong>latencia</strong>. Dado que el loop ReAct requiere múltiples pasadas consecutivas por el modelo de lenguaje (Thoughts y Actions), si cada llamada de inferencia debe re-procesar todo el historial de la conversación desde el inicio en el hardware de la nube, el sistema tardará decenas de segundos en responder. Para mitigar esto, los ingenieros de infraestructura optimizan el <strong>KV Cache</strong> (Key-Value Cache). Esta tecnología almacena de forma persistente las representaciones matemáticas de las consultas y respuestas previas en los chips GPU de los servidores de la nube, evitando que la IA tenga que recalculadoras matemáticas de todo el texto en cada iteración del loop. <strong>Pensalo bajo la analogía de la memoria de corto plazo de un operador portuario en plena crisis</strong>: si en cada llamada del coordinador de puerto el operador tuviera que leer de vuelta las 50 páginas del manual de exportaciones desde la primera línea para responder una pregunta complementaria menor, la operación se detendría por completo. En su lugar, el operador mantiene el manual abierto sobre su escritorio y las páginas relevantes memorizadas en su cabeza (KV Cache), permitiéndole responder al instante las consultas sucesivas. Habilitar la optimización de KV Cache reduce la latencia de primer token en más de un 60%, haciendo viable el uso de agentes en interfaces comerciales en tiempo real. No obstante, habilitar autonomía en sistemas corporativos conlleva el riesgo latente de errores lógicos o de seguridad. ¿Cómo controlamos que el agente no tome decisiones financieras críticas sin supervisión? Avancemos a la diapositiva 7 para dominar el Human-in-the-loop."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 7 -->
+                <div class="glass-card slide-script-card" id="slide-7">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">07</span>
+                            <span>Human-in-the-Loop: Compuertas de Supervisión</span>
+                        </div>
+                        <span class="card-title-badge">Slide 7</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 5 Min</span>
+                        <span class="slide-meta-tag">Human-in-the-loop</span>
+                        <span class="slide-meta-tag">Control de Riesgos</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"Una regla de gobernanza mandatoria en la implementación de IA empresarial es la integración de <strong>Human-in-the-loop</strong> (HITL). La autonomía total del agente es excelente para tareas informativas, pero en flujos críticos de negocio —como emitir una transferencia bancaria o autorizar el despacho fluvial de un buque de granos—, delegar el 100% de la firma a una IA probabilística es un riesgo inaceptable para el negocio. Por ello, diseñamos compuertas lógicas en el backend donde el agente suspende su ejecución, guarda su estado en memoria y envía una notificación de aprobación al usuario humano antes de ejecutar una acción de alto impacto. <strong>Pensalo como el protocolo de dos llaves en un silo de misiles o en una bóveda de alta seguridad</strong>: el oficial de automatización (el agente de IA) puede preparar los sistemas y cargar las coordenadas de destino de forma precisa, pero el lanzamiento real exige que el comandante de la base (el humano supervisor) inserte y gire físicamente su llave en el tablero de control. El agente prepara el reporte de aranceles y la orden de despacho, pero la firma comercial definitiva que valida la transacción requiere el Sign-Off de un empleado humano. Esto nos permite beneficiarnos del 95% de velocidad de preparación del agente, manteniendo el control de riesgos de negocio en el 5% final de la ejecución. Con estas reglas claras, analicemos cómo se materializa esto en un caso de estudio real. Avancemos a la diapositiva 8 para estudiar el Agente de Logística y Despacho Portuario en vivo."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 8 -->
+                <div class="glass-card slide-script-card" id="slide-8">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">08</span>
+                            <span>Caso de Estudio: Logística Fluvial y Despacho</span>
+                        </div>
+                        <span class="card-title-badge">Slide 8</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 5 Min</span>
+                        <span class="slide-meta-tag">Caso Práctico</span>
+                        <span class="slide-meta-tag">Cargill Logistics</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"Apliquemos toda esta arquitectura de IA Activa sobre un caso de estudio corporativo de alto impacto: la automatización logística y despacho portuario de soja. Imaginemos que una barcaza arriba a la terminal fluvial. El agente recibe de forma automática el manifiesto de carga en PDF, extrae los datos clave y detecta que el cargamento supera la capacidad del silo asignado originalmente. En lugar de limitarse a alertar al operador (IA Pasiva), el agente inicia un flujo activo: consulta la disponibilidad de espacio en silos alternativos mediante una API interna, verifica las restricciones de calado del canal, genera una propuesta de reasignación óptima y la envía a través de una API de mensajería (Slack/Teams) al coordinador del puerto para su firma electrónica (Human-in-the-loop). Una vez que el humano presiona 'Aprobar', el agente ejecuta de forma autónoma la actualización de stock en el ERP corporativo y solicita el permiso de descarga correspondiente al sistema aduanero de forma automatizada. Este caso de estudio demuestra cómo la IA Activa elimina cuellos de botella operativos en la cadena de suministro tradicionales, optimizando los tiempos de rotación de las barcazas y reduciendo costos por estadía portuaria en un 30%. Pero, ¿cómo garantizamos la calidad y consistencia del output del bot cuando se comunica de sistema a sistema? Avancemos a la diapositiva 9 para analizar la validación estructurada con Pydantic."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 9 -->
+                <div class="glass-card slide-script-card" id="slide-9">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">09</span>
+                            <span>Validación Estructurada: JSON Schema &amp; Pydantic</span>
+                        </div>
+                        <span class="card-title-badge">Slide 9</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 5 Min</span>
+                        <span class="slide-meta-tag">Pydantic</span>
+                        <span class="slide-meta-tag">JSON Schema</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"Cuando conectas un agente de IA con sistemas legados o ERPs corporativos de base relacional, no puedes permitir que el bot devuelva texto plano redactado de forma libre como: 'El stock disponible de soja es de aproximadamente 500 toneladas en el silo 4'. Los sistemas tradicionales no entienden aproximaciones literarias; exigen variables estrictas con tipos de datos definidos, por ejemplo: `{"silo_id": 4, "stock_ton": 500.0, "status": "AVAILABLE"}`. Para forzar al modelo probabilístico a comportarse de forma determinista y estructurada en sus respuestas de llamadas a APIs de sistemas, los ingenieros de backend implementan validadores estructurados como <strong>Pydantic</strong> y <strong>JSON Schema</strong>. <strong>Pensalo como la ranura de clasificación física en una caja de ahorro infantil o en una máquina expendedora de monedas</strong>: no importa el ángulo en que introduzcas la moneda de $1, la ranura física solo permite el paso de objetos con las dimensiones de circunferencia y espesor exactos exigidos por el mecanismo metálico, rechazando al instante cualquier moneda defectuosa o de otra denominación. Pydantic actúa como esa ranura metálica en el software: define la estructura rígida de datos exigida por el ERP y, si la IA intenta devolver un dato mal formateado o con campos incompletos, el validador del backend intercepta el fallo en milisegundos, bloquea el paso de datos al sistema de producción, y le reenvía una instrucción de corrección automática a la IA con el log de error para que reformatee la salida de inmediato. Esto garantiza la integridad transaccional de los sistemas de producción. Sin embargo, dar rienda suelta a que el agente intente corregirse e interactúe en loops autónomos plantea riesgos de facturación financiera incontrolables. Avancemos a la diapositiva 10 para explorar el control de costos y la mitigación de loops infinitos."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 10 -->
+                <div class="glass-card slide-script-card" id="slide-10">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">10</span>
+                            <span>Control de Costos: Mitigación de Loops Infinitos</span>
+                        </div>
+                        <span class="card-title-badge">Slide 10</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 4 Min</span>
+                        <span class="slide-meta-tag">Finanzas de IA</span>
+                        <span class="slide-meta-tag">Bucle de Llamadas</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"La IA activa introduce un riesgo financiero nuevo y sumamente crítico: los <strong>loops infinitos</strong> en la toma de decisiones agénticas. Dado que el loop ReAct evalúa de forma autónoma el resultado de sus acciones en cada paso, si un agente encuentra una inconsistencia en un API (por ejemplo, una llamada que retorna un código de error de base de datos) y su prompt le indica corregir el error por sí mismo, el agente podría ingresar en un loop recursivo infinito llamando a la API de OpenAI 10,000 veces consecutivas en pocos minutos intentando descifrar el error. Esto puede generar facturas de miles de dólares de consumo en tu tarjeta corporativa en una sola noche de forma descontrolada. Para evitar esto en Cargill, como PM debes exigir en las especificaciones del backend tres limitadores físicos rigurosos: 1) <strong>Límite máximo de iteraciones</strong> (Max Iterations de 5 a 7 llamadas consecutivas por sesión de usuario). 2) <strong>Timeouts estrictos de ejecución de API</strong> (ej. cancelar la sesión agéntica si el flujo total tarda más de 15 segundos). 3) **Alertas de presupuesto en tiempo real** conectadas a compuertas de parada en el backend. <strong>Pensalo como configurar el límite de consumo diario de datos y de roaming en tu celular antes de viajar al extranjero</strong>: no importa si tu teléfono intenta descargar videos o actualizaciones en segundo plano de forma automática; el operador telefónico de la red corta el flujo de internet al alcanzar el límite de gigabytes preestablecido, evitando sorpresas catastróficas en la factura de fin de mes. Implementar estos cortafuegos en tu especificación funcional del PRD blinda los presupuestos de nube de la corporación. Pero ante una situación imprevista de caída de sistemas, ¿cómo debe reaccionar el agente de forma controlada? Pasemos a la diapositiva 11 para tratar la resiliencia y los mecanismos de Fallbacks del sistema."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 11 -->
+                <div class="glass-card slide-script-card" id="slide-11">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">11</span>
+                            <span>Resiliencia y Fallbacks: Contingencias de APIs</span>
+                        </div>
+                        <span class="card-title-badge">Slide 11</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 3 Min</span>
+                        <span class="slide-meta-tag">Fallbacks</span>
+                        <span class="slide-meta-tag">Redundancia</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"En la ingeniería de software moderna, la pregunta crítica para un Project Manager no es '¿cómo funciona el sistema cuando todo está online?', sino '¿cómo reacciona tu producto de forma controlada cuando un sistema crítico externo se cae?'. Si tu agente de aduanas de IA intenta consultar el calado de la hidrovía en tiempo real para autorizar un despacho, pero el servidor del organismo nacional está caído o no responde por mantenimiento de red, el agente no debe quedarse congelado en pantalla ni arrojar un error técnico de bajo nivel al usuario. Debemos diseñar <strong>Fallbacks deterministas</strong>. Un fallback es un plan de contingencia codificado de antemano que intercepta el fallo de la herramienta agéntica y redirige el flujo de forma segura. <strong>Pensalo como el protocolo de desvío de tráfico terrestre ante la clausura de un puente por obras</strong>: si la vía principal está cortada, las señales de tránsito desvían a todos los camiones de forma automática por una ruta secundaria habilitada para que sigan circulando, o detienen los camiones en un puesto de control seguro informándoles la causa del retraso. En el Cargill Customs Bot, si la API del organismo nacional falla, el agente activa el fallback: lee una base de datos histórica local guardada en caché (con datos de hace 24 horas) y emite una alerta indicando que trabaja con datos de respaldo históricos, o escala inmediatamente el flujo a un analista logístico humano mediante un ticket de urgencia de soporte. Diseñar estos desvíos lógicos garantiza la resiliencia operativa y la reputación de tu producto de tecnología ante incidentes inesperados. Pero para que tu squad pueda programar todas estas reglas de forma estructurada, debés plasmar estas especificaciones en un documento formal de requerimientos de producto. Avancemos a la diapositiva 12 para iniciar el taller práctico de diseño del Mock PRD de la Sesión 3."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 12 -->
+                <div class="glass-card slide-script-card" id="slide-12">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">12</span>
+                            <span>Taller: Mock PRD del Cargill Logistics Agent</span>
+                        </div>
+                        <span class="card-title-badge">Slide 12</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 5 Min</span>
+                        <span class="slide-meta-tag">Actividad Práctica</span>
+                        <span class="slide-meta-tag">PRD Spec</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"Pasemos a la acción práctica en nuestro taller. Claudio, en esta actividad daremos forma al Mock PRD del 'Cargill Logistics Agent'. En este documento de requerimientos de producto no especificaremos una base vectorial estática; daremos estructura y reglas lógicas de negocio al sistema de agentes de la central. En primer lugar, definiremos el alcance del Orquestador central y sus tres Trabajadores especializados: el Analista de Documentos, el Auditor de Silos y el despachante de Emails. En segundo lugar, estableceremos las <strong>herramientas autorizadas</strong> para cada rol (por ejemplo, el Lector de Documentos tiene prohibido acceder a la API de facturación por seguridad). Y en tercer lugar, especificaremos de forma estricta las compuertas de <strong>Human-in-the-loop</strong>: cualquier desvío de carga de barcazas mayor al 10% de tolerancia respecto al volumen planificado, o cualquier cambio en el silo de destino, exigirá la firma de aprobación electrónica de un supervisor del puerto antes de ser procesado de forma definitiva en el ERP corporativo. Este PRD de Session 3 será la joya de tu portafolio en LinkedIn, demostrando a los reclutadores de tecnología que dominás el diseño detallado de sistemas de IA empresarial de alto impacto. Una vez estructurados los requerimientos funcionales, cabe preguntarnos cómo se comunican estos agentes con las bases de datos transaccionales del negocio. Avancemos a la diapositiva 13 para analizar la arquitectura de integración de datos."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 13 -->
+                <div class="glass-card slide-script-card" id="slide-13">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">13</span>
+                            <span>Arquitectura de Integración: Del Agente al API Gateway</span>
+                        </div>
+                        <span class="card-title-badge">Slide 13</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 5 Min</span>
+                        <span class="slide-meta-tag">Capa de APIs</span>
+                        <span class="slide-meta-tag">Ciberseguridad</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"Un error de ciberseguridad catastrófico que cometen las startups de IA es permitir que los agentes escriban o editen registros directamente en la base de datos de producción de la compañía de forma directa sin filtros intermedios. Los agentes de IA son probabilísticos y, ante un error en su razonamiento semántico, un agente podría ejecutar un comando de borrado masivo de filas o escribir valores de stock de soja negativos en tu base de datos relacional de producción. Por ende, la arquitectura de integración corporativa madura exige que <strong>los agentes interactúen con los sistemas centrales exclusivamente a través de una capa intermedia de APIs internas controladas</strong> (API Gateway). <strong>Pensalo como el protocolo de seguridad de un laboratorio biológico de alta seguridad</strong>: los científicos de la sala principal (el agente de IA) no tocan directamente los virus o reactivos altamente peligrosos en los estantes con sus manos desnudas; interactúan a través de cabinas aisladas selladas al vacío utilizando guantes mecánicos fijos y filtros de aire automáticos (APIs intermedias) que controlan la presión y el flujo del material, aislando por completo la cabina de experimentos de la atmósfera exterior del edificio. En tu arquitectura agéntica, si el bot necesita registrar un despacho, envía un JSON con los datos estructurados a una API de validación de backend. Esta API (el guante mecánico) verifica que el ID del puerto exista, que las toneladas sean números válidos superiores a cero y que la transacción sea válida de acuerdo con las reglas deterministas de software, realizando recién allí el guardado definitivo en la base de datos SQL. Implementar esta separación física de arquitecturas de integración protege la estabilidad de los sistemas centrales de tu empresa. Pero para consolidar este conocimiento en entrevistas de trabajo, debés aprender a defender estas decisiones de diseño ante el cuestionamiento técnico de un CTO internacional. Pasemos a la diapositiva 14 para iniciar nuestro Roleplay y simulación de comités de tecnología."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 14 -->
+                <div class="glass-card slide-script-card" id="slide-14">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">14</span>
+                            <span>Defensa ante el Comité Técnico (CTO Audit)</span>
+                        </div>
+                        <span class="card-title-badge">Slide 14</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 5 Min</span>
+                        <span class="slide-meta-tag">Auditoría</span>
+                        <span class="slide-meta-tag">Roleplay de Entrevista</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"Hagamos una simulación de comité técnico de alto impacto. Imagina que un <strong>CTO</strong> internacional te interroga en una entrevista de trabajo estratégica: 'Tenemos un agente de IA enviando correos automatizados de cotización a clientes. Anteayer un cliente inyectó un comando malicioso en el cuerpo del correo y forzó al bot a enviarle una oferta con un descuento del 90%. ¿Cómo solucionaría este fallo de seguridad catastrófico en la arquitectura?'. Tu respuesta inmediata debe ser un rotundo: 'Implementando un validador de formato de salida estructurado (JSON Schema/Pydantic) acoplado a una compuerta de aprobación de Human-in-the-loop'. Explicás al CTO que el error consistió en dar autonomía total de salida de texto plano y ejecución al agente sin filtros intermedios. La solución técnica radica en: 1) Forzar al bot a responder exclusivamente en variables numéricas estructuradas, impidiendo que el bot redacte o altere el cuerpo del contrato de forma libre. 2) Establecer un motor de reglas en el backend que compare los precios emitidos por la IA contra las tarifas oficiales históricas guardadas en la base de datos de Cargill. 3) Si la propuesta de descuento supera el 10% de tolerancia máxima permitida, el sistema suspende de forma automatizada el envío, bloquea la inferencia e ingresa el ticket al panel de control de un gerente comercial humano para su firma electrónica de Sign-Off. Esta defensa técnica demuestra que no solo entiendes la IA generativa como un experimento, sino que dominas el control de riesgos de negocio corporativos y la gobernanza de datos enterprise. Dominar este discurso técnico ante reclutadores internacionales te consagra como un AI Project Manager de élite. Para cerrar esta Sesión 3, pasemos a la diapositiva 15 para consolidar tu propuesta de valor y mapear el roadmap del programa."</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 15 -->
+                <div class="glass-card slide-script-card" id="slide-15">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="nav-item-num">15</span>
+                            <span>Hoja de Ruta y Tu Propuesta de Valor</span>
+                        </div>
+                        <span class="card-title-badge">Slide 15</span>
+                    </div>
+                    <div class="slide-meta-row">
+                        <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 5 Min</span>
+                        <span class="slide-meta-tag">Roadmap</span>
+                        <span class="slide-meta-tag">Propuesta de Valor</span>
+                    </div>
+                    <div class="script-box">
+                        <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
+                        <div class="script-text">"Claudio, felicitaciones por completar esta intensa Sesión 3. Hoy diste el gran salto conceptual hacia la IA Activa y el diseño agéntico autónomo. Comprender los loops de razonamiento ReAct te capacita para liderar comités de diseño de sistemas autónomos; dominar el diseño multi-agente en el patrón Orchestrator-Workers te otorga autoridad técnica para coordinar y planificar sprints con arquitectos de datos; y entender el control de costos de loops infinitos, validaciones Pydantic y compuertas Human-in-the-loop te posiciona en la cima del mercado como un Project Manager capaz de gobernar los riesgos operativos de la compañía. En nuestra hoja de ruta: hoy en la Sesión 3 dominamos el diseño de la 'IA Activa' mediante agentes autónomos y coordinamos sus integraciones con APIs corporativas. En nuestra próxima y última sesión, la Sesión 4, daremos el cierre definitivo: analizaremos los Economics de la IA Generativa, calcularemos el ROI de estas implementaciones, estructuraremos pipelines de <strong>Evals automatizadas</strong> en entornos de CI/CD para que el bot corra crash-tests semánticos en cada commit, y simularemos una auditoría técnica completa para que salgas al mercado laboral internacional con la máxima confianza y seniority técnico del mercado actual. ¡Excelente semana de trabajo, completa el PRD agéntico en GitHub y nos vemos en la Sesión 4!"</div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <!-- SEARCH & NAVIGATION JS -->
+    <script>
+        lucide.createIcons();
+
+        function filterContent() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const cards = document.querySelectorAll('.slide-script-card');
+            
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(query)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function copyPromptText() {
+            const text = document.getElementById('prompt-text').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("¡Prompt copiado al portapapeles!");
+            }).catch(err => {
+                console.error("Fallo al copiar: ", err);
+            });
+        }
+
+        function setActiveNav(id) {
+            const items = document.querySelectorAll('.nav-item');
+            items.forEach(item => item.classList.remove('active'));
+            
+            const target = document.getElementById('nav-' + id);
+            if (target) {
+                target.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
