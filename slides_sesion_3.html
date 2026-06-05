@@ -1350,13 +1350,14 @@
         <div class="slide" id="slide-8">
             <h2 class="slide-title">Caso de Estudio: Logística Fluvial</h2>
             <p class="slide-subtitle">Automatización en tiempo real del despacho portuario y control de silos de granos</p>
+            <h2 class="slide-title">Caso de Estudio: Logística Fluvial y Despacho</h2>
+            <p class="slide-subtitle">Simulación de automatización de reasignación de silos por sobrefacturación</p>
             
-            <div class="grid-2" style="max-width: 1100px;">
-                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: center; padding: 1.5rem 2rem;">
-                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem;">
-                        <i data-lucide="anchor" style="color: var(--color-purple)"></i>
-                        <h3 style="color: #ffffff;">Coordinación Portuaria</h3>
-                    </div>
+            <div class="grid-2" style="grid-template-columns: 1.2fr 1fr; gap: 1.5rem;">
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: center; text-align: left;">
+                    <h3 style="color: var(--color-blue); margin-bottom: 0.6rem; font-family: var(--font-display); font-size: 1.1rem; display: flex; align-items: center; gap: 0.4rem;">
+                        <i data-lucide="anchor"></i> Cargill Logistics Agent
+                    </h3>
                     <p style="color: var(--text-secondary); font-size: 0.88rem; line-height: 1.5; margin-bottom: 0.6rem;">
                         El bot lee el manifiesto de la barcaza en PDF, valida en el ERP de stock la disponibilidad de silos de soja y detecta que el silo original asignado está completo.
                     </p>
@@ -1365,9 +1366,17 @@
                     </p>
                 </div>
                 
-                <div class="glass-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
-                    <img src="fluvial_logistics_agent_mockup.png" alt="Dashboard de Control Fluvial de Silos" style="width: 100%; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); cursor: pointer;" onclick="openLightbox(this)">
-                    <span style="font-size: 0.72rem; color: var(--text-secondary); margin-top: 0.5rem;">[Haz clic en la captura para expandir la interfaz]</span>
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between; padding: 1.2rem;">
+                    <div class="console-header" style="background: rgba(255,255,255,0.02); padding: 0.4rem 0.8rem; border-radius: 6px 6px 0 0; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: var(--font-display); font-size: 0.8rem; font-weight: 600;">
+                        <span>Cargill Logistics Console</span>
+                        <span id="logistics-status" style="color: var(--color-blue)">STANDBY</span>
+                    </div>
+                    <div class="console-body" id="logistics-console" style="background: #040813; font-family: monospace; font-size: 0.76rem; padding: 1rem; color: #a7f3d0; min-height: 180px; max-height: 180px; overflow-y: auto; white-space: pre-wrap; line-height: 1.4; border-radius: 0 0 6px 6px; text-align: left;">Esperando inicio del flujo agéntico...</div>
+                    <div style="margin-top: 0.8rem; display: flex; gap: 0.5rem; justify-content: center;">
+                        <button class="btn-action-sm" id="btn-run-logistics" onclick="runLogisticsSimulation()">
+                            <i data-lucide="play" class="icon-sm"></i> Simular Agente
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1378,25 +1387,30 @@
             <p class="slide-subtitle">Definir contratos de datos lógicos para intercomunicación segura entre sistemas (DoD del PM)</p>
             
             <div class="pydantic-box">
-                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: flex-start; padding: 1.2rem 1.5rem;">
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: flex-start; padding: 1.2rem 1.5rem; text-align: left;">
                     <h3 style="color: var(--color-green); margin-bottom: 0.6rem; font-family: var(--font-display); font-size: 1.1rem; display: flex; align-items: center; gap: 0.4rem;">
-                        <i data-lucide="clipboard-list"></i> Especificación del Contrato de Datos (PRD)
+                        <i data-lucide="sliders"></i> Validador en Tiempo Real (DoD Playground)
                     </h3>
-                    <p style="color: var(--text-secondary); font-size: 0.82rem; line-height: 1.45; margin-bottom: 0.8rem;">
-                        El PM no escribe el código; define las **Reglas de Negocio** y campos que el bot de IA debe cumplir obligatoriamente al conectarse al ERP:
+                    <p style="color: var(--text-secondary); font-size: 0.82rem; line-height: 1.45; margin-bottom: 1rem;">
+                        Modifica los valores simulados de la IA. Observa cómo el validador Pydantic del backend detecta violaciones al contrato del PRD:
                     </p>
-                    <div class="prd-item-list" style="margin-top: 0.3rem;">
-                        <div class="prd-item-row" style="background: rgba(255,255,255,0.02); padding: 0.4rem 0.6rem;">
-                            <span class="prd-item-label" style="font-size: 0.8rem;">silo_id (Entero)</span>
-                            <span class="prd-badge prd-badge-blue" style="font-size: 0.65rem;">ID de Silo en Base de Datos</span>
+                    <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); padding: 0.4rem 0.8rem; border-radius: 6px;">
+                            <label style="font-size: 0.85rem; color: #ffffff; font-weight: 500;">silo_id (Entero):</label>
+                            <input type="number" id="input-silo-id" value="4" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 0.3rem 0.5rem; color: #ffffff; width: 100px; font-size: 0.85rem; text-align: right;" oninput="validatePydanticInputs()">
                         </div>
-                        <div class="prd-item-row" style="background: rgba(255,255,255,0.02); padding: 0.4rem 0.6rem;">
-                            <span class="prd-item-label" style="font-size: 0.8rem;">stock_ton (Float)</span>
-                            <span class="prd-badge prd-badge-purple" style="font-size: 0.65rem;">Tonelaje mayor a cero (gt=0)</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); padding: 0.4rem 0.8rem; border-radius: 6px;">
+                            <label style="font-size: 0.85rem; color: #ffffff; font-weight: 500;">stock_ton (Mayor a 0):</label>
+                            <input type="number" id="input-stock-ton" value="500" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 0.3rem 0.5rem; color: #ffffff; width: 100px; font-size: 0.85rem; text-align: right;" oninput="validatePydanticInputs()">
                         </div>
-                        <div class="prd-item-row" style="background: rgba(255,255,255,0.02); padding: 0.4rem 0.6rem;">
-                            <span class="prd-item-label" style="font-size: 0.8rem;">status (Categoría)</span>
-                            <span class="prd-badge prd-badge-blue" style="font-size: 0.65rem;">AVAILABLE | FULL | MAINTENANCE</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); padding: 0.4rem 0.8rem; border-radius: 6px;">
+                            <label style="font-size: 0.85rem; color: #ffffff; font-weight: 500;">status (Categoría):</label>
+                            <select id="input-status" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 0.3rem 0.5rem; color: #ffffff; width: 130px; font-size: 0.85rem;" onchange="validatePydanticInputs()">
+                                <option value="AVAILABLE">AVAILABLE</option>
+                                <option value="FULL">FULL</option>
+                                <option value="MAINTENANCE">MAINTENANCE</option>
+                                <option value="INVALID_VALUE">TEXTO_LIBRE</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -1406,9 +1420,9 @@
                         <span>Pydantic Output Guard</span>
                         <span id="pydantic-status" style="color: var(--color-green)">VALIDADO</span>
                     </div>
-                    <div class="console-body" id="pydantic-console" style="color: #a7f3d0;">{
+                    <div class="console-body" id="pydantic-console" style="color: #a7f3d0; text-align: left;">{
   "silo_id": 4,
-  "stock_ton": 500.0,
+  "stock_ton": 500,
   "status": "AVAILABLE"
 }</div>
                     <div class="console-footer">
@@ -1922,20 +1936,177 @@
         function togglePydanticFormat() {
             const consoleBody = document.getElementById('pydantic-console');
             const status = document.getElementById('pydantic-status');
+            const btn = document.querySelector('#slide-9 .btn-action-sm');
+            
+            const inputSiloId = document.getElementById('input-silo-id');
+            const inputStockTon = document.getElementById('input-stock-ton');
+            const inputStatus = document.getElementById('input-status');
             
             if (!isPydanticRaw) {
+                isPydanticRaw = true;
+                btn.innerHTML = "<i data-lucide='toggle-right' class='icon-sm'></i> Habilitar Pydantic Guard";
+                
+                inputSiloId.disabled = true;
+                inputStockTon.disabled = true;
+                inputStatus.disabled = true;
+                
                 consoleBody.textContent = "El stock disponible de soja es de aproximadamente 500 toneladas en el silo 4. Saludos.";
                 consoleBody.style.color = "var(--text-secondary)";
                 status.textContent = "SIN ESTRUCTURA";
                 status.style.color = "var(--color-orange)";
-                isPydanticRaw = true;
             } else {
-                consoleBody.innerHTML = `{\n  "silo_id": 4,\n  "stock_ton": 500.0,\n  "status": "AVAILABLE"\n}`;
-                consoleBody.style.color = "#a7f3d0";
+                isPydanticRaw = false;
+                btn.innerHTML = "<i data-lucide='toggle-left' class='icon-sm'></i> Alternar Entrada Cruda";
+                
+                inputSiloId.disabled = false;
+                inputStockTon.disabled = false;
+                inputStatus.disabled = false;
+                
+                validatePydanticInputs();
+            }
+            lucide.createIcons();
+        }
+
+        function validatePydanticInputs() {
+            if (isPydanticRaw) return;
+            
+            const consoleBody = document.getElementById('pydantic-console');
+            const status = document.getElementById('pydantic-status');
+            
+            const siloIdVal = document.getElementById('input-silo-id').value;
+            const stockTonVal = parseFloat(document.getElementById('input-stock-ton').value);
+            const statusVal = document.getElementById('input-status').value;
+            
+            let errors = [];
+            
+            if (!siloIdVal || isNaN(parseInt(siloIdVal))) {
+                errors.push({
+                    loc: ["silo_id"],
+                    msg: "value is not a valid integer",
+                    type: "integer_error"
+                });
+            }
+            
+            if (isNaN(stockTonVal)) {
+                errors.push({
+                    loc: ["stock_ton"],
+                    msg: "value is not a valid float",
+                    type: "float_error"
+                });
+            } else if (stockTonVal <= 0) {
+                errors.push({
+                    loc: ["stock_ton"],
+                    msg: "ensure this value is greater than 0",
+                    type: "value_error.number.not_gt",
+                    ctx: { limit_value: 0 }
+                });
+            }
+            
+            if (statusVal === "INVALID_VALUE") {
+                errors.push({
+                    loc: ["status"],
+                    msg: "value must be 'AVAILABLE', 'FULL' or 'MAINTENANCE'",
+                    type: "value_error.const",
+                    ctx: { given: "INVALID_VALUE", permitted: ["AVAILABLE", "FULL", "MAINTENANCE"] }
+                });
+            }
+            
+            if (errors.length > 0) {
+                status.textContent = "ERROR DE VALIDACIÓN";
+                status.style.color = "var(--color-red)";
+                consoleBody.style.color = "#f87171";
+                
+                let errorLines = `ValidationError: ${errors.length} validation error${errors.length > 1 ? 's' : ''} for CargoShipment\n`;
+                errors.forEach(err => {
+                    errorLines += `${err.loc.join('.')}\n  ${err.msg} [type=${err.type}, input_value=${err.loc[0] === 'stock_ton' ? stockTonVal : err.loc[0] === 'silo_id' ? siloIdVal : '\'' + statusVal + '\''}, input_type=${typeof (err.loc[0] === 'stock_ton' ? stockTonVal : err.loc[0] === 'silo_id' ? parseInt(siloIdVal) : statusVal)}]\n`;
+                });
+                consoleBody.textContent = errorLines;
+            } else {
                 status.textContent = "VALIDADO";
                 status.style.color = "var(--color-green)";
-                isPydanticRaw = false;
+                consoleBody.style.color = "#a7f3d0";
+                consoleBody.textContent = JSON.stringify({
+                    silo_id: parseInt(siloIdVal),
+                    stock_ton: stockTonVal,
+                    status: statusVal
+                }, null, 2);
             }
+        }
+
+        // --- INTERACTIVE ENGINE: LOGISTICS RUN (SLIDE 8) ---
+        let logisticsSimRunning = false;
+        function runLogisticsSimulation() {
+            if (logisticsSimRunning) return;
+            logisticsSimRunning = true;
+            
+            const consoleBody = document.getElementById('logistics-console');
+            const status = document.getElementById('logistics-status');
+            const btn = document.getElementById('btn-run-logistics');
+            
+            btn.disabled = true;
+            status.textContent = "EJECUTANDO";
+            status.style.color = "var(--color-orange)";
+            consoleBody.textContent = "";
+            
+            const steps = [
+                "[Agente] Escaneando Manifiesto PDF: Barcaza 'Rosario II' - 650 Toneladas de Soja.",
+                "[Agente] Validando ERP: Consultando disponibilidad en Silo 3 (Original)...",
+                "[Silos ERP] Respuesta: Silo 3 COMPLETO (Capacidad disponible: 120 Ton).",
+                "[Agente] Alerta de sobrecupo. Consultando disponibilidad en silos alternativos...",
+                "[Silos ERP] Respuesta: Silo 4 DISPONIBLE (Espacio libre: 800 Ton).",
+                "[Agente] Consultando API Hidrovía: Nivel de calado en Silo 4 es óptimo (28 pies).",
+                "[Agente] Generando propuesta de desvío de Barcaza a Silo 4.",
+                "[SISTEMA] Activando compuerta Human-in-the-Loop por Slack...",
+                "[Slack HITL] Notificación enviada al Coordinador General.",
+                "[HITL] Esperando aprobación humana...",
+                "[HITL] ¡APROBACIÓN RECIBIDA de Claudio Vernuccio!",
+                "[Agente] Ejecutando orden en ERP: Reasignando a Silo 4.",
+                "[Silos ERP] Stock actualizado (+650 Ton).",
+                "[SISTEMA] Flujo agéntico completado con éxito."
+            ];
+            
+            let cur = 0;
+            function printLogisticsStep() {
+                if (cur < steps.length) {
+                    consoleBody.textContent += (cur > 0 ? "\n" : "") + steps[cur];
+                    consoleBody.scrollTop = consoleBody.scrollHeight;
+                    
+                    if (steps[cur].includes("HITL") || steps[cur].includes("APROBACIÓN")) {
+                        status.textContent = "HITL WAITING";
+                        status.style.color = "var(--color-orange)";
+                    }
+                    
+                    cur++;
+                    let delay = 600;
+                    if (steps[cur-1].includes("APROBACIÓN RECIBIDA")) {
+                        delay = 1000;
+                    }
+                    setTimeout(printLogisticsStep, delay);
+                } else {
+                    status.textContent = "COMPLETADO";
+                    status.style.color = "var(--color-green)";
+                    btn.disabled = false;
+                    btn.innerHTML = "<i data-lucide='rotate-ccw' class='icon-sm'></i> Reiniciar Simulación";
+                    lucide.createIcons();
+                    logisticsSimRunning = false;
+                    btn.setAttribute("onclick", "resetLogisticsSimulation()");
+                }
+            }
+            printLogisticsStep();
+        }
+
+        function resetLogisticsSimulation() {
+            const consoleBody = document.getElementById('logistics-console');
+            const status = document.getElementById('logistics-status');
+            const btn = document.getElementById('btn-run-logistics');
+            
+            consoleBody.textContent = "Esperando inicio del flujo agéntico...";
+            status.textContent = "STANDBY";
+            status.style.color = "var(--color-blue)";
+            btn.innerHTML = "<i data-lucide='play' class='icon-sm'></i> Simular Agente";
+            btn.setAttribute("onclick", "runLogisticsSimulation()");
+            lucide.createIcons();
+            logisticsSimRunning = false;
         }
 
         // --- INTERACTIVE ENGINE: LOOP MITIGATION (SLIDE 10) ---
