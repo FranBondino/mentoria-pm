@@ -565,7 +565,7 @@
                 <li class="nav-item slide-nav-item" id="nav-slide-6"><a href="#slide-6" onclick="setActiveNav('slide-6')"><span class="nav-item-num">6</span><span>Optimización KV Cache</span></a></li>
                 <li class="nav-item slide-nav-item" id="nav-slide-7"><a href="#slide-7" onclick="setActiveNav('slide-7')"><span class="nav-item-num">7</span><span>Human-in-the-loop</span></a></li>
                 <li class="nav-item slide-nav-item" id="nav-slide-8"><a href="#slide-8" onclick="setActiveNav('slide-8')"><span class="nav-item-num">8</span><span>Caso de Estudio</span></a></li>
-                <li class="nav-item slide-nav-item" id="nav-slide-9"><a href="#slide-9" onclick="setActiveNav('slide-9')"><span class="nav-item-num">9</span><span>Validación Pydantic</span></a></li>
+                <li class="nav-item slide-nav-item" id="nav-slide-9"><a href="#slide-9" onclick="setActiveNav('slide-9')"><span class="nav-item-num">9</span><span>Validación Estructurada</span></a></li>
                 <li class="nav-item slide-nav-item" id="nav-slide-10"><a href="#slide-10" onclick="setActiveNav('slide-10')"><span class="nav-item-num">10</span><span>Loops Infinitos</span></a></li>
                 <li class="nav-item slide-nav-item" id="nav-slide-11"><a href="#slide-11" onclick="setActiveNav('slide-11')"><span class="nav-item-num">11</span><span>Fallbacks &amp; Contingencia</span></a></li>
                 <li class="nav-item slide-nav-item" id="nav-slide-12"><a href="#slide-12" onclick="setActiveNav('slide-12')"><span class="nav-item-num">12</span><span>Taller: Mock PRD</span></a></li>
@@ -631,7 +631,7 @@
                             <td class="highlight-text">30 - 45 min</td>
                             <td>Caso de Estudio y Estructuras</td>
                             <td>Slides 7 - 9</td>
-                            <td>Human-in-the-loop, caso logístico de aduanas/silos y validación Pydantic.</td>
+                             <td>Human-in-the-loop, caso logístico de aduanas/silos y validación estructurada.</td>
                         </tr>
                         <tr>
                             <td class="highlight-text">45 - 55 min</td>
@@ -922,18 +922,18 @@
                     <div class="card-header">
                         <div class="card-title">
                             <span class="nav-item-num">09</span>
-                            <span>Validación Estructurada: JSON Schema &amp; Pydantic</span>
+                            <span>Validación Estructurada (Esquema de Datos)</span>
                         </div>
                         <span class="card-title-badge">Slide 9</span>
                     </div>
                     <div class="slide-meta-row">
                         <span class="slide-meta-tag" style="border-color: var(--color-orange); color: #f97316; font-weight: 700;"><i data-lucide="clock" class="icon-sm" style="width:12px; height:12px; margin-right:3px; vertical-align: middle;"></i> 5 Min</span>
-                        <span class="slide-meta-tag">Pydantic</span>
-                        <span class="slide-meta-tag">JSON Schema</span>
+                        <span class="slide-meta-tag">Esquema de Datos</span>
+                        <span class="slide-meta-tag">Gobernanza PM</span>
                     </div>
                     <div class="script-box">
                         <div class="script-header"><i data-lucide="mic"></i><span>Guion a decir</span></div>
-                        <div class="script-text">"Cuando conectas un agente de IA con sistemas legados o ERPs corporativos de base relacional, no puedes permitir que el bot devuelva texto plano redactado de forma libre como: 'El stock disponible de soja es de aproximadamente 500 toneladas en el silo 4'. Los sistemas tradicionales no entienden aproximaciones literarias; exigen variables estrictas con tipos de datos definidos, por ejemplo: `{"silo_id": 4, "stock_ton": 500.0, "status": "AVAILABLE"}`. Para forzar al modelo probabilístico a comportarse de forma determinista y estructurada en sus respuestas de llamadas a APIs de sistemas, los ingenieros de backend implementan validadores estructurados como <strong>Pydantic</strong> y <strong>JSON Schema</strong>. <strong>Pensalo como la ranura de clasificación física en una caja de ahorro infantil o en una máquina expendedora de monedas</strong>: no importa el ángulo en que introduzcas la moneda de $1, la ranura física solo permite el paso de objetos con las dimensiones de circunferencia y espesor exactos exigidos por el mecanismo metálico, rechazando al instante cualquier moneda defectuosa o de otra denominación. Pydantic actúa como esa ranura metálica en el software: define la estructura rígida de datos exigida por el ERP y, si la IA intenta devolver un dato mal formateado o con campos incompletos, el validador del backend intercepta el fallo en milisegundos, bloquea el paso de datos al sistema de producción, y le reenvía una instrucción de corrección automática a la IA con el log de error para que reformatee la salida de inmediato. Esto garantiza la integridad transaccional de los sistemas de producción. Sin embargo, dar rienda suelta a que el agente intente corregirse e interactúe en loops autónomos plantea riesgos de facturación financiera incontrolables. Avancemos a la diapositiva 10 para explorar el control de costos y la mitigación de loops infinitos."</div>
+                        <div class="script-text">"Cuando conectas un agente de IA con sistemas legados o ERPs corporativos de base relacional, no puedes permitir que el bot devuelva texto plano redactado de forma libre como: 'El stock disponible de soja es de aproximadamente 500 toneladas en el silo 4'. Los sistemas tradicionales no entienden aproximaciones literarias; exigen variables estrictas con tipos de datos definidos. Como Product Manager de IA, tu rol no es escribir el código en Python; tu deber es definir la **Especificación de Reglas de Negocio (DoD)** y las tolerancias en el PRD —como los campos, tipos y límites numéricos de validación— para que el equipo de desarrollo configure los validadores de esquema de datos (como Pydantic y JSON Schema) en el backend. <strong>Pensalo como la ranura de clasificación física en una caja de ahorro infantil o en una máquina expendedora de monedas</strong>: no importa el ángulo en que introduzcas la moneda de $1, la ranura física solo permite el paso de objetos con las dimensiones de circunferencia y espesor exactos exigidos por el mecanismo metálico, rechazando al instante cualquier moneda defectuosa o de otra denominación. Pydantic actúa como esa ranura metálica en el software: define la estructura rígida de datos exigida por el ERP y, si la IA intenta devolver un dato mal formateado o con campos incompletos, el validador del backend intercepta el fallo en milisegundos, bloquea el paso de datos al sistema de producción, y le reenvía una instrucción de corrección automática a la IA con el log de error para que reformatee la salida de inmediato. Esto garantiza la integridad transaccional de los sistemas de producción. Sin embargo, dar rienda suelta a que el agente intente corregirse e interactúe en loops autónomos plantea riesgos de facturación financiera incontrolables. Avancemos a la diapositiva 10 para explorar el control de costos y la mitigación de loops infinitos."</div>
                     </div>
                 </div>
 

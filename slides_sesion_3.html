@@ -1160,29 +1160,36 @@
             <h2 class="slide-title">Loops de Razonamiento: ReAct</h2>
             <p class="slide-subtitle">La arquitectura cognitiva fundamental para la autonomía (Yao et al., 2022)</p>
             
-            <div class="react-interactive-container">
-                <div class="react-loop-graphic">
-                    <div class="react-loop-connector"></div>
-                    <div class="react-node react-node-thought active" onclick="activateReactStep(0)">
-                        <div class="react-node-circle"><i data-lucide="brain"></i></div>
-                        <span class="react-node-title">1. Pensamiento</span>
-                        <span class="react-node-subtitle">Thought</span>
+            <div class="grid-2">
+                <div class="react-interactive-container" style="max-width: 100%;">
+                    <div class="react-loop-graphic">
+                        <div class="react-loop-connector"></div>
+                        <div class="react-node react-node-thought active" onclick="activateReactStep(0)">
+                            <div class="react-node-circle"><i data-lucide="brain"></i></div>
+                            <span class="react-node-title">1. Pensamiento</span>
+                            <span class="react-node-subtitle">Thought</span>
+                        </div>
+                        <div class="react-node react-node-action" onclick="activateReactStep(1)">
+                            <div class="react-node-circle"><i data-lucide="play"></i></div>
+                            <span class="react-node-title">2. Acción</span>
+                            <span class="react-node-subtitle">Action</span>
+                        </div>
+                        <div class="react-node react-node-observation" onclick="activateReactStep(2)">
+                            <div class="react-node-circle"><i data-lucide="eye"></i></div>
+                            <span class="react-node-title">3. Observación</span>
+                            <span class="react-node-subtitle">Observation</span>
+                        </div>
                     </div>
-                    <div class="react-node react-node-action" onclick="activateReactStep(1)">
-                        <div class="react-node-circle"><i data-lucide="play"></i></div>
-                        <span class="react-node-title">2. Acción</span>
-                        <span class="react-node-subtitle">Action</span>
-                    </div>
-                    <div class="react-node react-node-observation" onclick="activateReactStep(2)">
-                        <div class="react-node-circle"><i data-lucide="eye"></i></div>
-                        <span class="react-node-title">3. Observación</span>
-                        <span class="react-node-subtitle">Observation</span>
+
+                    <div class="glass-card react-explanation-card" style="min-height: 130px;">
+                        <h3 id="react-title" style="margin-bottom: 0.5rem; color: var(--color-purple)">Thought (Pensamiento)</h3>
+                        <p id="react-desc" style="color: var(--text-secondary); font-size: 0.88rem; line-height: 1.45;">El agente de IA analiza su objetivo, evalúa la información actual y deduce el siguiente paso lógico. Por ejemplo: "El usuario solicita los despachos pendientes. Para conseguir esta información, debo llamar a la API de despacho fluvial".</p>
                     </div>
                 </div>
 
-                <div class="glass-card react-explanation-card">
-                    <h3 id="react-title" style="margin-bottom: 0.5rem; color: var(--color-purple)">Thought (Pensamiento)</h3>
-                    <p id="react-desc" style="color: var(--text-secondary); font-size: 0.92rem; line-height: 1.5;">El agente de IA analiza su objetivo, evalúa la información actual y deduce el siguiente paso lógico. Por ejemplo: "El usuario solicita los despachos pendientes. Para conseguir esta información, debo llamar a la API de despacho fluvial".</p>
+                <div class="glass-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1rem;">
+                    <img src="react_loop_flow.png" alt="Esquema Teórico del Loop Cognitivo ReAct" style="width: 100%; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); cursor: pointer;" onclick="openLightbox(this)">
+                    <span style="font-size: 0.72rem; color: var(--text-secondary); margin-top: 0.5rem;">[Haz clic para expandir la ilustración conceptual]</span>
                 </div>
             </div>
         </div>
@@ -1211,11 +1218,17 @@
                     </div>
                 </div>
 
-                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: center; padding: 1.5rem 2rem;">
-                    <h3 id="orch-title" style="color: var(--color-purple); margin-bottom: 0.6rem;">Agente Orquestador (Coordinador)</h3>
-                    <p id="orch-desc" style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5;">
-                        Se encarga de recibir el objetivo general de negocio de alto nivel. Evalúa la meta, define un plan general de ejecución y delega micro-tareas a los agentes trabajadores especializados. Controla la ejecución general sin ensuciarse con detalles mecánicos.
-                    </p>
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between; padding: 1.2rem 1.5rem; gap: 1rem;">
+                    <div style="text-align: center;">
+                        <img src="multi_agent_orchestrator.png" alt="Esquema Jerárquico de Orquestación Multi-Agente" style="max-height: 120px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); cursor: pointer;" onclick="openLightbox(this)">
+                        <div style="font-size: 0.68rem; color: var(--text-secondary); margin-top: 0.3rem;">[Haz clic para expandir la ilustración]</div>
+                    </div>
+                    <div>
+                        <h3 id="orch-title" style="color: var(--color-purple); font-size: 1.1rem; margin-bottom: 0.4rem;">Agente Orquestador (Coordinador)</h3>
+                        <p id="orch-desc" style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.45;">
+                            Se encarga de recibir el objetivo general de negocio de alto nivel. Evalúa la meta, define un plan general de ejecución y delega micro-tareas a los agentes trabajadores especializados. Controla la ejecución general sin ensuciarse con detalles mecánicos.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1361,19 +1374,33 @@
 
         <!-- SLIDE 9: VALIDACIÓN ESTRECTURADA PYDANTIC -->
         <div class="slide" id="slide-9">
-            <h2 class="slide-title">Validación Estructurada</h2>
-            <p class="slide-subtitle">Forzar a una máquina probabilística a emitir objetos estructurados válidos de forma determinista</p>
+            <h2 class="slide-title">Validación Estructurada (Esquema de Datos)</h2>
+            <p class="slide-subtitle">Definir contratos de datos lógicos para intercomunicación segura entre sistemas (DoD del PM)</p>
             
             <div class="pydantic-box">
-                <div class="pydantic-code">
-                    <span style="color: #60a5fa;">from</span> pydantic <span style="color: #60a5fa;">import</span> BaseModel, Field
-
-<span style="color: #34d399;">class</span> <span style="color: #fca5a5;">CargoShipment</span>(BaseModel):
-    silo_id: <span style="color: #fbcfe8;">int</span> = Field(description=<span style="color: #fde047;">"ID único del silo"</span>)
-    stock_ton: <span style="color: #fbcfe8;">float</span> = Field(gt=<span style="color: #fde047;">0</span>, description=<span style="color: #fde047;">"Toneladas cargadas"</span>)
-    status: <span style="color: #fbcfe8;">str</span> = Field(description=<span style="color: #fde047;">"Estado operativo"</span>)
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: flex-start; padding: 1.2rem 1.5rem;">
+                    <h3 style="color: var(--color-green); margin-bottom: 0.6rem; font-family: var(--font-display); font-size: 1.1rem; display: flex; align-items: center; gap: 0.4rem;">
+                        <i data-lucide="clipboard-list"></i> Especificación del Contrato de Datos (PRD)
+                    </h3>
+                    <p style="color: var(--text-secondary); font-size: 0.82rem; line-height: 1.45; margin-bottom: 0.8rem;">
+                        El PM no escribe el código; define las **Reglas de Negocio** y campos que el bot de IA debe cumplir obligatoriamente al conectarse al ERP:
+                    </p>
+                    <div class="prd-item-list" style="margin-top: 0.3rem;">
+                        <div class="prd-item-row" style="background: rgba(255,255,255,0.02); padding: 0.4rem 0.6rem;">
+                            <span class="prd-item-label" style="font-size: 0.8rem;">silo_id (Entero)</span>
+                            <span class="prd-badge prd-badge-blue" style="font-size: 0.65rem;">ID de Silo en Base de Datos</span>
+                        </div>
+                        <div class="prd-item-row" style="background: rgba(255,255,255,0.02); padding: 0.4rem 0.6rem;">
+                            <span class="prd-item-label" style="font-size: 0.8rem;">stock_ton (Float)</span>
+                            <span class="prd-badge prd-badge-purple" style="font-size: 0.65rem;">Tonelaje mayor a cero (gt=0)</span>
+                        </div>
+                        <div class="prd-item-row" style="background: rgba(255,255,255,0.02); padding: 0.4rem 0.6rem;">
+                            <span class="prd-item-label" style="font-size: 0.8rem;">status (Categoría)</span>
+                            <span class="prd-badge prd-badge-blue" style="font-size: 0.65rem;">AVAILABLE | FULL | MAINTENANCE</span>
+                        </div>
+                    </div>
                 </div>
-
+ 
                 <div class="console-container" style="min-height: auto;">
                     <div class="console-header">
                         <span>Pydantic Output Guard</span>
