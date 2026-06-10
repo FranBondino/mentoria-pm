@@ -15,78 +15,30 @@
             --text-muted: #94a3b8;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            background: var(--bg); 
-            color: var(--text); 
-            font-family: 'Inter', sans-serif; 
-            overflow: hidden; 
-            height: 100vh; 
-            width: 100vw;
-            display: flex;
-            flex-direction: column;
-        }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh; width: 100vw; display: flex; flex-direction: column; }
         
-        .slides-container {
-            flex-grow: 1;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .slide {
-            position: absolute;
-            width: 90%;
-            max-width: 1000px;
-            height: 80%;
-            background: var(--card);
-            border-radius: 20px;
-            padding: 40px;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            transition: all 0.5s ease;
-        }
-
+        .slides-container { flex-grow: 1; position: relative; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .slide { position: absolute; width: 90%; max-width: 1000px; height: 80%; background: var(--card); border-radius: 20px; padding: 40px; display: none; flex-direction: column; justify-content: center; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.5); transition: all 0.5s ease; }
         .slide.active { display: flex; animation: fadeIn 0.5s ease forwards; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.5rem; margin-bottom: 20px; color: var(--primary); }
-        h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.8rem; margin-bottom: 15px; color: var(--accent); }
-        p { font-size: 1.2rem; line-height: 1.6; margin-bottom: 20px; color: var(--text-muted); }
+        h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.8rem; margin-bottom: 25px; color: var(--primary); }
+        h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2rem; margin-bottom: 20px; color: var(--accent); }
+        p { font-size: 1.3rem; line-height: 1.7; margin-bottom: 25px; color: var(--text-muted); }
+        ul { margin-left: 30px; margin-bottom: 25px; color: var(--text-muted); }
+        li { margin-bottom: 12px; font-size: 1.2rem; }
         
-        .controls {
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(0,0,0,0.3);
-        }
+        .controls { padding: 20px; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); }
+        button { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 10px; cursor: pointer; font-weight: 700; transition: transform 0.2s; }
+        button:hover { transform: scale(1.05); background: #2563eb; }
+        .progress { font-size: 1rem; font-weight: 600; color: var(--text-muted); }
 
-        button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .progress { font-size: 0.9rem; color: var(--text-muted); }
-
-        @media (max-width: 600px) {
-            h1 { font-size: 1.8rem; }
-            h2 { font-size: 1.4rem; }
-            p { font-size: 1rem; }
-            .slide { padding: 25px; height: 85%; }
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.5rem; }
+            p, li { font-size: 1rem; }
+            .slide { padding: 30px; height: 85%; }
         }
     </style>
 </head>
@@ -95,36 +47,60 @@
 <div class="slides-container" id="slides">
     <div class="slide active">
         <h1>IA Activa & Agentes Autónomos</h1>
-        <h2>Sesión 3 - Mentoría IT para PMs</h2>
-        <p>Hoy analizamos la transición desde modelos de consulta estática hacia sistemas que ejecutan acciones y resuelven objetivos de negocio complejos.</p>
-        <p>Acomodate que ya empezamos.</p>
+        <h2>Sesión 3: El fin de la IA de solo chat</h2>
+        <p>Hoy entramos en la frontera más avanzada del desarrollo actual: sistemas que no solo te hablan, sino que <strong>ejecutan el trabajo por vos</strong>.</p>
+        <ul>
+            <li>Transición de RAG (Pasivo) a Agentes Activos.</li>
+            <li>Arquitecturas de razonamiento ReAct y Orquestación.</li>
+            <li>Gobernanza corporativa, control de riesgos y costos.</li>
+        </ul>
     </div>
 
     <div class="slide">
-        <h1>¿Qué es un Agente?</h1>
-        <h2>De la respuesta a la resolución</h2>
-        <p>Un agente no es simplemente un chat. Es un sistema con la capacidad de <strong>razonar</strong> y <strong>actuar</strong>.</p>
-        <p>Pensalo como un colaborador con experiencia: vos le das el objetivo final y él se encarga de seleccionar las herramientas necesarias para alcanzarlo.</p>
+        <h1>¿Qué es un Agente real?</h1>
+        <h2>De la respuesta a la resolución de metas</h2>
+        <p>Un agente es un sistema diseñado para operar con autonomía para:</p>
+        <ul>
+            <li><strong>Razonar:</strong> Planificar los pasos necesarios para cumplir un objetivo.</li>
+            <li><strong>Interactuar:</strong> Usar APIs, consultar bases de datos y sistemas externos.</li>
+            <li><strong>Validar:</strong> Evaluar si sus propias acciones tuvieron éxito.</li>
+        </ul>
+        <p>Pensalo como un colaborador senior con experiencia: vos le das la meta final y él se encarga de definir y ejecutar el "cómo".</p>
     </div>
 
     <div class="slide">
-        <h1>El Loop ReAct</h1>
-        <h2>Pensar -> Actuar -> Observar</h2>
-        <p>Es el proceso que garantiza la precisión de la IA. Antes de realizar cualquier acción, el modelo explica su razonamiento (Pensar), ejecuta la tarea (Actuar) y evalúa los resultados obtenidos (Observar).</p>
-        <p>Tenés el control total sobre cada paso del razonamiento.</p>
+        <h1>Patrones: Orquestador y Workers</h1>
+        <h2>Especialización para garantizar precisión</h2>
+        <p>En escala corporativa no usamos un solo bot para todo. Diseñamos un equipo:</p>
+        <ul>
+            <li><strong>Orquestador:</strong> El cerebro central que descompone el pedido.</li>
+            <li><strong>Workers:</strong> Agentes expertos en una sola tarea (SQL, lectura de PDFs, búsqueda web).</li>
+        </ul>
+        <p>Esta estructura reduce drásticamente las alucinaciones y te permite tener un control quirúrgico sobre cada paso del proceso de negocio.</p>
     </div>
 
     <div class="slide">
-        <h1>Gobernanza y Seguridad</h1>
-        <h2>Estrategia y Control</h2>
-        <p>Como Product Manager, sos responsable de establecer los límites operativos y los puntos de aprobación manual (Human-in-the-loop).</p>
-        <p>Definís las reglas para que el sistema opere con total seguridad dentro de tu arquitectura corporativa.</p>
+        <h1>Tool Calling</h1>
+        <h2>El puente entre la IA y tu Backend</h2>
+        <p>Es la capacidad técnica de la IA para generar instrucciones estructuradas (JSON) que activan funciones reales en tus servidores.</p>
+        <p>Como PM, vos sos el responsable de definir el "Catálogo de Herramientas". Es como dar las llaves de la empresa: tenés que saber exactamente qué permisos le das al agente.</p>
+    </div>
+
+    <div class="slide">
+        <h1>Gobernanza Estratégica</h1>
+        <h2>Tu rol fundamental en el liderazgo de IA</h2>
+        <p>La autonomía de la IA no es una decisión técnica, es una decisión estratégica del Product Manager:</p>
+        <ul>
+            <li><strong>Human-in-the-loop:</strong> ¿En qué puntos críticos frenamos al bot para que vos apruebes?</li>
+            <li><strong>Guardrails de Costos:</strong> Límites de gastos y de iteraciones para proteger el presupuesto.</li>
+            <li><strong>Auditoría de Razonamiento:</strong> Revisión de los logs (¿Por qué el agente decidió esto?).</li>
+        </ul>
     </div>
 </div>
 
 <div class="controls">
     <button onclick="prevSlide()">Anterior</button>
-    <div class="progress" id="progress">Diapositiva 1 / 4</div>
+    <div class="progress" id="progress">Diapositiva 1 / 5</div>
     <button onclick="nextSlide()">Siguiente</button>
 </div>
 
@@ -137,7 +113,7 @@
         slides.forEach((slide, index) => {
             slide.classList.toggle('active', index === currentSlide);
         });
-        progress.innerText = `Diapositiva ${currentSlide + 1} / ${slides.length}`;
+        progress.innerText = 'Diapositiva ' + (currentSlide + 1) + ' / ' + slides.length;
     }
 
     function nextSlide() {

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glosario Técnico: Sesión 3 - Mentoría IT & AI</title>
+    <title>Glosario Estratégico: Sesión 3 - IA Activa & Agentes</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -57,27 +57,31 @@
         @media (min-width: 768px) { .page-header-title { font-size: 2.2rem; flex-direction: row; align-items: center; justify-content: space-between; } }
         .page-header-title span { font-size: 0.8rem; font-weight: 500; color: var(--text-muted); background-color: var(--bg-light); padding: 4px 12px; border-radius: 6px; border: 1px solid var(--border-color); width: fit-content; }
         
-        .section-intro { font-size: 1rem; color: var(--text-muted); margin-bottom: 35px; padding-left: 15px; border-left: 3px solid #CBD5E1; }
+        .section-intro { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 45px; padding-left: 20px; border-left: 4px solid var(--primary); }
         
-        .glossary-card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; margin-bottom: 24px; box-shadow: var(--shadow); transition: var(--transition); }
-        @media (min-width: 768px) { .glossary-card { padding: 24px; } }
-        .glossary-card:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); border-color: var(--primary); }
+        .glossary-card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; margin-bottom: 40px; box-shadow: var(--shadow); transition: var(--transition); }
+        @media (min-width: 768px) { .glossary-card { padding: 35px; } }
+        .glossary-card:hover { box-shadow: 0 15px 30px -5px rgba(139, 92, 246, 0.1); border-color: var(--primary); }
         
-        .card-header { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
+        .card-header { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
         @media (min-width: 768px) { .card-header { flex-direction: row; justify-content: space-between; align-items: flex-start; } }
-        .concept-title { font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 10px; }
-        .concept-index { color: var(--primary); background-color: var(--primary-light); font-size: 0.8rem; padding: 2px 8px; border-radius: 4px; font-weight: 700; }
-        .concept-tag { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 10px; border-radius: 20px; background-color: var(--primary-light); color: var(--primary); width: fit-content; }
+        .concept-title { font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 12px; }
+        .concept-index { color: var(--primary); background-color: var(--primary-light); font-size: 0.85rem; padding: 4px 10px; border-radius: 6px; font-weight: 800; }
+        .concept-tag { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 12px; border-radius: 20px; background-color: var(--primary-light); color: var(--primary); width: fit-content; }
         
-        .definition-box { background-color: var(--bg-light); border-radius: 6px; padding: 14px 18px; margin-bottom: 15px; font-size: 0.95rem; color: var(--text-dark); border-left: 3px solid #CBD5E1; }
-        .metaphor-box { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 18px; display: flex; gap: 10px; align-items: flex-start; }
-        .metaphor-icon { font-size: 1.1rem; color: #EAB308; margin-top: 2px; }
+        .content-section { margin-bottom: 25px; }
+        .content-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #64748B; letter-spacing: 1px; margin-bottom: 8px; display: block; }
         
-        .diagram-container { background: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 8px; padding: 15px; margin: 15px 0; display: flex; justify-content: center; align-items: center; flex-direction: column; overflow-x: auto; }
-        .diagram-label { font-size: 0.65rem; color: #94A3B8; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; font-weight: 600; text-align: center; }
+        .definition-box { background-color: var(--bg-light); border-radius: 8px; padding: 18px 22px; font-size: 1rem; color: var(--text-dark); border-left: 4px solid #CBD5E1; }
+        
+        .diagram-container { background: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 10px; padding: 25px; margin: 25px 0; display: flex; justify-content: center; align-items: center; flex-direction: column; overflow-x: auto; }
+        .diagram-label { font-size: 0.7rem; color: #94A3B8; text-transform: uppercase; letter-spacing: 1px; margin-top: 15px; font-weight: 600; text-align: center; }
 
-        .pm-insight-box { background-color: #F8FAFC; border: 1px solid #E2E8F0; border-left: 4px solid var(--primary); border-radius: 6px; padding: 16px; font-size: 0.9rem; }
-        .pm-insight-header { font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--primary); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+        .insight-card { background-color: #FDFCFB; border: 1px solid rgba(139, 92, 246, 0.1); border-left: 5px solid var(--primary); border-radius: 8px; padding: 20px; margin-top: 25px; }
+        .insight-header { font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--primary); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        
+        .example-box { font-size: 0.95rem; color: var(--text-muted); display: flex; gap: 12px; align-items: flex-start; margin-top: 15px; background: rgba(245, 243, 255, 0.3); padding: 15px; border-radius: 6px; }
+        .example-icon { font-size: 1.2rem; color: #EAB308; }
 
         svg { max-width: 100%; height: auto; display: block; }
     </style>
@@ -86,6 +90,7 @@
 
 <div class="document-container">
     
+    <!-- PORTADA -->
     <div class="cover-page">
         <div class="cover-header">
             <div class="logo-text">Mentoría IT / AI</div>
@@ -93,44 +98,46 @@
         </div>
         
         <div class="cover-body">
-            <h1 class="cover-title">Glosario Estratégico:<br>Sesión 3</h1>
-            <p class="cover-subtitle">Transición hacia la IA Activa y Agentes Autónomos. Arquitecturas cognitivas, integración y gobernanza corporativa.</p>
+            <h1 class="cover-title">Glosario Estratégico de IA Avanzada:<br>Sesión 3</h1>
+            <p class="cover-subtitle">Transición crítica hacia la IA Activa y el diseño de Agentes Autónomos. Arquitecturas cognitivas, integración profunda con APIs, gobernanza de riesgos corporativos y optimización de costos operativos en sistemas de producción.</p>
             <div class="divider-accent"></div>
         </div>
         
         <div class="cover-footer">
             <div class="meta-info">
                 <h5>Orientado a</h5>
-                <p>Product Managers & Liderazgo</p>
+                <p>Product Managers & Liderazgo de Producto</p>
             </div>
             <div class="meta-info">
                 <h5>Bloque Temático</h5>
-                <p>IA Activa & Agentes</p>
+                <p>Inteligencia Artificial Activa & Sistemas Agénticos</p>
             </div>
         </div>
     </div>
 
+    <!-- CONTENIDO -->
     <div class="page-content">
         
         <h2 class="page-header-title">
-            Arquitectura Cognitiva y Agentes <span>Bloque 1</span>
+            I. Arquitectura Cognitiva y Agentes <span>Bloque 1</span>
         </h2>
         
         <p class="section-intro">
-            Analizamos cómo los modelos evolucionan desde sistemas de consulta hacia agentes que resuelven problemas complejos de negocio de forma autónoma.
+            En este bloque analizamos la evolución fundamental del software probabilístico: el paso de sistemas de consulta estática (RAG) hacia agentes capaces de razonar, planificar y ejecutar acciones complejas en nombre de la empresa.
         </p>
 
-        <!-- IA Pasiva vs Activa -->
+        <!-- 1. IA Pasiva vs. IA Activa -->
         <div class="glossary-card">
             <div class="card-header">
-                <div class="concept-title">
-                    <span class="concept-index">01</span>
-                    IA Pasiva vs. IA Activa
-                </div>
+                <div class="concept-title"><span class="concept-index">01</span> IA Pasiva vs. IA Activa</div>
                 <div class="concept-tag">Paradigma</div>
             </div>
-            <div class="definition-box">
-                La <strong>IA Pasiva</strong> se limita a generar respuestas basadas en información recuperada (RAG). La <strong>IA Activa</strong> utiliza el razonamiento para decidir qué herramientas necesita y ejecutar acciones en sistemas externos.
+            
+            <div class="content-section">
+                <span class="content-label">Definición Técnica Extensa</span>
+                <div class="definition-box">
+                    La <strong>IA Pasiva</strong> (RAG Clásico) se limita a actuar como un motor de búsqueda avanzado que genera respuestas textuales basadas en documentos inyectados en su contexto; su capacidad termina en la pantalla. La <strong>IA Activa</strong> (Sistemas Agénticos) integra una capa de razonamiento dinámico que le permite interactuar con el mundo exterior mediante el uso de herramientas, APIs y bases de datos relacionales para modificar registros y ejecutar flujos de negocio.
+                </div>
             </div>
             
             <div class="diagram-container">
@@ -142,211 +149,263 @@
                             <feComponentTransfer><feFuncA type="linear" slope="0.2"/></feComponentTransfer>
                             <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
                         </filter>
-                        <linearGradient id="gradPurple" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#A78BFA;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#8B5CF6;stop-opacity:1" />
-                        </linearGradient>
                     </defs>
                     <rect x="20" y="40" width="130" height="60" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2" filter="url(#shadow)"/>
-                    <text x="85" y="70" text-anchor="middle" font-size="12" font-weight="700" fill="#475569">RAG (Pasiva)</text>
-                    <text x="85" y="85" text-anchor="middle" font-size="10" fill="#64748B">Genera Respuesta</text>
-                    
+                    <text x="85" y="70" text-anchor="middle" font-size="12" font-weight="700" fill="#475569">IA PASIVA</text>
+                    <text x="85" y="85" text-anchor="middle" font-size="10" fill="#64748B">Solo Lectura/Chat</text>
                     <path d="M160 70 L200 70" stroke="#94A3B8" stroke-width="3" stroke-dasharray="4" />
-                    
-                    <rect x="210" y="30" width="170" height="80" rx="10" fill="url(#gradPurple)" stroke="#6D28D9" stroke-width="2" filter="url(#shadow)"/>
-                    <text x="295" y="65" text-anchor="middle" font-size="12" font-weight="700" fill="#FFFFFF">AGENTE (Activa)</text>
-                    <text x="295" y="85" text-anchor="middle" font-size="10" fill="#EDE9FE">Ejecuta Acciones</text>
+                    <rect x="210" y="30" width="170" height="80" rx="10" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="2" filter="url(#shadow)"/>
+                    <text x="295" y="65" text-anchor="middle" font-size="12" font-weight="700" fill="#6D28D9">IA ACTIVA (AGENTE)</text>
+                    <text x="295" y="85" text-anchor="middle" font-size="10" fill="#7C3AED">Lectura + Acción (APIs)</text>
                 </svg>
-                <div class="diagram-label">Evolución de capacidades: De informar a ejecutar.</div>
+                <div class="diagram-label">Evolución: De informar a resolver objetivos de negocio.</div>
             </div>
 
-            <div class="metaphor-box">
-                <span class="metaphor-icon">💡</span>
-                <div><strong>Caso de uso:</strong> Mientras que una IA Pasiva te informa el nivel de stock, una IA Activa identifica el faltante y genera una orden de compra para que vos la apruebes.</div>
+            <div class="example-box">
+                <span class="example-icon">💡</span>
+                <div><strong>Caso de Negocio:</strong> Una IA Pasiva te informa que tenés facturas vencidas. Una IA Activa identifica los clientes con deuda, redacta los correos de reclamo, los envía y actualiza el estado en el CRM una vez que el cliente responde con un comprobante.</div>
             </div>
-            <div class="pm-insight-box">
-                <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
-                Tu planificación ya no se centra únicamente en la visualización de datos, sino en las herramientas y permisos que el agente requiere para operar con autonomía.
+
+            <div class="insight-card">
+                <div class="insight-header">🎯 Insight del PM</div>
+                Tu rol estratégico deja de ser el diseño de flujos de pantallas rígidos y pasa a ser la definición de "Objetivos, Herramientas y Límites". Diseñás el **espacio de juego** donde el agente operará, asegurando que tenga los permisos necesarios pero restringidos para no comprometer la integridad de los datos centrales.
             </div>
         </div>
 
-        <!-- Loop ReAct -->
+        <!-- 2. Loop ReAct -->
         <div class="glossary-card">
             <div class="card-header">
-                <div class="concept-title">
-                    <span class="concept-index">02</span>
-                    Loop ReAct
-                </div>
+                <div class="concept-title"><span class="concept-index">02</span> Loop ReAct (Reasoning + Acting)</div>
                 <div class="concept-tag">Proceso</div>
             </div>
-            <div class="definition-box">
-                Marco de razonamiento donde el agente itera en tres pasos: <strong>Pensar</strong> (Planificar), <strong>Actuar</strong> (Usar una herramienta) y <strong>Observar</strong> (Analizar el resultado para determinar los siguientes pasos).
+            
+            <div class="content-section">
+                <span class="content-label">Definición Técnica Extensa</span>
+                <div class="definition-box">
+                    Arquitectura fundamental que permite a un LLM alternar entre generar razonamientos verbalizados y ejecutar acciones técnicas. El agente itera en tres pasos: <strong>Pensar</strong> (evaluar el estado actual y planificar), <strong>Actuar</strong> (invocar una herramienta o API) y <strong>Observar</strong> (analizar el resultado de la acción para decidir el siguiente paso). Este proceso elimina la impulsividad del modelo y le permite auto-corregirse si una herramienta falla.
+                </div>
             </div>
 
             <div class="diagram-container">
-                <svg width="300" height="200" viewBox="0 0 300 200">
-                    <path d="M150 20 A 80 80 0 1 1 149.9 20" fill="none" stroke="#E2E8F0" stroke-width="8" stroke-linecap="round"/>
-                    <path d="M150 20 A 80 80 0 0 1 230 100" fill="none" stroke="#8B5CF6" stroke-width="8" stroke-linecap="round"/>
-                    
+                <svg width="300" height="180" viewBox="0 0 300 180">
+                    <circle cx="150" cy="90" r="70" fill="none" stroke="#E2E8F0" stroke-width="6" stroke-dasharray="10,5"/>
                     <circle cx="150" cy="20" r="22" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="3" filter="url(#shadow)"/>
                     <text x="150" y="24" text-anchor="middle" font-size="8" font-weight="800" fill="#6D28D9">PENSAR</text>
-                    
-                    <circle cx="230" cy="100" r="22" fill="#FFFFFF" stroke="#10B981" stroke-width="3" filter="url(#shadow)"/>
-                    <text x="230" y="104" text-anchor="middle" font-size="8" font-weight="800" fill="#059669">ACTUAR</text>
-                    
-                    <circle cx="70" cy="100" r="22" fill="#FFFFFF" stroke="#3B82F6" stroke-width="3" filter="url(#shadow)"/>
-                    <text x="70" y="104" text-anchor="middle" font-size="8" font-weight="800" fill="#1D4ED8">OBSERVAR</text>
+                    <circle cx="240" cy="120" r="22" fill="#FFFFFF" stroke="#10B981" stroke-width="3" filter="url(#shadow)"/>
+                    <text x="240" y="124" text-anchor="middle" font-size="8" font-weight="800" fill="#059669">ACTUAR</text>
+                    <circle cx="60" cy="120" r="22" fill="#FFFFFF" stroke="#3B82F6" stroke-width="3" filter="url(#shadow)"/>
+                    <text x="60" y="124" text-anchor="middle" font-size="8" font-weight="800" fill="#1D4ED8">OBSERVAR</text>
                 </svg>
-                <div class="diagram-label">El motor de razonamiento: Pensar -> Hacer -> Evaluar.</div>
+                <div class="diagram-label">El bucle de pensamiento agéntico: transfiere lógica de control al modelo.</div>
             </div>
 
-            <div class="metaphor-box">
-                <span class="metaphor-icon">💡</span>
-                <div><strong>Analogía Profesional:</strong> Es el flujo de trabajo de un consultor estratégico. Primero analizás el problema, luego ejecutás una acción y finalmente evaluás los resultados para decidir cómo continuar.</div>
+            <div class="example-box">
+                <span class="example-icon">💡</span>
+                <div><strong>Analogía Profesional:</strong> Es exactamente como trabaja un analista de procesos senior. Ante un problema nuevo, primero analiza la situación y arma un plan de acción (Pensar), realiza una consulta o pedido a otro departamento (Actuar) y, basándose en la respuesta que recibe, decide si el problema está resuelto o si debe probar un camino alternativo (Observar).</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-header">🎯 Insight del PM</div>
+                El Loop ReAct es la clave de la **explicabilidad semántica**. Cuando el agente toma una decisión equivocada, podés auditar el "log de pensamientos" paso a paso para ver exactamente en qué parte del razonamiento se desvió. Es fundamental exigirle a ingeniería que estos logs sean visibles en los dashboards de observabilidad (ej. Langfuse).
             </div>
         </div>
 
-        <!-- Orchestrator-Workers -->
+        <!-- 3. Patrón Orchestrator-Workers -->
         <div class="glossary-card">
             <div class="card-header">
-                <div class="concept-title">
-                    <span class="concept-index">03</span>
-                    Patrón Orchestrator-Workers
-                </div>
+                <div class="concept-title"><span class="concept-index">03</span> Patrón Orchestrator-Workers</div>
                 <div class="concept-tag">Arquitectura</div>
             </div>
-            <div class="definition-box">
-                Arquitectura multi-agente donde un <strong>Orquestador</strong> central descompone una tarea compleja y la distribuye entre varios <strong>Workers</strong> especializados, consolidando luego la solución final.
+            
+            <div class="content-section">
+                <span class="content-label">Definición Técnica Extensa</span>
+                <div class="definition-box">
+                    Diseño de arquitectura multi-agente donde un agente central de alta capacidad (Orquestador) se encarga de recibir pedidos complejos, descomponerlos en subtareas atómicas y delegarlas a múltiples micro-agentes especializados (Workers). Cada Worker tiene una responsabilidad acotada y herramientas específicas, lo que aumenta drásticamente la precisión y reduce la latencia al permitir procesamiento en paralelo.
+                </div>
             </div>
 
             <div class="diagram-container">
-                <svg width="360" height="140" viewBox="0 0 360 140">
-                    <rect x="120" y="10" width="120" height="40" rx="6" fill="#1E293B" stroke="#8B5CF6" stroke-width="2" filter="url(#shadow)"/>
-                    <text x="180" y="35" text-anchor="middle" font-size="10" font-weight="800" fill="#FFFFFF">ORQUESTADOR</text>
-                    
-                    <path d="M180 50 L60 90" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="3"/>
-                    <path d="M180 50 L180 90" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="3"/>
-                    <path d="M180 50 L300 90" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="3"/>
-                    
-                    <rect x="20" y="90" width="80" height="35" rx="4" fill="#F1F5F9" stroke="#8B5CF6" stroke-width="1"/>
-                    <text x="60" y="112" text-anchor="middle" font-size="9" font-weight="700" fill="#475569">Worker PDF</text>
-                    
-                    <rect x="140" y="90" width="80" height="35" rx="4" fill="#F1F5F9" stroke="#8B5CF6" stroke-width="1"/>
-                    <text x="180" y="112" text-anchor="middle" font-size="9" font-weight="700" fill="#475569">Worker SQL</text>
-                    
-                    <rect x="260" y="90" width="80" height="35" rx="4" fill="#F1F5F9" stroke="#8B5CF6" stroke-width="1"/>
-                    <text x="300" y="112" text-anchor="middle" font-size="9" font-weight="700" fill="#475569">Worker Web</text>
+                <svg width="360" height="150" viewBox="0 0 360 150">
+                    <rect x="120" y="10" width="120" height="45" rx="8" fill="#1E293B" stroke="#8B5CF6" stroke-width="2" filter="url(#shadow)"/>
+                    <text x="180" y="38" text-anchor="middle" font-size="10" font-weight="800" fill="#FFFFFF">ORQUESTADOR</text>
+                    <path d="M180 55 L60 100 M180 55 L180 100 M180 55 L300 100" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="3"/>
+                    <rect x="20" y="100" width="80" height="35" rx="6" fill="#F1F5F9" stroke="#8B5CF6" stroke-width="1"/>
+                    <text x="60" y="122" text-anchor="middle" font-size="9" font-weight="700" fill="#475569">Lector PDF</text>
+                    <rect x="140" y="100" width="80" height="35" rx="6" fill="#F1F5F9" stroke="#8B5CF6" stroke-width="1"/>
+                    <text x="180" y="122" text-anchor="middle" font-size="9" font-weight="700" fill="#475569">Auditor SQL</text>
+                    <rect x="260" y="100" width="80" height="35" rx="6" fill="#F1F5F9" stroke="#8B5CF6" stroke-width="1"/>
+                    <text x="300" y="122" text-anchor="middle" font-size="9" font-weight="700" fill="#475569">Agente Web</text>
                 </svg>
-                <div class="diagram-label">Especialización: Cada Worker es experto en una subtarea específica.</div>
+                <div class="diagram-label">Especialización Agéntica: Mayor control y menos alucinaciones.</div>
             </div>
-            <div class="pm-insight-box">
-                <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
-                Esta estructura reduce significativamente las alucinaciones del modelo. Al gestionar un equipo de agentes especializados, lográs mayor precisión y facilidad en el testeo de cada componente.
+
+            <div class="example-box">
+                <span class="example-icon">💡</span>
+                <div><strong>Ejemplo Corporativo:</strong> Si pedís "Realizá una auditoría de la rentabilidad del cliente Vernuccio", el Orquestador desglosa la tarea: le manda a un Worker leer los contratos (PDF), a otro a extraer las facturas pagadas del ERP (SQL) y él mismo consolida el informe final comparando ambas fuentes.</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-header">🎯 Insight del PM</div>
+                Este patrón te permite escalar la fiabilidad. En lugar de pelear con un bot generalista que intenta hacer todo (y falla), gestionás un equipo de especialistas. Tu tarea como PM es definir el **contrato de interfaz** entre el Orquestador y los Workers: qué tareas son potestad de quién y cómo se entregan los resultados.
             </div>
         </div>
 
         <h2 class="page-header-title">
-            Integración y Gobernanza <span>Bloque 2</span>
+            II. Integración, Gobernanza y Costos <span>Bloque 2</span>
         </h2>
 
-        <!-- Tool Calling -->
+        <!-- 4. Tool Calling -->
         <div class="glossary-card">
             <div class="card-header">
-                <div class="concept-title">
-                    <span class="concept-index">04</span>
-                    Tool Calling
-                </div>
+                <div class="concept-title"><span class="concept-index">04</span> Tool Calling (Invocación de Funciones)</div>
                 <div class="concept-tag">Integración</div>
             </div>
-            <div class="definition-box">
-                Capacidad del LLM de solicitar la ejecución de una función externa. La IA genera un <strong>JSON</strong> estructurado con los parámetros necesarios para que tu sistema ejecute la acción.
-            </div>
             
-            <div class="diagram-container">
-                <svg width="340" height="100" viewBox="0 0 340 100">
-                    <rect x="10" y="25" width="100" height="50" rx="8" fill="#F8FAFC" stroke="#8B5CF6" stroke-width="2"/>
-                    <text x="60" y="55" text-anchor="middle" font-size="10" font-weight="800" fill="#6D28D9">IA</text>
-                    
-                    <path d="M120 50 L160 50" stroke="#94A3B8" stroke-width="2" />
-                    
-                    <rect x="170" y="20" width="150" height="60" rx="6" fill="#F1F5F9" stroke="#475569" stroke-width="1"/>
-                    <text x="180" y="40" font-family="monospace" font-size="8" fill="#1E293B">{</text>
-                    <text x="190" y="52" font-family="monospace" font-size="8" fill="#1E293B">"tool": "get_sales",</text>
-                    <text x="190" y="64" font-family="monospace" font-size="8" fill="#1E293B">"client_id": 1045</text>
-                    <text x="180" y="76" font-family="monospace" font-size="8" fill="#1E293B">}</text>
-                </svg>
-                <div class="diagram-label">Tool Calling: El puente entre el lenguaje natural y el código.</div>
-            </div>
-
-            <div class="metaphor-box">
-                <span class="metaphor-icon">💡</span>
-                <div><strong>Ejemplo:</strong> Si el agente necesita consultar una base de datos, no inventa la respuesta; emite una solicitud técnica para que tu backend le devuelva la información real.</div>
-            </div>
-        </div>
-
-        <!-- Human-in-the-loop -->
-        <div class="glossary-card">
-            <div class="card-header">
-                <div class="concept-title">
-                    <span class="concept-index">05</span>
-                    Human-in-the-loop (HITL)
+            <div class="content-section">
+                <span class="content-label">Definición Técnica Extensa</span>
+                <div class="definition-box">
+                    Capacidad nativa del LLM para emitir una respuesta en formato **JSON estructurado** que indica la intención de ejecutar una función externa específica. El modelo no "hace" la acción físicamente, sino que genera los argumentos técnicos necesarios para que tu sistema ejecute el código de forma segura y le devuelva el resultado para que él continúe razonando.
                 </div>
-                <div class="concept-tag">Gobernanza</div>
-            </div>
-            <div class="definition-box">
-                Punto de control donde el agente detiene su proceso y solicita autorización manual antes de realizar una acción crítica, irreversible o de alto impacto.
-            </div>
-            <div class="diagram-container">
-                <svg width="320" height="80" viewBox="0 0 320 80">
-                    <rect x="10" y="25" width="70" height="30" rx="4" fill="#EDE9FE" stroke="#8B5CF6"/>
-                    <text x="45" y="44" text-anchor="middle" font-size="9" fill="#6D28D9">Agente</text>
-                    
-                    <line x1="85" y1="40" x2="115" y2="40" stroke="#94A3B8" stroke-width="2"/>
-                    
-                    <circle cx="150" cy="40" r="24" fill="#FEE2E2" stroke="#EF4444" stroke-width="2" filter="url(#shadow)"/>
-                    <text x="150" y="45" text-anchor="middle" font-size="18" fill="#EF4444">👤</text>
-                    
-                    <line x1="185" y1="40" x2="215" y2="40" stroke="#94A3B8" stroke-width="2" />
-                    
-                    <rect x="230" y="25" width="80" height="30" rx="4" fill="#F0FDF4" stroke="#10B981"/>
-                    <text x="270" y="44" text-anchor="middle" font-size="9" fill="#059669">Acción</text>
-                </svg>
-                <div class="diagram-label">Garantía de seguridad: El factor humano como validador final.</div>
-            </div>
-            <div class="pm-insight-box">
-                <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
-                Es tu principal mecanismo de mitigación de riesgos. Definir qué acciones requieren aprobación (ej: transacciones monetarias elevadas) es una decisión estratégica del Product Manager.
-            </div>
-        </div>
-
-        <!-- Validación Estructurada -->
-        <div class="glossary-card">
-            <div class="card-header">
-                <div class="concept-title">
-                    <span class="concept-index">06</span>
-                    Validación Estructurada
-                </div>
-                <div class="concept-tag">Seguridad</div>
-            </div>
-            <div class="definition-box">
-                Implementación de esquemas técnicos (Pydantic / JSON Schema) para garantizar que los datos generados por la IA cumplan estrictamente con el formato requerido por tus sistemas centrales.
             </div>
             
             <div class="diagram-container">
                 <svg width="340" height="120" viewBox="0 0 340 120">
-                    <path d="M40 30 L40 90 L300 90 L300 30 Z" fill="#F8FAFC" stroke="#475569" stroke-width="2"/>
-                    <rect x="70" y="10" width="200" height="30" rx="4" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="2"/>
-                    <text x="170" y="30" text-anchor="middle" font-size="10" font-weight="800" fill="#6D28D9">VALIDACIÓN DE DATOS</text>
-                    <text x="170" y="70" text-anchor="middle" font-size="10" fill="#64748B">Garantía de integridad en el backend</text>
+                    <rect x="10" y="30" width="90" height="60" rx="10" fill="#F8FAFC" stroke="#8B5CF6" stroke-width="2"/>
+                    <text x="55" y="65" text-anchor="middle" font-size="12" font-weight="800" fill="#6D28D9">LLM</text>
+                    <path d="M110 60 L150 60" stroke="#94A3B8" stroke-width="2" />
+                    <rect x="160" y="20" width="160" height="80" rx="8" fill="#1E293B" stroke="#475569" stroke-width="1"/>
+                    <text x="175" y="45" font-family="monospace" font-size="9" fill="#A78BFA">{ "function": "get_id",</text>
+                    <text x="175" y="65" font-family="monospace" font-size="9" fill="#A78BFA">  "name": "Claudio" }</text>
                 </svg>
-                <div class="diagram-label">Integridad de datos: Protegiendo la arquitectura corporativa.</div>
+                <div class="diagram-label">Tool Calling: El lenguaje natural convertido en comando de sistema.</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-header">🎯 Insight del PM</div>
+                Es el estándar de la industria para evitar que la IA "invente" datos. Si el bot necesita saber la fecha o un saldo, no debe adivinarlo; debe tener una **Herramienta** para consultarlo. Como PM, debés priorizar y documentar el "Catálogo de Herramientas" que el agente tiene permitido invocar, definiendo qué parámetros son obligatorios.
+            </div>
+        </div>
+
+        <!-- 5. Human-in-the-loop (HITL) -->
+        <div class="glossary-card">
+            <div class="card-header">
+                <div class="concept-title"><span class="concept-index">05</span> Human-in-the-loop (HITL)</div>
+                <div class="concept-tag">Gobernanza</div>
+            </div>
+            
+            <div class="content-section">
+                <span class="content-label">Definición Técnica Extensa</span>
+                <div class="definition-box">
+                    Mecanismo de seguridad que pausa la autonomía del agente ante acciones críticas, irreversibles o de alto costo, requiriendo la aprobación manual de un operador humano. El estado de la tarea queda en "Suspenso" hasta que una persona valida la propuesta del bot y le permite continuar o le pide corregir el rumbo.
+                </div>
+            </div>
+
+            <div class="diagram-container">
+                <svg width="340" height="100" viewBox="0 0 340 100">
+                    <rect x="10" y="35" width="80" height="30" rx="6" fill="#EDE9FE" stroke="#8B5CF6"/>
+                    <text x="50" y="54" text-anchor="middle" font-size="9" fill="#6D28D9">IA Propone</text>
+                    <line x1="90" y1="50" x2="130" y2="50" stroke="#94A3B8" stroke-width="2" stroke-dasharray="4"/>
+                    <circle cx="170" cy="50" r="28" fill="#FEE2E2" stroke="#EF4444" stroke-width="2" filter="url(#shadow)"/>
+                    <text x="170" y="55" text-anchor="middle" font-size="20" fill="#EF4444">👤</text>
+                    <line x1="210" y1="50" x2="250" y2="50" stroke="#94A3B8" stroke-width="2" />
+                    <rect x="260" y="35" width="70" height="30" rx="6" fill="#F0FDF4" stroke="#10B981"/>
+                    <text x="295" y="54" text-anchor="middle" font-size="9" fill="#059669">ACCIÓN</text>
+                </svg>
+                <div class="diagram-label">Seguridad: El factor humano como validador de última instancia.</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-header">🎯 Insight del PM</div>
+                HITL es tu herramienta fundamental de **Gobernanza de Riesgo**. Definir los umbrales de aprobación (ej. "Cualquier transacción > $50k" o "Cualquier envío de mail a un directivo") es una decisión puramente de producto y negocio. Tenés que balancear la fricción que esto genera contra la seguridad que requiere la organización.
+            </div>
+        </div>
+
+        <!-- 6. KV Cache -->
+        <div class="glossary-card">
+            <div class="card-header">
+                <div class="concept-title"><span class="concept-index">06</span> KV Cache (Optimización de Latencia)</div>
+                <div class="concept-tag">Costos & Eficiencia</div>
+            </div>
+            
+            <div class="content-section">
+                <span class="content-label">Definición Técnica Extensa</span>
+                <div class="definition-box">
+                    Técnica de optimización en la memoria de la GPU que almacena los cómputos de las partes estáticas del prompt (instrucciones base, documentos inyectados) para evitar procesarlos de nuevo en turnos sucesivos. Esto permite que el bot responda mucho más rápido (menor TTFT) y reduce el costo de procesamiento de tokens de entrada repetitivos hasta en un 80% en algunos proveedores.
+                </div>
+            </div>
+
+            <div class="example-box">
+                <span class="example-icon">💡</span>
+                <div><strong>Analogía Profesional:</strong> Imaginalo como un mozo que ya sabe de memoria tu pedido de siempre. No tiene que preguntarte la historia de la mesa cada vez que se acerca; el tipo ya tiene el contexto "cacheado" y solo procesa lo nuevo que le pidas.</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-header">🎯 Insight del PM</div>
+                El KV Cache vuelve económicamente viables a los agentes complejos que mantienen conversaciones largas. Como PM, debés auditar que el equipo técnico esté implementando estrategias de caché de prompts para proteger tu margen de rentabilidad y mejorar la experiencia de usuario con respuestas instantáneas.
+            </div>
+        </div>
+
+        <!-- 7. Validación Estructurada (Pydantic / Schema) -->
+        <div class="glossary-card">
+            <div class="card-header">
+                <div class="concept-title"><span class="concept-index">07</span> Validación Estructurada</div>
+                <div class="concept-tag">Seguridad de Datos</div>
+            </div>
+            
+            <div class="content-section">
+                <span class="content-label">Definición Técnica Extensa</span>
+                <div class="definition-box">
+                    Uso de librerías de tipado estricto en el backend para obligar a la IA a que sus respuestas cumplan con un formato de datos exacto y verificado. Si el agente genera una respuesta con un campo faltante o un tipo de dato erróneo (ej. un string donde esperábamos un número), el sistema detecta el error antes de procesarlo, lo rechaza y le pide a la IA que se corrija automáticamente.
+                </div>
+            </div>
+
+            <div class="diagram-container">
+                <svg width="340" height="120" viewBox="0 0 340 120">
+                    <path d="M40 30 L40 100 L300 100 L300 30 Z" fill="#F8FAFC" stroke="#475569" stroke-width="2"/>
+                    <rect x="70" y="10" width="200" height="35" rx="6" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="2" />
+                    <text x="170" y="32" text-anchor="middle" font-size="10" font-weight="800" fill="#6D28D9">VALIDACIÓN ESTRUCTURADA</text>
+                    <text x="170" y="75" text-anchor="middle" font-size="10" fill="#64748B">Garantiza que la IA respete el "contrato de datos"</text>
+                </svg>
+                <div class="diagram-label">Protección del backend: eliminando el riesgo de "datos rotos" en el sistema central.</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-header">🎯 Insight del PM</div>
+                Esto elimina el 90% de los errores de integración. Te permite tratar a un componente probabilístico (IA) como si fuera una pieza de software tradicional determinista que respeta reglas claras. Es tu principal defensa contra el "caos" de datos en las bases corporativas.
+            </div>
+        </div>
+
+        <!-- 8. Control de Costos: Max Iterations -->
+        <div class="glossary-card">
+            <div class="card-header">
+                <div class="concept-title"><span class="concept-index">08</span> Control de Costos (Max Iterations)</div>
+                <div class="concept-tag">Operaciones</div>
+            </div>
+            
+            <div class="content-section">
+                <span class="content-label">Definición Técnica Extensa</span>
+                <div class="definition-box">
+                    Implementación de cortafuegos lógicos en el código de orquestación que limitan la cantidad de veces que un agente puede iterar en un loop ReAct antes de forzar una salida. Evita que un error en el razonamiento meta al bot en un "bucle infinito" de llamadas a la API que podría consumir miles de dólares de presupuesto en pocos minutos.
+                </div>
+            </div>
+
+            <div class="example-box">
+                <span class="example-icon">💡</span>
+                <div><strong>Ejemplo Corporativo:</strong> Es como ponerle un límite de gasto diario a la tarjeta de crédito de la empresa. Si el empleado (el agente) entra en un gasto desmedido por un error, el sistema bloquea automáticamente la cuenta para proteger la caja de la compañía.</div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-header">🎯 Insight del PM</div>
+                Es una exigencia **no negociable** para cualquier lanzamiento a producción. Debés definir junto con los ingenieros los límites físicos de cada agente (ej. `max_iterations = 5` o `timeout = 30s`) para garantizar la previsibilidad financiera de tu producto de IA.
             </div>
         </div>
 
     </div>
 
-    <div style="padding: 30px; background: #F8FAFC; border-top: 1px solid #E2E8F0; font-size: 0.8rem; color: #94A3B8; text-align: center;">
-        Mentoría IT & AI - Sesión 3 | 2026 Claudio Vernuccio
+    <!-- FOOTER -->
+    <div style="padding: 40px; background: #F8FAFC; border-top: 1px solid #E2E8F0; font-size: 0.85rem; color: #94A3B8; text-align: center;">
+        <p>Glosario Estratégico de Re-Entry Tecnológico - Sesión 3</p>
+        <p style="margin-top: 10px; font-weight: 600; color: #64748B;">2026 Claudio Vernuccio | Mentoría IT & AI</p>
     </div>
 </div>
 
