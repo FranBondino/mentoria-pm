@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glosario Técnico: Sesión 3 - Mentoría IT & AI</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #8B5CF6;
+            --primary-light: #F5F3FF;
+            --text-dark: #1F2937;
+            --text-muted: #4B5563;
+            --bg-light: #F9FAFB;
+            --bg-card: #FFFFFF;
+            --border-color: #E5E7EB;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --transition: all 0.2s ease-in-out;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background-color: #F3F4F6; color: var(--text-dark); line-height: 1.6; padding: 40px 20px; display: flex; justify-content: center; }
+        .document-container { width: 100%; max-width: 900px; background-color: var(--bg-card); box-shadow: var(--shadow-md); border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); position: relative; }
+        
+        .cover-page { height: 100vh; max-height: 900px; background: linear-gradient(135deg, #0B0F19 0%, #1E293B 100%); color: #FFFFFF; display: flex; flex-direction: column; justify-content: space-between; padding: 80px 60px; position: relative; overflow: hidden; page-break-after: always; }
+        .cover-page::before { content: ''; position: absolute; top: -20%; right: -20%; width: 60%; height: 60%; background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%); border-radius: 50%; }
+        
+        .cover-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 20px; z-index: 10; }
+        .logo-text { font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #8B5CF6; }
+        .edition-badge { background-color: rgba(139, 92, 246, 0.2); color: #C4B5FD; border: 1px solid rgba(139, 92, 246, 0.3); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        
+        .cover-body { z-index: 10; margin: auto 0; }
+        .cover-title { font-family: 'Outfit', sans-serif; font-size: 3.2rem; font-weight: 800; line-height: 1.15; margin-bottom: 24px; background: linear-gradient(90deg, #FFFFFF 30%, #C4B5FD 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .cover-subtitle { font-family: 'Inter', sans-serif; font-size: 1.3rem; font-weight: 300; color: #94A3B8; max-width: 600px; margin-bottom: 40px; line-height: 1.5; }
+        
+        .divider-accent { width: 120px; height: 6px; background: linear-gradient(90deg, #8B5CF6, #3B82F6); border-radius: 3px; }
+        
+        .cover-footer { z-index: 10; display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 30px; }
+        .meta-info h5 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; color: #64748B; margin-bottom: 6px; }
+        .meta-info p { font-size: 1rem; font-weight: 600; color: #E2E8F0; }
+        
+        .page-content { padding: 60px; }
+        .page-header-title { font-family: 'Outfit', sans-serif; font-size: 2.2rem; font-weight: 700; color: #0F172A; border-bottom: 2px solid #E2E8F0; padding-bottom: 12px; margin-bottom: 30px; display: flex; align-items: center; justify-content: space-between; }
+        .page-header-title span { font-size: 0.9rem; font-weight: 500; color: var(--text-muted); background-color: var(--bg-light); padding: 4px 12px; border-radius: 6px; border: 1px solid var(--border-color); }
+        
+        .section-intro { font-size: 1.05rem; color: var(--text-muted); margin-bottom: 35px; padding-left: 15px; border-left: 3px solid #CBD5E1; }
+        
+        .glossary-card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow); page-break-inside: avoid; transition: var(--transition); }
+        .glossary-card:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04); border-color: #D1D5DB; }
+        
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        .concept-title { font-family: 'Outfit', sans-serif; font-size: 1.3rem; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 10px; }
+        .concept-index { color: var(--primary); background-color: var(--primary-light); font-size: 0.85rem; padding: 2px 8px; border-radius: 4px; font-weight: 700; }
+        .concept-tag { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 10px; border-radius: 20px; background-color: var(--primary-light); color: var(--primary); }
+        
+        .definition-box { background-color: var(--bg-light); border-radius: 6px; padding: 14px 18px; margin-bottom: 15px; font-size: 0.95rem; color: var(--text-dark); border-left: 3px solid #CBD5E1; }
+        .metaphor-box { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 18px; display: flex; gap: 10px; align-items: flex-start; }
+        .metaphor-icon { font-size: 1.1rem; color: #EAB308; margin-top: 2px; }
+        
+        .pm-insight-box { background-color: #F8FAFC; border: 1px solid #E2E8F0; border-left: 4px solid var(--primary); border-radius: 6px; padding: 16px; font-size: 0.9rem; }
+        .pm-insight-header { font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--primary); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+
+        @media print {
+            body { background-color: white; padding: 0; }
+            .document-container { box-shadow: none; border: none; max-width: 100%; }
+            .cover-page { height: 100vh; padding: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="document-container">
+    
+    <!-- PORTADA -->
+    <div class="cover-page">
+        <div class="cover-header">
+            <div class="logo-text">Mentoría IT / AI</div>
+            <div class="edition-badge">Edición 2026</div>
+        </div>
+        
+        <div class="cover-body">
+            <h1 class="cover-title">Glosario de Re-Entry Tecnológico:<br>Sesión 3</h1>
+            <p class="cover-subtitle">Flujos Agénticos Avanzados & Casos de Uso Corporativos. Transición hacia la IA Activa y el control estratégico de agentes autónomos.</p>
+            <div class="divider-accent"></div>
+        </div>
+        
+        <div class="cover-footer">
+            <div class="meta-info">
+                <h5>Orientado a</h5>
+                <p>Product Managers & Liderazgo</p>
+            </div>
+            <div class="meta-info" style="text-align: right;">
+                <h5>Bloque Temático</h5>
+                <p>Arquitectura Cognitiva y Agentes</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENIDO -->
+    <div class="page-content">
+        
+        <h2 class="page-header-title">
+            Arquitectura Cognitiva y Agentes <span>Bloque 1</span>
+        </h2>
+        
+        <p class="section-intro">
+            Conceptos clave sobre la transición desde la recuperación estática de conocimiento (RAG) hacia la toma de decisiones autónoma.
+        </p>
+
+        <!-- Concepto 1 -->
+        <div class="glossary-card">
+            <div class="card-header">
+                <div class="concept-title">
+                    <span class="concept-index">01</span>
+                    IA Pasiva (RAG Clásico)
+                </div>
+                <div class="concept-tag">Paradigma</div>
+            </div>
+            <div class="definition-box">
+                Sistemas basados en Retrieval-Augmented Generation donde el bot solo responde preguntas leyendo documentos inyectados en su contexto, pero no tiene capacidad de modificar el mundo exterior o ejecutar acciones.
+            </div>
+            <div class="metaphor-box">
+                <span class="metaphor-icon">💡</span>
+                <div><strong>Metáfora:</strong> Un bibliotecario experto que te busca el libro exacto y te lee un resumen del párrafo, pero no puede firmar un cheque ni comprar un libro nuevo por vos.</div>
+            </div>
+            <div class="pm-insight-box">
+                <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
+                Es seguro y determinista en su impacto, excelente para bases de conocimiento, pero está limitado por el "sandbox de la pantalla". No altera bases de datos ni interactúa con sistemas externos de forma activa.
+            </div>
+        </div>
+
+        <!-- Concepto 2 -->
+        <div class="glossary-card">
+            <div class="card-header">
+                <div class="concept-title">
+                    <span class="concept-index">02</span>
+                    IA Activa (Sistemas Agénticos)
+                </div>
+                <div class="concept-tag">Paradigma</div>
+            </div>
+            <div class="definition-box">
+                Sistemas donde el modelo de lenguaje (LLM) tiene autonomía para llamar APIs externas, ejecutar código y modificar registros basándose en un objetivo general, tomando decisiones dinámicas paso a paso.
+            </div>
+            <div class="metaphor-box">
+                <span class="metaphor-icon">💡</span>
+                <div><strong>Metáfora:</strong> Un empleado al que le indicás "resolvé este problema logístico". Él mismo decide a quién llamar, qué correos enviar y en qué momento terminar la tarea de manera autónoma.</div>
+            </div>
+            <div class="pm-insight-box">
+                <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
+                Cambia el paradigma del producto. Ya no diseñás flujos pantalla a pantalla de forma rígida, sino que definís el "objetivo de negocio", las herramientas operativas permitidas y las barreras de seguridad (guardrails) para que el agente opere sin romper nada.
+            </div>
+        </div>
+
+        <!-- Concepto 3 -->
+        <div class="glossary-card">
+            <div class="card-header">
+                <div class="concept-title">
+                    <span class="concept-index">03</span>
+                    Loop ReAct
+                </div>
+                <div class="concept-tag">Arquitectura</div>
+            </div>
+            <div class="definition-box">
+                Una arquitectura cognitiva fundacional que obliga al agente a iterar en tres pasos cíclicos: Pensamiento (Thought), Acción (Action) y Observación (Observation) antes de dar una respuesta final.
+            </div>
+            <div class="metaphor-box">
+                <span class="metaphor-icon">💡</span>
+                <div><strong>Metáfora:</strong> Un mecánico reparando un motor. Piensa: "Podría ser la batería" (Thought), prueba conectando un voltímetro (Action), lee que el voltaje es nulo (Observation) y luego decide el siguiente paso.</div>
+            </div>
+            <div class="pm-insight-box">
+                <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
+                Es el motor interno de la autonomía. Te ayuda a entender por qué el agente a veces tarda más en responder: está "pensando en voz alta" e interactuando con sistemas en bucle interno antes de presentarte un resultado consolidado.
+            </div>
+        </div>
+
+        <!-- Concepto 4 -->
+        <div class="glossary-card">
+            <div class="card-header">
+                <div class="concept-title">
+                    <span class="concept-index">04</span>
+                    Patrón Orchestrator-Workers
+                </div>
+                <div class="concept-tag">Patrones</div>
+            </div>
+            <div class="definition-box">
+                Un diseño multi-agente donde un "Orquestador" central recibe la meta compleja, define un plan y delega micro-tareas a múltiples "Trabajadores" especializados (ej. un lector de PDFs, un auditor SQL), ensamblando luego el resultado.
+            </div>
+            <div class="metaphor-box">
+                <span class="metaphor-icon">💡</span>
+                <div><strong>Metáfora:</strong> Un Director de Proyecto (Orquestador) que recibe el pedido de un cliente y asigna tareas específicas al diseñador, al programador y al QA (Trabajadores), coordinando la entrega sin hacer el trabajo mecánico.</div>
+            </div>
+            <div class="pm-insight-box">
+                <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
+                Permite escalar la fiabilidad del software corporativo. En lugar de tener un solo "super bot generalista" propenso a errores, creás perfiles de IA hiper-especializados con responsabilidades aisladas, acotadas y más seguras.
+            </div>
+        </div>
+
+        <h2 class="page-header-title" style="margin-top: 60px;">
+            Integración, Gobernanza y Costos <span>Bloque 2</span>
+        </h2>
+
+        <!-- Concepto 5 -->
+        <div class="glossary-card">
+            <div class="card-header">
+                <div class="concept-title">
+                    <span class="concept-index">05</span>
+                    Tool Calling
+                </div>
+                <div class="concept-tag">API</div>
+            </div>
+            <div class="definition-box">
+                La capacidad de un LLM de no responder con texto libre, sino de devolver un objeto JSON estructurado indicando qué función externa (API) quiere ejecutar y con qué parámetros exactos.
+            </div>
+            <div class="metaphor-box">
+                <span class="metaphor-icon">💡</span>
+                <div><strong>Metáfora:</strong> Un operador de planta que, en lugar de relatar por radio la presión de una caldera, presiona botones específicos en un tablero de control para abrir válvulas de descompresión automáticamente.</div>
+            </div>
+            <div class="pm-insight-box">
+                <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
+                Es el puente entre el razonamiento probabilístico (IA) y el backend determinista de tu empresa. Como PM, tu tarea es definir el "JSON Schema" de las herramientas (qué botones existen, para qué sirven y qué variables requieren).
+            </div>
+        </div>
+
+        <!-- Concepto 6 -->
+        <div class="glossary-card">
+            <div class="card-header">
+                <div class="concept-title">
+                    <span class="concept-index">06</span>
+                    KV Cache
+                </div>
+                <div class="concept-tag">Infra</div>
+            </div>
+            <div class="definition-box">
+                Una técnica de memoria en la GPU que almacena los cálculos matemáticos de las partes del prompt que no cambian entre turnos de una conversación, evitando reprocesar todo el historial.
+            </div>
+            <div class="metaphor-box">
+                <span class="metaphor-icon">💡</span>
+                <div><strong>Metáfora:</strong> Un mozo que recuerda tu nombre y lo que pediste de entrada, para no tener que preguntarte toda la historia de la mesa cada vez que se acerca a ofrecerte el postre.</div>
+            </div>
+            <div class="pm-insight-box">
+                <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
+                Reduce drásticamente el "Time to First Token" (TTFT) en loops sucesivos de ReAct y abarata los costos computacionales (hasta un 60% menos), volviendo viables económicamente a los agentes que "piensan mucho".
+            </div>
+        </div>
+
+        <!-- Concepto 7 -->
+        <div class="glossary-card">
+            <div class="card-header">
+                <div class="concept-title">
+                    <span class="concept-index">07</span>
+                    Human-in-the-Loop (HITL)
+                </div>
+                <div class="concept-tag">Gobernanza</div>
+            </div>
+            <div class="definition-box">
+                Un mecanismo de seguridad (compuerta lógica) que pausa temporalmente el flujo autónomo de un agente y requiere la aprobación manual de un operador humano antes de ejecutar una acción crítica.
+            </div>
+            <div class="metaphor-box">
+                <span class="metaphor-icon">💡</span>
+                <div><strong>Metáfora:</strong> El botón rojo de un misil que requiere que dos generales giren una llave física antes del lanzamiento, impidiendo que la computadora tome la decisión irreversible por su cuenta.</div>
+            </div>
+            <div class="pm-insight-box">
+                <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
+                Es tu principal herramienta de Gobernanza y Control de Riesgos. Permite introducir agentes en flujos core del negocio. Definir dónde poner estas compuertas (ej. para pagos mayores a $10k USD) es el trabajo clave del PM en la era de IA.
+            </div>
+        </div>
+
+        <!-- Concepto 8 -->
+        <div class="glossary-card">
+            <div class="card-header">
+                <div class="concept-title">
+                    <span class="concept-index">08</span>
+                    Validación Estructurada (Pydantic)
+                </div>
+                <div class="concept-tag">Backend</div>
+            </div>
+            <div class="definition-box">
+                El uso de librerías (como Pydantic) en el backend para verificar que los datos generados por el agente cumplan estrictamente con los tipos de datos esperados antes de procesarlos.
+            </div>
+            <div class="metaphor-box">
+                <span class="metaphor-icon">💡</span>
+                <div><strong>Metáfora:</strong> Un guardia de seguridad en migraciones que verifica que tu formulario de entrada tenga exactamente 8 números en el campo de pasaporte; si ponés letras, te rechaza el papel de inmediato.</div>
+            </div>
+            <div class="pm-insight-box">
+                <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
+                Protege la base de datos corporativa contra alucinaciones o errores de formato de la IA. Es tu "Definition of Done (DoD)" a nivel de contratos de datos para la comunicación entre sistemas.
+            </div>
+        </div>
+
+        <!-- Concepto 9 -->
+        <div class="glossary-card">
+            <div class="card-header">
+                <div class="concept-title">
+                    <span class="concept-index">09</span>
+                    Loops Infinitos (Max Iterations)
+                </div>
+                <div class="concept-tag">Costos</div>
+            </div>
+            <div class="definition-box">
+                Cortafuegos lógicos implementados por el equipo de ingeniería para prevenir que un agente entre en un bucle cerrado intentando auto-corregir un error de forma perpetua, limitando la cantidad máxima de inferencias.
+            </div>
+            <div class="metaphor-box">
+                <span class="metaphor-icon">💡</span>
+                <div><strong>Metáfora:</strong> Ponerle un límite máximo de gasto diario a la tarjeta de crédito corporativa para que, si el sistema de compras automáticas tiene un bug, no vacíe la cuenta bancaria de la empresa en segundos.</div>
+            </div>
+            <div class="pm-insight-box">
+                <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
+                Evita facturas millonarias sorpresa de los proveedores cloud (OpenAI, AWS). Es imperativo exigir estos límites físicos a tu equipo técnico antes del lanzamiento a producción.
+            </div>
+        </div>
+
+        <!-- Concepto 10 -->
+        <div class="glossary-card">
+            <div class="card-header">
+                <div class="concept-title">
+                    <span class="concept-index">10</span>
+                    Resiliencia y Fallbacks
+                </div>
+                <div class="concept-tag">Infra</div>
+            </div>
+            <div class="definition-box">
+                Planes de contingencia lógicos donde, si el sistema o la API principal que usa el agente se cae o no responde, el flujo cambia automáticamente a una ruta degradada en lugar de colapsar.
+            </div>
+            <div class="metaphor-box">
+                <span class="metaphor-icon">💡</span>
+                <div><strong>Metáfora:</strong> El generador eléctrico a gasoil de un hospital que se enciende automáticamente al medio segundo de que se corta la luz de la red pública.</div>
+            </div>
+            <div class="pm-insight-box">
+                <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
+                Asegura la continuidad operativa del negocio frente a la caída de sistemas de terceros que escapan a tu control, un escenario muy probable al orquestar docenas de agentes que dependen de APIs externas.
+            </div>
+        </div>
+
+        <!-- Concepto 11 -->
+        <div class="glossary-card">
+            <div class="card-header">
+                <div class="concept-title">
+                    <span class="concept-index">11</span>
+                    API Gateways
+                </div>
+                <div class="concept-tag">Seguridad</div>
+            </div>
+            <div class="definition-box">
+                Un servidor intermedio que recibe las peticiones del agente de IA, las valida, filtra e inspecciona, y recién luego las reenvía a la base de datos de producción corporativa.
+            </div>
+            <div class="metaphor-box">
+                <span class="metaphor-icon">💡</span>
+                <div><strong>Metáfora:</strong> El cajero blindado de un banco. Vos le pasás el cheque por la ranura, y es el cajero (el gateway) quien saca la plata de la caja fuerte; vos jamás entrás a la bóveda.</div>
+            </div>
+            <div class="pm-insight-box">
+                <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
+                Es la arquitectura obligatoria (Regla de Oro) a nivel Enterprise. Garantiza que ninguna alucinación o inyección maliciosa ("Prompt Injection") pueda borrar tablas o alterar registros financieros de forma directa.
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
