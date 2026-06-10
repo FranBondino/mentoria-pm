@@ -114,7 +114,7 @@
         </h2>
         
         <p class="section-intro">
-            Exploramos cómo los modelos pasan de ser meros "lectores" a ser "actores" que resuelven problemas complejos de negocio de forma autónoma.
+            Chequeamos cómo los modelos pasan de ser simples "lectores" a ser "actores" que resuelven quilombos complejos de negocio por su cuenta.
         </p>
 
         <!-- IA Pasiva vs Activa -->
@@ -127,7 +127,7 @@
                 <div class="concept-tag">Paradigma</div>
             </div>
             <div class="definition-box">
-                La <strong>IA Pasiva</strong> se limita a generar texto basado en información recuperada (RAG). La <strong>IA Activa</strong> (Agentes) utiliza el razonamiento para decidir qué herramientas usar y ejecutar acciones que modifican sistemas externos.
+                La <strong>IA Pasiva</strong> se queda en generar texto basado en lo que recupera (RAG). La <strong>IA Activa</strong> (Agentes) usa el razonamiento para decidir qué herramientas le sirven y mete mano en sistemas externos para cambiar cosas.
             </div>
             
             <div class="diagram-container">
@@ -155,11 +155,11 @@
 
             <div class="metaphor-box">
                 <span class="metaphor-icon">💡</span>
-                <div><strong>Ejemplo Corporativo:</strong> Una IA Pasiva te dice cuánto stock queda; una IA Activa nota que queda poco y redacta una orden de compra para que vos la apruebes.</div>
+                <div><strong>Ejemplo para el laburo:</strong> Una IA Pasiva te canta cuánto stock queda; una IA Activa se da cuenta de que falta mercadería y te arma la orden de compra para que vos le des el OK.</div>
             </div>
             <div class="pm-insight-box">
                 <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
-                Tu backlog ya no se llena de "pantallas para consultar datos", sino de "permisos y herramientas" que el agente necesita para operar con autonomía y seguridad.
+                Tu backlog ya no se llena de "pantallas para ver datos", sino de "permisos y herramientas" que el agente necesita para laburar solo con seguridad.
             </div>
         </div>
 
@@ -173,7 +173,7 @@
                 <div class="concept-tag">Proceso</div>
             </div>
             <div class="definition-box">
-                Marco de trabajo que permite a la IA "pensar en voz alta" antes de actuar. Se basa en un ciclo iterativo de: <strong>Pensamiento</strong> (Planificar) → <strong>Acción</strong> (Ejecutar) → <strong>Observación</strong> (Aprender del resultado).
+                Es el marco que permite que la IA "piense en voz alta" antes de mandarse a hacer algo. Es un ciclo de: <strong>Pensamiento</strong> (Planificar) → <strong>Acción</strong> (Ejecutar) → <strong>Observación</strong> (Aprender de lo que pasó).
             </div>
 
             <div class="diagram-container">
@@ -194,11 +194,11 @@
 
             <div class="metaphor-box">
                 <span class="metaphor-icon">💡</span>
-                <div><strong>Analogía Profesional:</strong> Es el proceso de un consultor experto. Primero analiza el problema, luego ejecuta una prueba piloto y finalmente revisa las métricas para decidir el siguiente paso.</div>
+                <div><strong>Analogía Profesional:</strong> Es igual a como labura un consultor senior. Primero analiza el quilombo, después tira una prueba y al final mira los resultados para ver cómo sigue.</div>
             </div>
             <div class="pm-insight-box">
                 <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
-                Es vital para la explicabilidad. Si un agente falla, el Loop ReAct te permite auditar el "log de pensamientos" para ver exactamente en qué paso del razonamiento se equivocó.
+                Es clave para entender por qué la IA hizo lo que hizo. Si algo falla, el Loop ReAct te deja ver el "log de pensamientos" para encontrar dónde se mandó la macana.
             </div>
         </div>
 
@@ -212,7 +212,7 @@
                 <div class="concept-tag">Arquitectura</div>
             </div>
             <div class="definition-box">
-                Estrategia multi-agente donde un <strong>Orquestador</strong> central descompone una tarea compleja en subtareas más simples y las delega a <strong>Trabajadores</strong> especializados, consolidando finalmente la solución.
+                Es una forma de organizar varios agentes donde un <strong>Orquestador</strong> central desarma una tarea pesada en partes más chicas y se las pasa a <strong>Trabajadores</strong> que la tienen clara en temas específicos.
             </div>
 
             <div class="diagram-container">
@@ -234,11 +234,11 @@
 
             <div class="metaphor-box">
                 <span class="metaphor-icon">💡</span>
-                <div><strong>Ejemplo:</strong> Al pedir "Analizá la rentabilidad de este cliente", el Orquestador manda a un Worker a leer facturas (PDF), a otro a consultar el CRM (SQL) y él une las conclusiones.</div>
+                <div><strong>Ejemplo:</strong> Si pedís "Miranos la rentabilidad de este cliente", el Orquestador manda a un Worker a leer facturas, a otro a chusmear el CRM y después él junta todo para darte la posta.</div>
             </div>
             <div class="pm-insight-box">
                 <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
-                Reduce alucinaciones drásticamente. En lugar de un "bot que hace todo" (propenso a errores), gestionás un equipo de micro-bots enfocados en tareas atómicas y fáciles de testear.
+                Baja muchísimo las alucinaciones. En vez de tener un "bot que hace todo" (y que pifia seguido), manejás un equipo de micro-bots enfocados en cosas puntuales y fáciles de testear.
             </div>
         </div>
 
@@ -256,15 +256,15 @@
                 <div class="concept-tag">Integración</div>
             </div>
             <div class="definition-box">
-                Capacidad del LLM de solicitar la ejecución de una función externa. La IA no "hace" la acción, sino que genera las instrucciones técnicas (JSON) para que tu sistema la ejecute de forma segura.
+                Es cuando el LLM pide usar una función externa. La IA no "hace" la acción físicamente, sino que te tira las instrucciones técnicas (JSON) para que tu sistema la ejecute sin riesgos.
             </div>
             <div class="metaphor-box">
                 <span class="metaphor-icon">💡</span>
-                <div><strong>Ejemplo:</strong> Si el agente necesita la fecha, no la inventa; emite un comando que dice: <code>ejecutar_funcion("obtener_fecha_actual")</code>.</div>
+                <div><strong>Ejemplo:</strong> Si el agente necesita saber la fecha, no inventa; te tira un comando que dice: <code>ejecutar_funcion("obtener_fecha_actual")</code>.</div>
             </div>
             <div class="pm-insight-box">
                 <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
-                Es el estándar de oro para la integración. Como PM, debés priorizar qué "Herramientas" (APIs) exponés al agente, definiendo claramente qué pueden y qué no pueden tocar.
+                Es el estándar para integrar cosas. Como PM, vos tenés que priorizar qué "Herramientas" (APIs) le dejás usar al agente, definiendo bien qué puede tocar y qué no.
             </div>
         </div>
 
@@ -278,7 +278,7 @@
                 <div class="concept-tag">Gobernanza</div>
             </div>
             <div class="definition-box">
-                Punto de control donde el agente pausa su ejecución y solicita aprobación humana antes de realizar una acción crítica, irreversible o de alto costo.
+                Es un punto de control donde el agente frena y te pide permiso antes de mandarse una acción que sea crítica, cara o que no tenga vuelta atrás.
             </div>
             <div class="diagram-container">
                 <svg width="300" height="60" viewBox="0 0 300 60">
@@ -295,11 +295,11 @@
                     <rect x="220" y="15" width="70" height="30" rx="4" fill="#F0FDF4" stroke="#10B981"/>
                     <text x="255" y="35" text-anchor="middle" font-size="10" fill="#059669">Acción</text>
                 </svg>
-                <div class="diagram-label">Compuesta de seguridad: El humano tiene la última palabra.</div>
+                <div class="diagram-label">Freno de mano: El humano tiene la última palabra.</div>
             </div>
             <div class="pm-insight-box">
                 <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
-                Es tu herramienta de mitigación de riesgo #1. Definir los "umbrales de aprobación" (ej: cualquier gasto > 00) es una decisión puramente de producto, no técnica.
+                Es tu mejor forma de bajar riesgos. Decidir qué cosas necesitan el OK de una persona (ej: pagos de más de 500 lucas) es una decisión de negocio, no técnica.
             </div>
         </div>
 
@@ -313,15 +313,15 @@
                 <div class="concept-tag">Seguridad</div>
             </div>
             <div class="definition-box">
-                Uso de esquemas rígidos (como Pydantic) para obligar al agente a responder con datos en un formato exacto, evitando que envíe información incompleta o errónea a tus bases de datos.
+                Es usar esquemas rígidos para obligar a la IA a que te responda con los datos tal cual los esperás, para que no mande fruta o rompa tus bases de datos.
             </div>
             <div class="metaphor-box">
                 <span class="metaphor-icon">💡</span>
-                <div><strong>Analogía:</strong> Un formulario web que no te deja avanzar si falta el símbolo "@" en el email. Garantiza que la IA "hable el mismo idioma" que tus servidores.</div>
+                <div><strong>Analogía:</strong> Como un formulario que no te deja seguir si no pusiste bien el CUIT o el mail. Asegura que la IA "hable el mismo idioma" que tus servidores.</div>
             </div>
             <div class="pm-insight-box">
                 <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
-                Elimina el 90% de los errores de integración. Te permite tratar a la IA como un componente de software tradicional que respeta "contratos de datos" claros.
+                Te saca de encima casi todos los errores de integración. Te deja tratar a la IA como un pedazo de software común que respeta reglas claras.
             </div>
         </div>
 
