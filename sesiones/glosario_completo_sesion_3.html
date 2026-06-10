@@ -13,6 +13,7 @@
         :root {
             --primary: #8B5CF6;
             --primary-light: #F5F3FF;
+            --primary-dark: #6D28D9;
             --text-dark: #1F2937;
             --text-muted: #4B5563;
             --bg-light: #F9FAFB;
@@ -24,56 +25,79 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background-color: #F3F4F6; color: var(--text-dark); line-height: 1.6; padding: 40px 20px; display: flex; justify-content: center; }
+        body { font-family: 'Inter', sans-serif; background-color: #F3F4F6; color: var(--text-dark); line-height: 1.6; padding: 20px; display: flex; justify-content: center; }
+        
+        /* RESPONSIVE CONTAINER */
         .document-container { width: 100%; max-width: 900px; background-color: var(--bg-card); box-shadow: var(--shadow-md); border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); position: relative; }
         
-        .cover-page { height: 100vh; max-height: 900px; background: linear-gradient(135deg, #0B0F19 0%, #1E293B 100%); color: #FFFFFF; display: flex; flex-direction: column; justify-content: space-between; padding: 80px 60px; position: relative; overflow: hidden; page-break-after: always; }
+        /* COVER PAGE RESPONSIVE */
+        .cover-page { min-height: 600px; background: linear-gradient(135deg, #0B0F19 0%, #1E293B 100%); color: #FFFFFF; display: flex; flex-direction: column; justify-content: space-between; padding: 40px 30px; position: relative; overflow: hidden; }
+        @media (min-width: 768px) {
+            .cover-page { height: 100vh; max-height: 900px; padding: 80px 60px; }
+        }
+        
         .cover-page::before { content: ''; position: absolute; top: -20%; right: -20%; width: 60%; height: 60%; background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%); border-radius: 50%; }
         
         .cover-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 20px; z-index: 10; }
-        .logo-text { font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #8B5CF6; }
-        .edition-badge { background-color: rgba(139, 92, 246, 0.2); color: #C4B5FD; border: 1px solid rgba(139, 92, 246, 0.3); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .logo-text { font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #8B5CF6; }
+        .edition-badge { background-color: rgba(139, 92, 246, 0.2); color: #C4B5FD; border: 1px solid rgba(139, 92, 246, 0.3); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
         
         .cover-body { z-index: 10; margin: auto 0; }
-        .cover-title { font-family: 'Outfit', sans-serif; font-size: 3.2rem; font-weight: 800; line-height: 1.15; margin-bottom: 24px; background: linear-gradient(90deg, #FFFFFF 30%, #C4B5FD 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .cover-subtitle { font-family: 'Inter', sans-serif; font-size: 1.3rem; font-weight: 300; color: #94A3B8; max-width: 600px; margin-bottom: 40px; line-height: 1.5; }
+        .cover-title { font-family: 'Outfit', sans-serif; font-size: 2.2rem; font-weight: 800; line-height: 1.15; margin-bottom: 20px; background: linear-gradient(90deg, #FFFFFF 30%, #C4B5FD 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        @media (min-width: 768px) { .cover-title { font-size: 3.2rem; } }
         
-        .divider-accent { width: 120px; height: 6px; background: linear-gradient(90deg, #8B5CF6, #3B82F6); border-radius: 3px; }
+        .cover-subtitle { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 300; color: #94A3B8; max-width: 600px; margin-bottom: 30px; line-height: 1.5; }
         
-        .cover-footer { z-index: 10; display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 30px; }
-        .meta-info h5 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; color: #64748B; margin-bottom: 6px; }
-        .meta-info p { font-size: 1rem; font-weight: 600; color: #E2E8F0; }
+        .divider-accent { width: 100px; height: 6px; background: linear-gradient(90deg, #8B5CF6, #3B82F6); border-radius: 3px; }
         
-        .page-content { padding: 60px; }
-        .page-header-title { font-family: 'Outfit', sans-serif; font-size: 2.2rem; font-weight: 700; color: #0F172A; border-bottom: 2px solid #E2E8F0; padding-bottom: 12px; margin-bottom: 30px; display: flex; align-items: center; justify-content: space-between; }
-        .page-header-title span { font-size: 0.9rem; font-weight: 500; color: var(--text-muted); background-color: var(--bg-light); padding: 4px 12px; border-radius: 6px; border: 1px solid var(--border-color); }
+        .cover-footer { z-index: 10; display: flex; flex-direction: column; gap: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 30px; }
+        @media (min-width: 768px) {
+            .cover-footer { flex-direction: row; justify-content: space-between; align-items: flex-end; }
+        }
         
-        .section-intro { font-size: 1.05rem; color: var(--text-muted); margin-bottom: 35px; padding-left: 15px; border-left: 3px solid #CBD5E1; }
+        .meta-info h5 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; color: #64748B; margin-bottom: 4px; }
+        .meta-info p { font-size: 0.9rem; font-weight: 600; color: #E2E8F0; }
         
-        .glossary-card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow); page-break-inside: avoid; transition: var(--transition); }
+        /* PAGE CONTENT RESPONSIVE */
+        .page-content { padding: 30px 20px; }
+        @media (min-width: 768px) { .page-content { padding: 60px; } }
+
+        .page-header-title { font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 700; color: #0F172A; border-bottom: 2px solid #E2E8F0; padding-bottom: 12px; margin-bottom: 30px; display: flex; flex-direction: column; gap: 10px; }
+        @media (min-width: 768px) {
+            .page-header-title { font-size: 2.2rem; flex-direction: row; align-items: center; justify-content: space-between; }
+        }
+        .page-header-title span { font-size: 0.8rem; font-weight: 500; color: var(--text-muted); background-color: var(--bg-light); padding: 4px 12px; border-radius: 6px; border: 1px solid var(--border-color); width: fit-content; }
+        
+        .section-intro { font-size: 1rem; color: var(--text-muted); margin-bottom: 35px; padding-left: 15px; border-left: 3px solid #CBD5E1; }
+        
+        .glossary-card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; margin-bottom: 24px; box-shadow: var(--shadow); transition: var(--transition); }
+        @media (min-width: 768px) { .glossary-card { padding: 24px; } }
         .glossary-card:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); border-color: var(--primary); }
         
-        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
-        .concept-title { font-family: 'Outfit', sans-serif; font-size: 1.3rem; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 10px; }
-        .concept-index { color: var(--primary); background-color: var(--primary-light); font-size: 0.85rem; padding: 2px 8px; border-radius: 4px; font-weight: 700; }
-        .concept-tag { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 10px; border-radius: 20px; background-color: var(--primary-light); color: var(--primary); }
+        .card-header { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
+        @media (min-width: 768px) {
+            .card-header { flex-direction: row; justify-content: space-between; align-items: flex-start; }
+        }
+        .concept-title { font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 10px; }
+        .concept-index { color: var(--primary); background-color: var(--primary-light); font-size: 0.8rem; padding: 2px 8px; border-radius: 4px; font-weight: 700; }
+        .concept-tag { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 10px; border-radius: 20px; background-color: var(--primary-light); color: var(--primary); width: fit-content; }
         
         .definition-box { background-color: var(--bg-light); border-radius: 6px; padding: 14px 18px; margin-bottom: 15px; font-size: 0.95rem; color: var(--text-dark); border-left: 3px solid #CBD5E1; }
         .metaphor-box { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 18px; display: flex; gap: 10px; align-items: flex-start; }
         .metaphor-icon { font-size: 1.1rem; color: #EAB308; margin-top: 2px; }
         
-        .diagram-container { background: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 8px; padding: 20px; margin: 15px 0; display: flex; justify-content: center; align-items: center; flex-direction: column; }
-        .diagram-label { font-size: 0.7rem; color: #94A3B8; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; font-weight: 600; }
+        /* DIAGRAMS */
+        .diagram-container { background: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 8px; padding: 15px; margin: 15px 0; display: flex; justify-content: center; align-items: center; flex-direction: column; overflow-x: auto; }
+        .diagram-label { font-size: 0.65rem; color: #94A3B8; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; font-weight: 600; text-align: center; }
 
         .pm-insight-box { background-color: #F8FAFC; border: 1px solid #E2E8F0; border-left: 4px solid var(--primary); border-radius: 6px; padding: 16px; font-size: 0.9rem; }
         .pm-insight-header { font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--primary); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
 
-        svg { max-width: 100%; height: auto; }
+        svg { max-width: 100%; height: auto; display: block; }
 
         @media print {
             body { background-color: white; padding: 0; }
             .document-container { box-shadow: none; border: none; max-width: 100%; }
-            .cover-page { height: 100vh; padding: 40px; }
         }
     </style>
 </head>
@@ -99,7 +123,7 @@
                 <h5>Orientado a</h5>
                 <p>Product Managers & Liderazgo</p>
             </div>
-            <div class="meta-info" style="text-align: right;">
+            <div class="meta-info">
                 <h5>Bloque Temático</h5>
                 <p>IA Activa & Agentes</p>
             </div>
@@ -127,30 +151,36 @@
                 <div class="concept-tag">Paradigma</div>
             </div>
             <div class="definition-box">
-                La <strong>IA Pasiva</strong> se queda en generar texto basado en lo que recupera (RAG). La <strong>IA Activa</strong> (Agentes) usa el razonamiento para decidir qué herramientas le sirven y mete mano en sistemas externos para cambiar cosas.
+                La <strong>IA Pasiva</strong> se queda en generar texto basado en lo que recupera (RAG). La <strong>IA Activa</strong> (Agentes) usa el razonamiento para decidir qué herramientas le sirven y mete mano en sistemas externos.
             </div>
             
             <div class="diagram-container">
-                <svg width="400" height="120" viewBox="0 0 400 120">
+                <svg width="400" height="140" viewBox="0 0 400 140">
+                    <defs>
+                        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur in="SourceAlpha" stdDeviation="2" />
+                            <feOffset dx="1" dy="1" result="offsetblur" />
+                            <feComponentTransfer><feFuncA type="linear" slope="0.2"/></feComponentTransfer>
+                            <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+                        </filter>
+                        <linearGradient id="gradPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#A78BFA;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#8B5CF6;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
                     <!-- Pasiva -->
-                    <rect x="10" y="30" width="120" height="60" rx="8" fill="#F1F5F9" stroke="#94A3B8" stroke-width="2"/>
-                    <text x="70" y="65" text-anchor="middle" font-size="12" font-weight="bold" fill="#475569">RAG (Pasiva)</text>
-                    <text x="70" y="80" text-anchor="middle" font-size="10" fill="#64748B">Solo Lectura</text>
+                    <rect x="20" y="40" width="130" height="60" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2" filter="url(#shadow)"/>
+                    <text x="85" y="70" text-anchor="middle" font-size="12" font-weight="700" fill="#475569">RAG (Pasiva)</text>
+                    <text x="85" y="85" text-anchor="middle" font-size="10" fill="#64748B">Genera Respuesta</text>
                     
-                    <path d="M140 60 L180 60" stroke="#CBD5E1" stroke-width="2" marker-end="url(#arrowhead)"/>
+                    <path d="M160 70 L200 70" stroke="#94A3B8" stroke-width="3" stroke-dasharray="4" marker-end="url(#arrowhead)"/>
                     
                     <!-- Activa -->
-                    <rect x="190" y="20" width="180" height="80" rx="8" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="2"/>
-                    <text x="280" y="55" text-anchor="middle" font-size="12" font-weight="bold" fill="#6D28D9">AGENTE (Activa)</text>
-                    <text x="280" y="75" text-anchor="middle" font-size="10" fill="#7C3AED">Lectura + Acción (APIs)</text>
-                    
-                    <defs>
-                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
-                            <polygon points="0 0, 10 3.5, 0 7" fill="#CBD5E1" />
-                        </marker>
-                    </defs>
+                    <rect x="210" y="30" width="170" height="80" rx="10" fill="url(#gradPurple)" stroke="#6D28D9" stroke-width="2" filter="url(#shadow)"/>
+                    <text x="295" y="65" text-anchor="middle" font-size="12" font-weight="700" fill="#FFFFFF">AGENTE (Activa)</text>
+                    <text x="295" y="85" text-anchor="middle" font-size="10" fill="#EDE9FE">Ejecuta Acciones</text>
                 </svg>
-                <div class="diagram-label">Evolución de capacidades: De responder a resolver.</div>
+                <div class="diagram-label">De informar a ejecutar: La nueva frontera del producto.</div>
             </div>
 
             <div class="metaphor-box">
@@ -168,37 +198,41 @@
             <div class="card-header">
                 <div class="concept-title">
                     <span class="concept-index">02</span>
-                    Loop ReAct (Reasoning + Acting)
+                    Loop ReAct
                 </div>
                 <div class="concept-tag">Proceso</div>
             </div>
             <div class="definition-box">
-                Es el marco que permite que la IA "piense en voz alta" antes de mandarse a hacer algo. Es un ciclo de: <strong>Pensamiento</strong> (Planificar) → <strong>Acción</strong> (Ejecutar) → <strong>Observación</strong> (Aprender de lo que pasó).
+                Marco de razonamiento donde el agente itera en tres pasos: <strong>Pensar</strong> (Planificar), <strong>Actuar</strong> (Usar una herramienta) y <strong>Observar</strong> (Analizar el resultado para seguir).
             </div>
 
             <div class="diagram-container">
-                <svg width="300" height="150" viewBox="0 0 300 150">
-                    <circle cx="150" cy="75" r="50" fill="none" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="5,5"/>
+                <svg width="300" height="200" viewBox="0 0 300 200">
+                    <!-- Ciclo central -->
+                    <path d="M150 20 A 80 80 0 1 1 149.9 20" fill="none" stroke="#E2E8F0" stroke-width="8" stroke-linecap="round"/>
+                    <path d="M150 20 A 80 80 0 0 1 230 100" fill="none" stroke="#8B5CF6" stroke-width="8" stroke-linecap="round"/>
                     
-                    <rect x="110" y="5" width="80" height="30" rx="4" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="1"/>
-                    <text x="150" y="25" text-anchor="middle" font-size="10" font-weight="bold" fill="#6D28D9">THOUGHT</text>
+                    <!-- Nodos -->
+                    <circle cx="150" cy="20" r="22" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="3" filter="url(#shadow)"/>
+                    <text x="150" y="24" text-anchor="middle" font-size="8" font-weight="800" fill="#6D28D9">PENSAR</text>
                     
-                    <rect x="220" y="90" width="70" height="30" rx="4" fill="#F0FDF4" stroke="#10B981" stroke-width="1"/>
-                    <text x="255" y="110" text-anchor="middle" font-size="10" font-weight="bold" fill="#059669">ACTION</text>
+                    <circle cx="230" cy="100" r="22" fill="#FFFFFF" stroke="#10B981" stroke-width="3" filter="url(#shadow)"/>
+                    <text x="230" y="104" text-anchor="middle" font-size="8" font-weight="800" fill="#059669">ACTUAR</text>
                     
-                    <rect x="10" y="90" width="80" height="30" rx="4" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1"/>
-                    <text x="50" y="110" text-anchor="middle" font-size="10" font-weight="bold" fill="#1D4ED8">OBSERVE</text>
+                    <circle cx="70" cy="100" r="22" fill="#FFFFFF" stroke="#3B82F6" stroke-width="3" filter="url(#shadow)"/>
+                    <text x="70" y="104" text-anchor="middle" font-size="8" font-weight="800" fill="#1D4ED8">OBSERVAR</text>
+                    
+                    <!-- Flechas de conexión -->
+                    <path d="M175 25 L210 75" stroke="#8B5CF6" stroke-width="2" marker-end="url(#arrowhead)"/>
+                    <path d="M210 125 L100 125" stroke="#10B981" stroke-width="2" marker-end="url(#arrowhead)"/>
+                    <path d="M85 75 L125 35" stroke="#3B82F6" stroke-width="2" marker-end="url(#arrowhead)"/>
                 </svg>
-                <div class="diagram-label">Ciclo ReAct: El motor de la inteligencia del agente.</div>
+                <div class="diagram-label">El bucle infinito de razonamiento: Pensar -> Hacer -> Mirar.</div>
             </div>
 
             <div class="metaphor-box">
                 <span class="metaphor-icon">💡</span>
                 <div><strong>Analogía Profesional:</strong> Es igual a como labura un consultor senior. Primero analiza el quilombo, después tira una prueba y al final mira los resultados para ver cómo sigue.</div>
-            </div>
-            <div class="pm-insight-box">
-                <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
-                Es clave para entender por qué la IA hizo lo que hizo. Si algo falla, el Loop ReAct te deja ver el "log de pensamientos" para encontrar dónde se mandó la macana.
             </div>
         </div>
 
@@ -212,33 +246,35 @@
                 <div class="concept-tag">Arquitectura</div>
             </div>
             <div class="definition-box">
-                Es una forma de organizar varios agentes donde un <strong>Orquestador</strong> central desarma una tarea pesada en partes más chicas y se las pasa a <strong>Trabajadores</strong> que la tienen clara en temas específicos.
+                Arquitectura multi-agente donde un <strong>Orquestador</strong> central descompone el pedido y lo reparte entre varios <strong>Workers</strong> especializados.
             </div>
 
             <div class="diagram-container">
-                <svg width="350" height="120" viewBox="0 0 350 120">
-                    <rect x="125" y="10" width="100" height="40" rx="6" fill="#1E293B" stroke="#8B5CF6" stroke-width="2"/>
-                    <text x="175" y="35" text-anchor="middle" font-size="11" font-weight="bold" fill="#FFFFFF">ORCHESTRATOR</text>
+                <svg width="360" height="140" viewBox="0 0 360 140">
+                    <!-- Orquestador -->
+                    <rect x="120" y="10" width="120" height="40" rx="6" fill="#1E293B" stroke="#8B5CF6" stroke-width="2" filter="url(#shadow)"/>
+                    <text x="180" y="35" text-anchor="middle" font-size="10" font-weight="800" fill="#FFFFFF">ORQUESTADOR</text>
                     
-                    <line x1="175" y1="50" x2="60" y2="80" stroke="#94A3B8" stroke-width="1.5"/>
-                    <line x1="175" y1="50" x2="175" y2="80" stroke="#94A3B8" stroke-width="1.5"/>
-                    <line x1="175" y1="50" x2="290" y2="80" stroke="#94A3B8" stroke-width="1.5"/>
+                    <!-- Lineas -->
+                    <path d="M180 50 L60 90" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="3"/>
+                    <path d="M180 50 L180 90" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="3"/>
+                    <path d="M180 50 L300 90" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="3"/>
                     
-                    <circle cx="60" cy="95" r="15" fill="#EDE9FE" stroke="#8B5CF6"/>
-                    <circle cx="175" cy="95" r="15" fill="#EDE9FE" stroke="#8B5CF6"/>
-                    <circle cx="290" cy="95" r="15" fill="#EDE9FE" stroke="#8B5CF6"/>
-                    <text x="175" y="118" text-anchor="middle" font-size="9" fill="#64748B">Workers Especializados</text>
+                    <!-- Workers -->
+                    <rect x="20" y="90" width="80" height="35" rx="4" fill="#F1F5F9" stroke="#8B5CF6" stroke-width="1"/>
+                    <text x="60" y="112" text-anchor="middle" font-size="9" font-weight="700" fill="#475569">Worker PDF</text>
+                    
+                    <rect x="140" y="90" width="80" height="35" rx="4" fill="#F1F5F9" stroke="#8B5CF6" stroke-width="1"/>
+                    <text x="180" y="112" text-anchor="middle" font-size="9" font-weight="700" fill="#475569">Worker SQL</text>
+                    
+                    <rect x="260" y="90" width="80" height="35" rx="4" fill="#F1F5F9" stroke="#8B5CF6" stroke-width="1"/>
+                    <text x="300" y="112" text-anchor="middle" font-size="9" font-weight="700" fill="#475569">Worker Web</text>
                 </svg>
-                <div class="diagram-label">División de tareas: Especialización para mayor precisión.</div>
-            </div>
-
-            <div class="metaphor-box">
-                <span class="metaphor-icon">💡</span>
-                <div><strong>Ejemplo:</strong> Si pedís "Miranos la rentabilidad de este cliente", el Orquestador manda a un Worker a leer facturas, a otro a chusmear el CRM y después él junta todo para darte la posta.</div>
+                <div class="diagram-label">Especialización: Cada Worker es un experto en su micro-tarea.</div>
             </div>
             <div class="pm-insight-box">
                 <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
-                Baja muchísimo las alucinaciones. En vez de tener un "bot que hace todo" (y que pifia seguido), manejás un equipo de micro-bots enfocados en cosas puntuales y fáciles de testear.
+                Baja muchísimo las alucinaciones. En vez de tener un "bot que hace todo", tenés un equipo de micro-bots enfocados y fáciles de testear.
             </div>
         </div>
 
@@ -256,15 +292,28 @@
                 <div class="concept-tag">Integración</div>
             </div>
             <div class="definition-box">
-                Es cuando el LLM pide usar una función externa. La IA no "hace" la acción físicamente, sino que te tira las instrucciones técnicas (JSON) para que tu sistema la ejecute sin riesgos.
+                Capacidad del LLM de pedir que se ejecute una función externa. Genera un <strong>JSON</strong> estructurado con los parámetros necesarios.
             </div>
+            
+            <div class="diagram-container">
+                <svg width="340" height="100" viewBox="0 0 340 100">
+                    <rect x="10" y="25" width="100" height="50" rx="8" fill="#F8FAFC" stroke="#8B5CF6" stroke-width="2"/>
+                    <text x="60" y="55" text-anchor="middle" font-size="10" font-weight="800" fill="#6D28D9">IA</text>
+                    
+                    <path d="M120 50 L160 50" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrowhead)"/>
+                    
+                    <rect x="170" y="20" width="150" height="60" rx="6" fill="#F1F5F9" stroke="#475569" stroke-width="1"/>
+                    <text x="180" y="40" font-family="monospace" font-size="8" fill="#1E293B">{</text>
+                    <text x="190" y="52" font-family="monospace" font-size="8" fill="#1E293B">"tool": "get_sales",</text>
+                    <text x="190" y="64" font-family="monospace" font-size="8" fill="#1E293B">"client": "Vernuccio"</text>
+                    <text x="180" y="76" font-family="monospace" font-size="8" fill="#1E293B">}</text>
+                </svg>
+                <div class="diagram-label">Tool Calling: La IA no ejecuta, pide que vos ejecutes por ella.</div>
+            </div>
+
             <div class="metaphor-box">
                 <span class="metaphor-icon">💡</span>
                 <div><strong>Ejemplo:</strong> Si el agente necesita saber la fecha, no inventa; te tira un comando que dice: <code>ejecutar_funcion("obtener_fecha_actual")</code>.</div>
-            </div>
-            <div class="pm-insight-box">
-                <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
-                Es el estándar para integrar cosas. Como PM, vos tenés que priorizar qué "Herramientas" (APIs) le dejás usar al agente, definiendo bien qué puede tocar y qué no.
             </div>
         </div>
 
@@ -278,22 +327,22 @@
                 <div class="concept-tag">Gobernanza</div>
             </div>
             <div class="definition-box">
-                Es un punto de control donde el agente frena y te pide permiso antes de mandarse una acción que sea crítica, cara o que no tenga vuelta atrás.
+                Punto de control donde el agente frena y te pide permiso antes de mandarse una acción crítica o que no tenga vuelta atrás.
             </div>
             <div class="diagram-container">
-                <svg width="300" height="60" viewBox="0 0 300 60">
-                    <rect x="10" y="15" width="80" height="30" rx="4" fill="#EDE9FE" stroke="#8B5CF6"/>
-                    <text x="50" y="35" text-anchor="middle" font-size="10" fill="#6D28D9">Agente</text>
+                <svg width="320" height="80" viewBox="0 0 320 80">
+                    <rect x="10" y="25" width="70" height="30" rx="4" fill="#EDE9FE" stroke="#8B5CF6"/>
+                    <text x="45" y="44" text-anchor="middle" font-size="9" fill="#6D28D9">IA Pensando</text>
                     
-                    <line x1="90" y1="30" x2="120" y2="30" stroke="#94A3B8" stroke-width="2"/>
+                    <line x1="85" y1="40" x2="115" y2="40" stroke="#94A3B8" stroke-width="2"/>
                     
-                    <circle cx="150" cy="30" r="20" fill="#FEE2E2" stroke="#EF4444" stroke-width="2"/>
-                    <text x="150" y="34" text-anchor="middle" font-size="14" fill="#EF4444">👤</text>
+                    <circle cx="150" cy="40" r="24" fill="#FEE2E2" stroke="#EF4444" stroke-width="2" filter="url(#shadow)"/>
+                    <text x="150" y="45" text-anchor="middle" font-size="18" fill="#EF4444">👤</text>
                     
-                    <line x1="180" y1="30" x2="210" y2="30" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrowhead)"/>
+                    <line x1="185" y1="40" x2="215" y2="40" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrowhead)"/>
                     
-                    <rect x="220" y="15" width="70" height="30" rx="4" fill="#F0FDF4" stroke="#10B981"/>
-                    <text x="255" y="35" text-anchor="middle" font-size="10" fill="#059669">Acción</text>
+                    <rect x="230" y="25" width="80" height="30" rx="4" fill="#F0FDF4" stroke="#10B981"/>
+                    <text x="270" y="44" text-anchor="middle" font-size="9" fill="#059669">Acción OK</text>
                 </svg>
                 <div class="diagram-label">Freno de mano: El humano tiene la última palabra.</div>
             </div>
@@ -308,29 +357,32 @@
             <div class="card-header">
                 <div class="concept-title">
                     <span class="concept-index">06</span>
-                    Validación Estructurada (JSON Schema)
+                    Validación Estructurada
                 </div>
                 <div class="concept-tag">Seguridad</div>
             </div>
             <div class="definition-box">
-                Es usar esquemas rígidos para obligar a la IA a que te responda con los datos tal cual los esperás, para que no mande fruta o rompa tus bases de datos.
+                Uso de esquemas (Pydantic) para obligar a la IA a que responda con los datos tal cual los esperás, para que no mande fruta o rompa nada.
             </div>
-            <div class="metaphor-box">
-                <span class="metaphor-icon">💡</span>
-                <div><strong>Analogía:</strong> Como un formulario que no te deja seguir si no pusiste bien el CUIT o el mail. Asegura que la IA "hable el mismo idioma" que tus servidores.</div>
-            </div>
-            <div class="pm-insight-box">
-                <div class="pm-insight-header">🎯 Enfoque PM / Estrategia</div>
-                Te saca de encima casi todos los errores de integración. Te deja tratar a la IA como un pedazo de software común que respeta reglas claras.
+            
+            <div class="diagram-container">
+                <svg width="340" height="120" viewBox="0 0 340 120">
+                    <path d="M40 30 L40 90 L300 90 L300 30 Z" fill="#F8FAFC" stroke="#475569" stroke-width="2"/>
+                    <rect x="70" y="10" width="200" height="30" rx="4" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="2"/>
+                    <text x="170" y="30" text-anchor="middle" font-size="10" font-weight="800" fill="#6D28D9">EMBUDO DE VALIDACIÓN</text>
+                    
+                    <text x="170" y="65" text-anchor="middle" font-size="10" fill="#64748B">Solo pasan datos con el</text>
+                    <text x="170" y="78" text-anchor="middle" font-size="10" font-weight="bold" fill="#0F172A">Formato Correcto</text>
+                </svg>
+                <div class="diagram-label">Seguridad de datos: El filtro que protege tu backend.</div>
             </div>
         </div>
 
     </div>
 
     <!-- FOOTER -->
-    <div style="padding: 40px 60px; background: #F8FAFC; border-top: 1px solid #E2E8F0; font-size: 0.8rem; color: #94A3B8; display: flex; justify-content: space-between;">
-        <div>Mentoría IT & AI - Sesión 3</div>
-        <div>2026 Claudio Vernuccio</div>
+    <div style="padding: 30px; background: #F8FAFC; border-top: 1px solid #E2E8F0; font-size: 0.8rem; color: #94A3B8; text-align: center;">
+        Mentoría IT & AI - Sesión 3 | 2026 Claudio Vernuccio
     </div>
 </div>
 
