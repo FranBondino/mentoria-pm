@@ -18,90 +18,103 @@
         body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh; width: 100vw; display: flex; flex-direction: column; }
         
         .slides-container { flex-grow: 1; position: relative; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .slide { position: absolute; width: 90%; max-width: 1000px; height: 80%; background: var(--card); border-radius: 20px; padding: 40px; display: none; flex-direction: column; justify-content: center; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.5); transition: all 0.5s ease; }
-        .slide.active { display: flex; animation: fadeIn 0.5s ease forwards; }
+        .slide { position: absolute; width: 95%; max-width: 1100px; height: 85%; background: var(--card); border-radius: 24px; padding: 60px; display: none; flex-direction: column; justify-content: center; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 25px 60px rgba(0,0,0,0.6); transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .slide.active { display: flex; animation: slideIn 0.6s ease-out forwards; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(50px) scale(0.98); } to { opacity: 1; transform: translateX(0) scale(1); } }
 
-        h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.8rem; margin-bottom: 25px; color: var(--primary); }
-        h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2rem; margin-bottom: 20px; color: var(--accent); }
-        p { font-size: 1.3rem; line-height: 1.7; margin-bottom: 25px; color: var(--text-muted); }
-        ul { margin-left: 30px; margin-bottom: 25px; color: var(--text-muted); }
-        li { margin-bottom: 12px; font-size: 1.2rem; }
+        h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 3.2rem; margin-bottom: 30px; color: var(--primary); letter-spacing: -1px; }
+        h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.2rem; margin-bottom: 25px; color: var(--accent); }
+        p { font-size: 1.4rem; line-height: 1.8; margin-bottom: 30px; color: var(--text-muted); }
+        ul { margin-left: 40px; margin-bottom: 30px; color: var(--text-muted); }
+        li { margin-bottom: 15px; font-size: 1.3rem; }
         
-        .controls { padding: 20px; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); }
-        button { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 10px; cursor: pointer; font-weight: 700; transition: transform 0.2s; }
-        button:hover { transform: scale(1.05); background: #2563eb; }
-        .progress { font-size: 1rem; font-weight: 600; color: var(--text-muted); }
+        .controls { padding: 30px 50px; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.05); }
+        button { background: var(--primary); color: white; border: none; padding: 14px 32px; border-radius: 12px; cursor: pointer; font-weight: 800; font-size: 1.1rem; transition: all 0.3s; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); }
+        button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5); background: #2563eb; }
+        button:active { transform: translateY(1px); }
+        .progress { font-size: 1.1rem; font-weight: 700; color: var(--text-muted); letter-spacing: 1px; }
+
+        .term-badge { background: rgba(139, 92, 246, 0.1); color: var(--accent); padding: 4px 12px; border-radius: 6px; font-size: 1.1rem; border: 1px solid rgba(139, 92, 246, 0.3); }
 
         @media (max-width: 768px) {
             h1 { font-size: 2rem; }
-            h2 { font-size: 1.5rem; }
-            p, li { font-size: 1rem; }
-            .slide { padding: 30px; height: 85%; }
+            h2 { font-size: 1.6rem; }
+            p, li { font-size: 1.1rem; }
+            .slide { padding: 40px 25px; }
+            .controls { padding: 20px; }
         }
     </style>
 </head>
 <body>
 
 <div class="slides-container" id="slides">
+    <!-- Diapositiva 1 -->
     <div class="slide active">
-        <h1>IA Activa & Agentes Autónomos</h1>
-        <h2>Sesión 3: El fin de la IA de solo chat</h2>
-        <p>Hoy entramos en la frontera más avanzada del desarrollo actual: sistemas que no solo te hablan, sino que <strong>ejecutan el trabajo por vos</strong>.</p>
+        <h1>Sesión 3: IA Activa & Agentes</h1>
+        <h2>Más allá del simple chat corporativo</h2>
+        <p>Hoy cruzamos la línea: del bot que solo contesta (RAG Pasivo) al sistema que <strong>razona, decide y opera</strong> de forma autónoma.</p>
         <ul>
-            <li>Transición de RAG (Pasivo) a Agentes Activos.</li>
-            <li>Arquitecturas de razonamiento ReAct y Orquestación.</li>
-            <li>Gobernanza corporativa, control de riesgos y costos.</li>
+            <li>Conceptos Clave: <span class="term-badge">Loop ReAct</span>, <span class="term-badge">Tool Calling</span>.</li>
+            <li>Arquitectura: <span class="term-badge">Orchestrator-Workers</span>.</li>
+            <li>Gobernanza: <span class="term-badge">Pydantic</span>, <span class="term-badge">HITL</span>, <span class="term-badge">API Gateways</span>.</li>
         </ul>
     </div>
 
+    <!-- Diapositiva 2 -->
     <div class="slide">
-        <h1>¿Qué es un Agente real?</h1>
-        <h2>De la respuesta a la resolución de metas</h2>
-        <p>Un agente es un sistema diseñado para operar con autonomía para:</p>
+        <h1>El Bucle del Razonamiento</h1>
+        <h2>Cómo la IA decide sus próximos pasos</h2>
+        <p>Usamos el <span class="term-badge">Loop ReAct</span> para que el agente piense antes de mandarse una macana.</p>
         <ul>
-            <li><strong>Razonar:</strong> Planificar los pasos necesarios para cumplir un objetivo.</li>
-            <li><strong>Interactuar:</strong> Usar APIs, consultar bases de datos y sistemas externos.</li>
-            <li><strong>Validar:</strong> Evaluar si sus propias acciones tuvieron éxito.</li>
+            <li><strong>Thought:</strong> El modelo verbaliza su plan de acción.</li>
+            <li><strong>Action:</strong> Invoca una API usando <span class="term-badge">Tool Calling</span>.</li>
+            <li><strong>Observation:</strong> Lee el resultado y vuelve a razonar.</li>
         </ul>
-        <p>Pensalo como un colaborador senior con experiencia: vos le das la meta final y él se encarga de definir y ejecutar el "cómo".</p>
+        <p>Como PM, podés auditar estos pasos para entender la lógica del bot.</p>
     </div>
 
+    <!-- Diapositiva 3 -->
     <div class="slide">
-        <h1>Patrones: Orquestador y Workers</h1>
-        <h2>Especialización para garantizar precisión</h2>
-        <p>En escala corporativa no usamos un solo bot para todo. Diseñamos un equipo:</p>
+        <h1>Escalando con Orquestación</h1>
+        <h2>Divide y vencerás en el stack técnico</h2>
+        <p>Implementamos el patrón <span class="term-badge">Orchestrator-Workers</span> para maximizar la precisión:</p>
         <ul>
-            <li><strong>Orquestador:</strong> El cerebro central que descompone el pedido.</li>
-            <li><strong>Workers:</strong> Agentes expertos en una sola tarea (SQL, lectura de PDFs, búsqueda web).</li>
+            <li><strong>Orquestador:</strong> El cerebro que planifica y reparte el laburo.</li>
+            <li><strong>Workers:</strong> Micro-agentes expertos (SQL, PDFs, Web).</li>
         </ul>
-        <p>Esta estructura reduce drásticamente las alucinaciones y te permite tener un control quirúrgico sobre cada paso del proceso de negocio.</p>
+        <p>Esto reduce alucinaciones y te permite tener un control total sobre cada micro-tarea.</p>
     </div>
 
+    <!-- Diapositiva 4 -->
     <div class="slide">
-        <h1>Tool Calling</h1>
-        <h2>El puente entre la IA y tu Backend</h2>
-        <p>Es la capacidad técnica de la IA para generar instrucciones estructuradas (JSON) que activan funciones reales en tus servidores.</p>
-        <p>Como PM, vos sos el responsable de definir el "Catálogo de Herramientas". Es como dar las llaves de la empresa: tenés que saber exactamente qué permisos le das al agente.</p>
-    </div>
-
-    <div class="slide">
-        <h1>Gobernanza Estratégica</h1>
-        <h2>Tu rol fundamental en el liderazgo de IA</h2>
-        <p>La autonomía de la IA no es una decisión técnica, es una decisión estratégica del Product Manager:</p>
+        <h1>Gobernanza & Blindaje</h1>
+        <h2>Tu responsabilidad estratégica como líder</h2>
+        <p>No dejamos a la IA suelta. Ponemos barreras técnicas rígidas:</p>
         <ul>
-            <li><strong>Human-in-the-loop:</strong> ¿En qué puntos críticos frenamos al bot para que vos apruebes?</li>
-            <li><strong>Guardrails de Costos:</strong> Límites de gastos y de iteraciones para proteger el presupuesto.</li>
-            <li><strong>Auditoría de Razonamiento:</strong> Revisión de los logs (¿Por qué el agente decidió esto?).</li>
+            <li><span class="term-badge">Pydantic:</span> Validación estricta de cada dato que sale de la IA.</li>
+            <li><span class="term-badge">API Gateways:</span> Aislamiento para que la IA no rompa nada.</li>
+            <li><span class="term-badge">HITL:</span> Puntos de aprobación humana obligatoria.</li>
+        </ul>
+    </div>
+
+    <!-- Diapositiva 5 -->
+    <div class="slide">
+        <h1>Eficiencia & Observabilidad</h1>
+        <h2>Operando IA a nivel Enterprise</h2>
+        <p>Para que el producto sea viable y rentable necesitamos:</p>
+        <ul>
+            <li><span class="term-badge">KV Cache:</span> Reducción de latencia y hasta 80% de ahorro.</li>
+            <li><span class="term-badge">Langfuse:</span> Monitoreo en tiempo real de trazas y costos.</li>
+            <li><span class="term-badge">Max Iterations:</span> Cortafuegos contra bucles infinitos.</li>
         </ul>
     </div>
 </div>
 
 <div class="controls">
-    <button onclick="prevSlide()">Anterior</button>
-    <div class="progress" id="progress">Diapositiva 1 / 5</div>
-    <button onclick="nextSlide()">Siguiente</button>
+    <button onclick="prevSlide()">ANTERIOR</button>
+    <div class="progress" id="progress">DIAPOSITIVA 1 / 5</div>
+    <button onclick="nextSlide()">SIGUIENTE</button>
 </div>
 
 <script>
@@ -113,7 +126,7 @@
         slides.forEach((slide, index) => {
             slide.classList.toggle('active', index === currentSlide);
         });
-        progress.innerText = 'Diapositiva ' + (currentSlide + 1) + ' / ' + slides.length;
+        progress.innerText = 'DIAPOSITIVA ' + (currentSlide + 1) + ' / ' + slides.length;
     }
 
     function nextSlide() {
