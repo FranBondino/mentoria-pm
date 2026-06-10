@@ -60,7 +60,7 @@
 
         h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.5rem; margin-bottom: 20px; color: var(--primary); }
         h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.8rem; margin-bottom: 15px; color: var(--accent); }
-        p { font-size: 1.1rem; line-height: 1.6; margin-bottom: 20px; color: var(--text-muted); }
+        p { font-size: 1.2rem; line-height: 1.6; margin-bottom: 20px; color: var(--text-muted); }
         
         .controls {
             padding: 20px;
@@ -82,11 +82,10 @@
 
         .progress { font-size: 0.9rem; color: var(--text-muted); }
 
-        /* Mobile specific */
         @media (max-width: 600px) {
             h1 { font-size: 1.8rem; }
             h2 { font-size: 1.4rem; }
-            p { font-size: 0.95rem; }
+            p { font-size: 1rem; }
             .slide { padding: 25px; height: 85%; }
         }
     </style>
@@ -94,40 +93,38 @@
 <body>
 
 <div class="slides-container" id="slides">
-    <!-- Slide 1 -->
     <div class="slide active">
         <h1>IA Activa & Agentes Autónomos</h1>
         <h2>Sesión 3 - Mentoría IT para PMs</h2>
-        <p>Hoy vamos a ver cómo pasamos de tener un bot que solo "responde" a tener un equipo que "hace" y te resuelve los quilombos solo.</p>
-        <p>Ponete cómodo que arrancamos.</p>
+        <p>Hoy analizamos la transición desde modelos de consulta estática hacia sistemas que ejecutan acciones y resuelven objetivos de negocio complejos.</p>
+        <p>Acomodate que ya empezamos.</p>
     </div>
 
-    <!-- Slide 2 -->
     <div class="slide">
         <h1>¿Qué es un Agente?</h1>
         <h2>De la respuesta a la resolución</h2>
-        <p>Un agente no es solo un chat. Es un sistema que puede <strong>razonar</strong> y <strong>actuar</strong>.</p>
-        <p>Pensalo como un empleado senior: le das el objetivo y él se encarga de elegir las herramientas y darte el resultado.</p>
+        <p>Un agente no es simplemente un chat. Es un sistema con la capacidad de <strong>razonar</strong> y <strong>actuar</strong>.</p>
+        <p>Pensalo como un colaborador con experiencia: vos le das el objetivo final y él se encarga de seleccionar las herramientas necesarias para alcanzarlo.</p>
     </div>
 
-    <!-- Slide 3 -->
     <div class="slide">
         <h1>El Loop ReAct</h1>
         <h2>Pensar -> Actuar -> Observar</h2>
-        <p>Es el motor que hace que la IA no mande fruta. Antes de meter mano, la IA explica qué va a hacer (Pensar), lo hace (Actuar) y chequea si salió bien (Observar).</p>
+        <p>Es el proceso que garantiza la precisión de la IA. Antes de realizar cualquier acción, el modelo explica su razonamiento (Pensar), ejecuta la tarea (Actuar) y evalúa los resultados obtenidos (Observar).</p>
+        <p>Tenés el control total sobre cada paso del razonamiento.</p>
     </div>
 
-    <!-- Slide 4 -->
     <div class="slide">
         <h1>Gobernanza y Seguridad</h1>
-        <h2>No lo dejes solo</h2>
-        <p>Como PM, vos sos el responsable de poner los "frenos de mano" (Human-in-the-loop) y los filtros para que no rompa nada.</p>
+        <h2>Estrategia y Control</h2>
+        <p>Como Product Manager, sos responsable de establecer los límites operativos y los puntos de aprobación manual (Human-in-the-loop).</p>
+        <p>Definís las reglas para que el sistema opere con total seguridad dentro de tu arquitectura corporativa.</p>
     </div>
 </div>
 
 <div class="controls">
     <button onclick="prevSlide()">Anterior</button>
-    <div class="progress" id="progress">Slide 1 / 4</div>
+    <div class="progress" id="progress">Diapositiva 1 / 4</div>
     <button onclick="nextSlide()">Siguiente</button>
 </div>
 
@@ -140,7 +137,7 @@
         slides.forEach((slide, index) => {
             slide.classList.toggle('active', index === currentSlide);
         });
-        progress.innerText = `Slide ${currentSlide + 1} / ${slides.length}`;
+        progress.innerText = `Diapositiva ${currentSlide + 1} / ${slides.length}`;
     }
 
     function nextSlide() {
@@ -157,7 +154,6 @@
         }
     }
 
-    // Keyboard controls
     document.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowRight') nextSlide();
         if (e.key === 'ArrowLeft') prevSlide();
