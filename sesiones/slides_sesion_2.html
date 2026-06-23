@@ -1417,7 +1417,7 @@
                     </div>
                     
                     <div style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem; display: flex; gap: 1rem; align-items: flex-start;">
-                        <img src="bpe_vs_word_comparison.png" alt="BPE vs Word Comparison (Mecánica de Tokens)" onclick="openLightbox(this)" style="width: 140px; height: 110px; object-fit: contain; background: rgba(2, 6, 23, 0.5); padding: 4px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 10px rgba(0,0,0,0.5);" />
+                        <img src="../bpe_vs_word_comparison.png" alt="BPE vs Word Comparison (Mecánica de Tokens)" onclick="openLightbox(this)" style="width: 140px; height: 110px; object-fit: contain; background: rgba(2, 6, 23, 0.5); padding: 4px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 10px rgba(0,0,0,0.5);" />
                         <div style="font-size: 0.72rem; color: var(--text-secondary); line-height: 1.35;">
                             <strong style="color: #ffffff; display: block; margin-bottom: 0.2rem;">Mecánica del BPE (Byte Pair Encoding)</strong>
                             Para evitar un colapso por "explosión de vocabulario" de millones de palabras, el modelo divide palabras como "despachador" en raíces conceptuales ("despach") y sufijos gramaticales ("-ador"). Esto reduce el vocabulario a 100k tokens reusables, tolera errores ortográficos y procesa términos nuevos de forma veloz.
@@ -1461,7 +1461,7 @@
                     </div>
                     
                     <div style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem; display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1rem;">
-                        <img src="lost_in_the_middle_heatmap.png" alt="Fenómeno Lost in the Middle (Curva U de Atención)" onclick="openLightbox(this)" style="width: 140px; height: 110px; object-fit: contain; background: rgba(2, 6, 23, 0.5); padding: 4px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 10px rgba(0,0,0,0.5);" />
+                        <img src="../lost_in_the_middle_heatmap.png" alt="Fenómeno Lost in the Middle (Curva U de Atención)" onclick="openLightbox(this)" style="width: 140px; height: 110px; object-fit: contain; background: rgba(2, 6, 23, 0.5); padding: 4px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 10px rgba(0,0,0,0.5);" />
                         <div style="font-size: 0.72rem; color: var(--text-secondary); line-height: 1.35;">
                             <strong style="color: #ffffff; display: block; margin-bottom: 0.2rem;">Pérdida de Atención Central</strong>
                             Los modelos concentran casi toda su atención cognitiva (99% de precisión) en los extremos (primeros y últimos párrafos), perdiendo hasta un 40% de retención en el centro geométrico del contexto.
@@ -1540,7 +1540,7 @@
                             <i data-lucide="sparkles" style="color: var(--color-purple);"></i>
                             <span>Radar Semántico 3D</span>
                         </h3>
-                        <img src="embeddings_semantic_radar.png" alt="Radar Semántico 3D (Similitud por Coseno)" onclick="openLightbox(this)" style="width: 100%; max-height: 120px; object-fit: contain; background: rgba(2, 6, 23, 0.5); padding: 4px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 15px rgba(0,0,0,0.5);" />
+                        <img src="../embeddings_semantic_radar.png" alt="Radar Semántico 3D (Similitud por Coseno)" onclick="openLightbox(this)" style="width: 100%; max-height: 120px; object-fit: contain; background: rgba(2, 6, 23, 0.5); padding: 4px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 15px rgba(0,0,0,0.5);" />
                     </div>
                     <p style="font-size: 0.72rem; color: var(--text-secondary); line-height: 1.35; margin-top: 0.8rem; text-align: left;">
                         <strong>Cercanía por Coseno:</strong> El modelo mapea conceptos en 1536 dimensiones. Términos afines de logística fluvial ("Barcaza", "Remolcador") quedan con un score de similitud de 0.89, mientras "Deportivo" queda aislado en 0.12.
