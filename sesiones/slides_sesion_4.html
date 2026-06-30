@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanzas de la IA, Evals &amp; Entrevistas - Sesión 4</title>
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* CSS RESET & VARIABLES */
+        :root {
+            --bg-primary: #08070d;
+            --bg-secondary: #0f0d1a;
+            --bg-card: rgba(30, 27, 57, 0.4);
+            --border-card: rgba(245, 158, 11, 0.15);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --color-amber: #f59e0b;
+            --color-amber-glow: rgba(245, 158, 11, 0.4);
+            --color-blue: #3b82f6;
+            --color-blue-glow: rgba(59, 130, 246, 0.4);
+            --color-green: #10b981;
+            --color-green-glow: rgba(16, 185, 129, 0.4);
+            --color-purple: #8b5cf6;
+            --color-purple-glow: rgba(139, 92, 246, 0.4);
+            --color-red: #ef4444;
+            --color-red-glow: rgba(239, 68, 68, 0.4);
+            --font-display: 'Plus Jakarta Sans', 'Inter', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        .lucide {
+            width: 24px;
+            height: 24px;
+            stroke-width: 2px;
+            color: currentColor;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .icon-sm { width: 18px; height: 18px; stroke-width: 2px; }
+        .icon-lg { width: 32px; height: 32px; stroke-width: 1.5px; }
+        .icon-xl { width: 48px; height: 48px; stroke-width: 1.2px; }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(120, 53, 4, 0.25) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(30, 27, 75, 0.4) 0%, transparent 50%);
+        }
+
+        /* PROGRESS BAR */
+        .progress-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.03);
+            z-index: 100;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--color-amber), var(--color-purple));
+            box-shadow: 0 0 10px var(--color-amber-glow);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* MAIN SLIDE CONTAINER */
+        .slides-wrapper {
+            position: relative;
+            flex-grow: 1;
+            width: 100%;
+            height: calc(100vh - 80px);
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            display: none;
+            pointer-events: none;
+            transform: translateX(50px);
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 3rem 3.5rem;
+            box-sizing: border-box;
+            overflow-y: auto;
+            z-index: 1;
+        }
+
+        .slide::before,
+        .slide::after {
+            content: '';
+            flex: 1;
+            min-height: 1rem;
+            flex-shrink: 1;
+        }
+
+        .slide::-webkit-scrollbar { width: 6px; }
+        .slide::-webkit-scrollbar-track { background: transparent; }
+        .slide::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .slide.active {
+            opacity: 1;
+            display: flex;
+            pointer-events: auto;
+            transform: translateX(0);
+            z-index: 10;
+        }
+
+        .slide.prev { transform: translateX(-50px); }
+
+        /* COMMON TEXT COMPONENTS */
+        .slide-title {
+            font-family: var(--font-display);
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #ffffff 50%, var(--color-amber));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.4rem;
+            text-align: center;
+        }
+
+        .slide-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            text-align: center;
+            max-width: 800px;
+            font-weight: 400;
+        }
+
+        /* GLASS CARD COMMON */
+        .glass-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        /* GRID SYSTEM FOR BENTO LAYOUTS */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.2rem;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        @media (max-width: 900px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .slide {
+                padding: 1.5rem;
+            }
+            .slide-title { font-size: 1.6rem; }
+        }
+
+        /* NAVIGATION BAR */
+        .nav-bar {
+            height: 80px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background-color: var(--bg-secondary);
+            padding: 0 3.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 90;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-logo {
+            font-family: var(--font-display);
+            font-weight: 800;
+            color: var(--color-amber);
+            letter-spacing: 2px;
+            font-size: 0.95rem;
+        }
+
+        .nav-session {
+            font-size: 0.8rem;
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--color-amber);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-nav {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            color: var(--text-primary);
+            padding: 10px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-nav:hover:not(:disabled) {
+            background: rgba(245, 158, 11, 0.15);
+            border-color: var(--color-amber);
+            color: var(--color-amber);
+        }
+
+        .btn-nav:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* CUSTOM INTERACTIVE STYLINGS */
+        .calculator-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .calculator-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .calculator-value {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--color-amber);
+            font-family: monospace;
+        }
+
+        .calculator-slider {
+            width: 100%;
+            accent-color: var(--color-amber);
+            background: rgba(255,255,255,0.05);
+            height: 6px;
+            border-radius: 3px;
+            outline: none;
+            margin-bottom: 1.2rem;
+        }
+
+        .results-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .results-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .results-row.total {
+            font-size: 1.1rem;
+            font-weight: 800;
+            border-top: 1px dashed rgba(255,255,255,0.15);
+            padding-top: 0.6rem;
+            margin-top: 0.6rem;
+            color: var(--color-green);
+        }
+
+        /* COMPARISON TABLE */
+        .comp-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        .comp-table th {
+            color: var(--color-amber);
+            border-bottom: 2px solid rgba(245, 158, 11, 0.2);
+            padding: 8px;
+            font-weight: 800;
+        }
+
+        .comp-table td {
+            padding: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            color: var(--text-secondary);
+        }
+
+        .comp-table tr:hover td {
+            color: #ffffff;
+            background: rgba(255,255,255,0.02);
+        }
+
+        /* EVAL PLAYGROUND */
+        .eval-tag {
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+        .eval-tag.success { background: rgba(16, 185, 129, 0.15); color: var(--color-green); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .eval-tag.fail { background: rgba(239, 68, 68, 0.15); color: var(--color-red); border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        .slider-score-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .score-indicator {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: monospace;
+            font-weight: 800;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* TRACE TREE VIEWER */
+        .trace-item {
+            border-left: 2px dashed rgba(255, 255, 255, 0.08);
+            margin-left: 10px;
+            padding-left: 15px;
+            margin-bottom: 0.8rem;
+        }
+        .trace-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.02);
+        }
+        .trace-header:hover {
+            background: rgba(255,255,255,0.06);
+            color: #ffffff;
+        }
+        .trace-body {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            padding: 8px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 6px;
+            margin-top: 4px;
+            display: none;
+            font-family: monospace;
+        }
+
+        /* INTERVIEW CHAT SIMULATOR */
+        .chat-container {
+            height: 250px;
+            overflow-y: auto;
+            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            font-size: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+        .chat-bubble {
+            padding: 8px 12px;
+            border-radius: 12px;
+            max-width: 80%;
+            line-height: 1.4;
+        }
+        .chat-bubble.mentor {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            color: #ffffff;
+            align-self: flex-start;
+        }
+        .chat-bubble.pm {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            color: #ffffff;
+            align-self: flex-end;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PROGRESS BAR -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <!-- MAIN SLIDES WRAPPER -->
+    <div class="slides-wrapper" id="slides-wrapper">
+
+        <!-- SLIDE 1: COVER -->
+        <div class="slide active" id="slide-1">
+            <div class="glass-card text-center" style="max-width: 800px; padding: 3.5rem;">
+                <span class="nav-session" style="display: inline-block; margin-bottom: 1.5rem;">SESIÓN  final</span>
+                <h1 class="slide-title" style="font-size: 3.5rem; line-height: 1.05; margin-bottom: 1.5rem; background: linear-gradient(135deg, #ffffff 40%, var(--color-amber)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    Finanzas de la IA,<br>Evals &amp; Entrevistas
+                </h1>
+                <p style="font-size: 1.2rem; color: var(--text-secondary); line-height: 1.6; max-width: 600px; margin: 0 auto 2.5rem;">
+                    Dominá los números de infraestructura de LLMs, diseñá suites de evaluación para software probabilístico y preparate para entrevistas clave de IT.
+                </p>
+                <div class="divider-accent" style="width: 120px; height: 6px; background: var(--color-amber); border-radius: 3px; margin: 0 auto;"></div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: AGENDA -->
+        <div class="slide" id="slide-2">
+            <h2 class="slide-title">Agenda Operativa de la Sesión</h2>
+            <p class="slide-subtitle">Un resumen de los hitos y conceptos clave que abordaremos hoy para cerrar tu perfil de PM de IA.</p>
+            
+            <div class="grid-3">
+                <div class="glass-card" style="border-color: rgba(245, 158, 11, 0.15);">
+                    <div style="font-size: 1.8rem; margin-bottom: 0.8rem; color: var(--color-amber);"><i data-lucide="line-chart" class="icon-lg"></i></div>
+                    <h3 style="font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 0.5rem;">1. AI Economics</h3>
+                    <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45;">Costos por token, Prompt Caching en interfaces complejas y el balance financiero entre RAG y Fine-Tuning.</p>
+                </div>
+                
+                <div class="glass-card" style="border-color: rgba(59, 130, 246, 0.15);">
+                    <div style="font-size: 1.8rem; margin-bottom: 0.8rem; color: var(--color-blue);"><i data-lucide="shield-check" class="icon-lg"></i></div>
+                    <h3 style="font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 0.5rem;">2. Gobernanza &amp; Calidad</h3>
+                    <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45;">Prevención de Data Leakage, suites de evaluación semántica (Evals) y dashboards de observabilidad (Langfuse).</p>
+                </div>
+                
+                <div class="glass-card" style="border-color: rgba(139, 92, 246, 0.15);">
+                    <div style="font-size: 1.8rem; margin-bottom: 0.8rem; color: var(--color-purple);"><i data-lucide="user-check" class="icon-lg"></i></div>
+                    <h3 style="font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 0.5rem;">3. Simulación de Rol</h3>
+                    <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45;">Roleplay interactivo para responder y argumentar desvíos de presupuesto, problemas de latencia y protección de PI.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: AI ECONOMICS -->
+        <div class="slide" id="slide-3">
+            <h2 class="slide-title">AI Economics: La Variable GPU</h2>
+            <p class="slide-subtitle">Por qué desarrollar software de IA no es gratis y cómo se estructura la facturación de tokens.</p>
+            
+            <div class="grid-2">
+                <div class="glass-card">
+                    <h3 style="font-family: var(--font-display); font-size: 1.2rem; color: var(--color-amber); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="coins"></i> Costo Unitario de Inferencia
+                    </h3>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem;">
+                        A diferencia del código clásico ejecutado localmente, cada llamada a la API de OpenAI o Anthropic factura por <strong>tokens</strong> (sub-palabras).
+                    </p>
+                    <ul style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                        <li><strong>Input Tokens (Prompt)</strong>: Las instrucciones de sistema, datos recuperados por RAG e inputs del usuario.</li>
+                        <li><strong>Output Tokens (Response)</strong>: Las palabras generadas por el modelo. Suelen costar entre 3 y 4 veces más debido a la memoria de autoregresión de la GPU.</li>
+                    </ul>
+                </div>
+                
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: center;">
+                    <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); padding: 1.2rem; border-radius: 10px; text-align: center; margin-bottom: 1rem;">
+                        <p style="font-size: 0.75rem; text-transform: uppercase; color: var(--color-amber); letter-spacing: 1px; margin-bottom: 0.3rem;">REGLA MÉTRICA PM</p>
+                        <p style="font-size: 1.6rem; font-weight: 800; font-family: monospace;">1k Tokens ≈ 750 Palabras</p>
+                        <p style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.3rem;">En español, requiere un 20% a 30% más de tokens por término debido a raíces gramaticales complejas.</p>
+                    </div>
+                    <div style="background: rgba(245, 158, 11, 0.05); border-left: 4px solid var(--color-amber); padding: 0.8rem; border-radius: 4px; font-size: 0.82rem; line-height: 1.45;">
+                        <strong>Perspectiva PM:</strong> Un prompt mal optimizado o con datos irrelevantes inyectados duplica directamente el costo operativo unitario (COGS) de tu aplicación de IA.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: PROMPT CACHING -->
+        <div class="slide" id="slide-4">
+            <h2 class="slide-title">Prompt Caching: El Súper Ahorro</h2>
+            <p class="slide-subtitle">Cómo evitar calcular tokens repetitivos turno tras turno, bajando costos hasta en un 90%.</p>
+            
+            <div class="grid-2">
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 style="font-family: var(--font-display); font-size: 1.2rem; color: var(--color-blue); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="database"></i> ¿Cómo funciona el Caching?
+                        </h3>
+                        <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem;">
+                            El API de inferencia guarda el estado matemático (KV Cache) de los tokens fijos del System Prompt o de manuales extensos inyectados por RAG en la memoria RAM de la GPU.
+                        </p>
+                        <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45;">
+                            En turnos de chat sucesivos, el modelo lee la caché de inmediato sin volver a procesar los tokens fijos, cobrándote solo una fracción mínima de la tarifa normal.
+                        </p>
+                    </div>
+                    
+                    <div style="background: rgba(59, 130, 246, 0.05); border-left: 4px solid var(--color-blue); padding: 0.8rem; border-radius: 4px; font-size: 0.82rem; margin-top: 1rem;">
+                        <strong>Aceleración:</strong> Además de ahorrar dinero, baja radicalmente el <strong>Time to First Token (TTFT)</strong>, ya que el modelo empieza a escupir palabras casi al instante.
+                    </div>
+                </div>
+
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <div style="text-align: center; width: 100%;">
+                        <span class="nav-session" style="background: rgba(16, 185, 129, 0.15); color: var(--color-green); border-color: rgba(16, 185, 129, 0.3); margin-bottom: 1.2rem; display: inline-block;">CALIBRACIÓN DE CACHÉ</span>
+                        <div style="display: flex; justify-content: space-around; width: 100%; margin-top: 1rem;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: 800; color: var(--color-red); font-family: monospace;">$5.00</div>
+                                <div style="font-size: 0.72rem; color: var(--text-secondary); margin-top: 0.2rem;">Por 1M Tokens Entrada<br>(Normal)</div>
+                            </div>
+                            <div style="border-right: 1px dashed rgba(255,255,255,0.1); height: 50px;"></div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: 800; color: var(--color-green); font-family: monospace;">$1.25</div>
+                                <div style="font-size: 0.72rem; color: var(--text-secondary); margin-top: 0.2rem;">Por 1M Tokens Entrada<br>(Con Caché)</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); padding: 1rem; border-radius: 8px; font-size: 0.78rem; text-align: left; line-height: 1.4; margin-top: 1.5rem; color: var(--text-secondary);">
+                            • <strong>Umbral de Activación:</strong> Suele requerir bloques mínimos de 1024 a 2048 tokens estáticos para disparar la activación del caché en el servidor.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: RAG VS FINE-TUNING -->
+        <div class="slide" id="slide-5">
+            <h2 class="slide-title">RAG vs. Fine-Tuning: Costos de Negocio</h2>
+            <p class="slide-subtitle">El balance financiero y de mantenimiento que tenés que justificar al proponer soluciones.</p>
+            
+            <div class="glass-card" style="max-width: 900px; padding: 2rem;">
+                <table class="comp-table">
+                    <thead>
+                        <tr>
+                            <th>Dimensión</th>
+                            <th>RAG (Vector Database)</th>
+                            <th>Fine-Tuning (Ajuste Fino)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 700; color: #ffffff;">Costo de Configuración</td>
+                            <td>Bajo (Conector de datos, chunker y carga a base vectorial).</td>
+                            <td>Alto (Requiere preparar miles de pares pregunta-respuesta).</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 700; color: #ffffff;">Actualización de Datos</td>
+                            <td>Instantáneo y sin costo (Añadir o remover un PDF).</td>
+                            <td>Muy costoso (Requiere volver a entrenar el dataset completo).</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 700; color: #ffffff;">Alucinaciones</td>
+                            <td>Bajo (Ancla su respuesta a fragmentos reales citables).</td>
+                            <td>Medio-Alto (No previene que invente datos lógicos ausentes).</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 700; color: #ffffff;">Foco de Negocio</td>
+                            <td style="color: var(--color-green); font-weight: 600;">Enseñar QUÉ decir (Datos actualizados).</td>
+                            <td style="color: var(--color-purple); font-weight: 600;">Enseñar CÓMO hablar (Tono y formato).</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="background: rgba(255,255,255,0.01); border-left: 4px solid var(--color-amber); padding: 0.8rem; border-radius: 4px; font-size: 0.78rem; line-height: 1.4; margin-top: 1.5rem; color: var(--text-secondary);">
+                    <strong>Regla de Decisión PM:</strong> Casi siempre empezá con RAG. Solo pasá a Fine-Tuning si necesitás obligar al modelo a responder con un formato JSON milimétrico que no tolera fallas sintácticas de API.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: INTERACTIVE ROI CALCULATOR (EXERCISE 1) -->
+        <div class="slide" id="slide-6">
+            <h2 class="slide-title">Ejercicio 1: Calculadora de ROI (Auditoría Fluvial)</h2>
+            <p class="slide-subtitle">Arrastrá los selectores para simular el volumen mensual y costo laboral y calculá el ahorro neto de la IA.</p>
+            
+            <div class="grid-2">
+                <!-- Left: Controls -->
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div class="calculator-row">
+                            <span class="calculator-label">Contratos a Auditar / Mes</span>
+                            <span class="calculator-value" id="calc-volume-val">10,000</span>
+                        </div>
+                        <input type="range" min="1000" max="30000" step="1000" value="10000" class="calculator-slider" id="calc-volume" oninput="calculateROI()">
+                        
+                        <div class="calculator-row">
+                            <span class="calculator-label">Costo Hora Analista (USD)</span>
+                            <span class="calculator-value" id="calc-hourly-val">$15</span>
+                        </div>
+                        <input type="range" min="8" max="40" step="1" value="15" class="calculator-slider" id="calc-hourly" oninput="calculateROI()">
+
+                        <div style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.45; background: rgba(0,0,0,0.2); padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.04);">
+                            • <strong>Supuestos del Modelo de Costo IA:</strong><br>
+                            10k Tokens Entrada por Contrato (2k completos, 8k cacheados con 80% dto) + 500 Tokens de Salida.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Calculations & Ahorro -->
+                <div class="glass-card" style="border-color: rgba(16, 185, 129, 0.3);">
+                    <h3 style="font-family: var(--font-display); font-size: 1.1rem; color: var(--color-green); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="activity"></i> Comparativa de Costos Mensuales
+                    </h3>
+                    
+                    <div class="results-box">
+                        <div class="results-row">
+                            <span>Factura API IA sin Caching:</span>
+                            <span id="cost-no-cache" style="color: var(--color-red); font-family: monospace;">$0.00</span>
+                        </div>
+                        <div class="results-row">
+                            <span style="font-weight: 600; color: var(--color-green);">Factura API IA con Caching (Factible):</span>
+                            <span id="cost-cache" style="font-weight: 700; color: var(--color-green); font-family: monospace;">$0.00</span>
+                        </div>
+                        <div class="results-row" style="border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.5rem; margin-top: 0.5rem;">
+                            <span>Costo Auditoría Manual Humana:</span>
+                            <span id="cost-human" style="font-family: monospace;">$0.00</span>
+                        </div>
+                        
+                        <div class="results-row" style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.3rem;">
+                            <span>Horas de Analista requeridas:</span>
+                            <span id="hours-needed" style="font-family: monospace;">0 hrs</span>
+                        </div>
+                        
+                        <div class="results-row" style="font-size: 0.8rem; color: var(--text-secondary);">
+                            <span>Personal Equivalente (FTEs):</span>
+                            <span id="ftes-needed" style="font-family: monospace;">0.0</span>
+                        </div>
+
+                        <div class="results-row total">
+                            <span>Ahorro Mensual Neto:</span>
+                            <span id="roi-savings" style="font-family: monospace;">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: SEGURIDAD Y DATA LEAKAGE -->
+        <div class="slide" id="slide-7">
+            <h2 class="slide-title">Seguridad Corporativa: Fuga de Datos</h2>
+            <p class="slide-subtitle">Cómo blindar los datos comerciales sensibles de la empresa para evitar filtraciones indeseadas.</p>
+            
+            <div class="grid-2">
+                <div class="glass-card">
+                    <h3 style="font-family: var(--font-display); font-size: 1.2rem; color: var(--color-red); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="shield-alert"></i> Riesgo de Data Leakage
+                    </h3>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem;">
+                        Si los operarios o el propio agente inyectan información sensible (tarifas, nombres de barcazas, calados secretos) en llamadas a APIs de LLM externas.
+                    </p>
+                    <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45;">
+                        Los proveedores estándar pueden almacenar y usar esa información para re-entrenar sus modelos públicos, exponiendo tus datos comerciales a competidores.
+                    </p>
+                </div>
+
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 style="font-family: var(--font-display); font-size: 1.15rem; color: var(--color-green); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="shield"></i> Mitigaciones Corporativas
+                        </h3>
+                        <ul style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.4rem;">
+                            <li><strong>Enterprise API Contracts</strong>: Acuerdos legales con políticas de exclusión de entrenamiento (Zero Data Retention).</li>
+                            <li><strong>API Gateway Proxy</strong>: Filtros de seguridad locales que ofuscan o limpian PII (Datos Personales) o PI comercial antes de llamar al LLM externo.</li>
+                            <li><strong>Bases de Datos Vectoriales Propias</strong>: Servidas en tu nube elástica privada y protegidas con controles de acceso por inquilino.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: EVALS DE CALIDAD -->
+        <div class="slide" id="slide-8">
+            <h2 class="slide-title">Suite de Evaluaciones (AI Evals)</h2>
+            <p class="slide-subtitle">El desafío de testear software no-determinista y cómo se audita científicamente la precisión semántica.</p>
+            
+            <div class="grid-2">
+                <div class="glass-card">
+                    <h3 style="font-family: var(--font-display); font-size: 1.15rem; color: var(--color-amber); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="check-square"></i> Del Testing Manual a Evals
+                    </h3>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem;">
+                        Chatear cinco minutos con el bot no sirve para validar calidad en producción. Al ser probabilístico, un prompt que funcionó hoy puede dar una alucinación mañana.
+                    </p>
+                    <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45;">
+                        Se requiere una suite de <strong>Evals automatizadas</strong> que compare la salida del agente contra rúbricas semánticas y retorne scores de exactitud.
+                    </p>
+                </div>
+
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 style="font-family: var(--font-display); font-size: 1.1rem; color: #ffffff; margin-bottom: 0.8rem;">Métricas Semánticas de Calidad</h3>
+                        <ul style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                            <li><strong style="color: var(--color-green);">Fidelidad (Faithfulness)</strong>: ¿La respuesta se basa estrictamente en la base de datos de silos (cero alucinación)?</li>
+                            <li><strong style="color: var(--color-blue);">Relevancia de Contexto</strong>: ¿La base de datos vectorial recuperó los chunks exactos del silo solicitado?</li>
+                            <li><strong style="color: var(--color-purple);">Relevancia de Respuesta</strong>: ¿Resuelve directamente la pregunta del operario del puerto?</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: INTERACTIVE EVALS CHECKER (EXERCISE 2) -->
+        <div class="slide" id="slide-9">
+            <h2 class="slide-title">Ejercicio 2: Rúbricas Evals en Acción</h2>
+            <p class="slide-subtitle">Audita esta respuesta del bot arrastrando los sliders y determiná si el sistema aprueba el filtro de calidad.</p>
+            
+            <div class="grid-2">
+                <!-- Left: Response to Audit -->
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between; max-width: none;">
+                    <div>
+                        <span class="nav-session" style="background: rgba(59,130,246,0.15); color: var(--color-blue); border-color: rgba(59,130,246,0.3); margin-bottom: 0.8rem; display: inline-block;">DATOS DE ENTRADA (Silo DB)</span>
+                        <div style="font-size: 0.78rem; font-family: monospace; background: rgba(0,0,0,0.3); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.04); margin-bottom: 1rem; color: var(--text-secondary); line-height: 1.45;">
+                            [Silo 3] Stock: 4.500 Tn. Grano: Soja Cargill. Estado: Disponible.<br>
+                            [Silo 4] Stock: 1.200 Tn. Grano: Soja. Estado: Mantenimiento.
+                        </div>
+                        
+                        <span class="nav-session" style="background: rgba(139,92,246,0.15); color: var(--color-purple); border-color: rgba(139,92,246,0.3); margin-bottom: 0.8rem; display: inline-block;">RESPUESTA DE IA EN EVALUACIÓN</span>
+                        <div style="font-size: 0.82rem; background: rgba(255,255,255,0.02); padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); line-height: 1.45; color: #ffffff;">
+                            "En el Silo 3 hay 4.500 Tn de Soja disponibles para despacho. En el Silo 4 hay 1.200 Tn de Soja, pero se encuentra en mantenimiento y no se puede tocar. Además, estimamos que la barcaza llegará mañana a la mañana".
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Audit Sliders -->
+                <div class="glass-card" style="border-color: rgba(245,158,11,0.25);">
+                    <h3 style="font-family: var(--font-display); font-size: 1.1rem; color: var(--color-amber); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="sliders"></i> Rúbricas de Calidad
+                    </h3>
+                    
+                    <div>
+                        <div class="calculator-row">
+                            <span class="calculator-label" style="font-size: 0.82rem;">Fidelidad (Sin Alucinaciones)</span>
+                            <span class="score-indicator" id="eval-fidelidad-val">1.0</span>
+                        </div>
+                        <input type="range" min="0" max="1" step="0.5" value="0.5" class="calculator-slider" id="eval-fidelidad" oninput="calculateEval()">
+                        
+                        <div class="calculator-row">
+                            <span class="calculator-label" style="font-size: 0.82rem;">Relevancia de la Respuesta</span>
+                            <span class="score-indicator" id="eval-relevancia-val">1.0</span>
+                        </div>
+                        <input type="range" min="0" max="1" step="0.5" value="1.0" class="calculator-slider" id="eval-relevancia" oninput="calculateEval()">
+
+                        <div class="results-box" style="margin-top: 1rem; padding: 0.8rem 1.2rem; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <span class="calculator-label" style="font-size: 0.8rem; display: block;">Estado de Calidad:</span>
+                                <span id="eval-status" class="eval-tag success" style="margin-top: 0.3rem; display: inline-block;">APROBADO</span>
+                            </div>
+                            <div style="font-size: 0.72rem; color: var(--text-secondary); text-align: right; max-width: 140px;" id="eval-critique">
+                                Aprobado para desplegar en staging.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: OBSERVABILITY -->
+        <div class="slide" id="slide-10">
+            <h2 class="slide-title">Observabilidad &amp; Tracing (Langfuse)</h2>
+            <p class="slide-subtitle">Inspeccioná el flujo de ejecución ("Trace") del agente e identificá costos y latencias de cada micro-paso.</p>
+            
+            <div class="grid-2">
+                <!-- Left: Mock Trace Tree -->
+                <div class="glass-card" style="max-width: none;">
+                    <h3 style="font-family: var(--font-display); font-size: 1.05rem; color: var(--color-purple); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="git-merge"></i> Trace Tree: Auditoría Silos (Langfuse)
+                    </h3>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                        <div class="trace-item" style="border-color: var(--color-purple);">
+                            <div class="trace-header" onclick="toggleTrace('trace-1')">
+                                <span><span>🟢</span> [Trace] Auditoría Silos</span>
+                                <span style="font-family: monospace; font-size: 0.75rem; color: var(--color-purple);">Total: $0.0275 | 1.8s</span>
+                            </div>
+                            <div class="trace-body" id="trace-1" style="display: block;">
+                                Iniciado por: franbondino@gmail.com<br>
+                                Fecha: 2026-06-30T19:25:52Z<br>
+                                Modelo: gpt-4o-2024-05-13
+                            </div>
+                        </div>
+                        
+                        <div class="trace-item" style="border-color: var(--color-blue); margin-left: 25px;">
+                            <div class="trace-header" onclick="toggleTrace('trace-2')">
+                                <span>🔍 [Retrieval] Vector DB Search</span>
+                                <span style="font-family: monospace; font-size: 0.75rem; color: var(--color-blue);">0.0001 USD | 250ms</span>
+                            </div>
+                            <div class="trace-body" id="trace-2">
+                                Query: "Stock de silo 3"<br>
+                                Algoritmo: HNSW Cosine Similarity<br>
+                                Chunks Retornados: 2 chunks
+                            </div>
+                        </div>
+
+                        <div class="trace-item" style="border-color: var(--color-amber); margin-left: 25px;">
+                            <div class="trace-header" onclick="toggleTrace('trace-3')">
+                                <span>🤖 [LLM Call] Generar Respuesta</span>
+                                <span style="font-family: monospace; font-size: 0.75rem; color: var(--color-amber);">0.0274 USD | 1.55s</span>
+                            </div>
+                            <div class="trace-body" id="trace-3">
+                                Input Tokens: 2,000 (Normal) + 8,000 (Cached)<br>
+                                Output Tokens: 500<br>
+                                Cache Hit: TRUE (80%)<br>
+                                TTFT: 180ms
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Explanatory Card -->
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: center;">
+                    <div style="background: rgba(139, 92, 246, 0.05); border-left: 4px solid var(--color-purple); padding: 0.8rem; border-radius: 4px; font-size: 0.82rem; line-height: 1.45; margin-bottom: 1rem;">
+                        <strong>Auditoría Semántica:</strong> Si un usuario reporta una mala respuesta, en Langfuse ves la "caja negra" del modelo paso a paso para depurar el prompt inyectado.
+                    </div>
+                    <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); padding: 1rem; border-radius: 8px; font-size: 0.78rem; text-align: left; line-height: 1.4; color: var(--text-secondary);">
+                        • <strong>Traces (Trazas)</strong>: El mapa completo de la petición.<br>
+                        • <strong>Spans (Lapsos)</strong>: Tiempos y recursos consumidos por cada micro-servicio (ej: base de datos, API externa, modelo).
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: PREPARACION DE ENTREVISTAS -->
+        <div class="slide" id="slide-11">
+            <h2 class="slide-title">Preparación de Entrevistas de PM IT/IA</h2>
+            <p class="slide-subtitle">Cómo plantarse frente a un Hiring Manager técnico y defender tu posicionamiento estratégico.</p>
+            
+            <div class="grid-2">
+                <div class="glass-card">
+                    <h3 style="font-family: var(--font-display); font-size: 1.15rem; color: var(--color-amber); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="user-check"></i> El Perfil del PM IA
+                    </h3>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem;">
+                        Los reclutadores de tecnología no buscan a un programador de modelos. Buscan a un PM que entienda la <strong>gobernanza técnica</strong> y la <strong>viabilidad financiera</strong> del producto.
+                    </p>
+                    <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45;">
+                        Debés demostrar que sabés hablar tanto el idioma técnico de los desarrolladores (APIs, latencias, evals) como el de los gerentes de finanzas (COGS, ROI, presupuestos).
+                    </p>
+                </div>
+
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 style="font-family: var(--font-display); font-size: 1.1rem; color: #ffffff; margin-bottom: 0.8rem;">Tres Pilares de Defensa del PM</h3>
+                        <ul style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.4rem;">
+                            <li><strong style="color: var(--color-amber);">Gestión Financiera</strong>: Argumentar mitigación de facturas descontroladas de tokens (prompt caching, limits).</li>
+                            <li><strong style="color: var(--color-blue);">Gobernanza de Seguridad</strong>: Evitar fuga de datos del negocio (PII) mediante proxies y gateways de APIs.</li>
+                            <li><strong style="color: var(--color-purple);">Aseguramiento de Calidad</strong>: Explicar suites de pruebas automatizadas (Evals) contra alucinaciones.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: INTERACTIVE SIMULATOR - CASE 1 (BUDGET BLOWOUT) -->
+        <div class="slide" id="slide-12">
+            <h2 class="slide-title">Caso 1: Desvío Inesperado de Presupuesto</h2>
+            <p class="slide-subtitle">Simulación de Roleplay. Click en los botones para ver cómo se descontrola el costo y cómo solucionarlo.</p>
+            
+            <div class="grid-2">
+                <!-- Left: Simulator Console -->
+                <div class="glass-card">
+                    <h3 style="font-family: var(--font-display); font-size: 1.05rem; color: var(--color-red); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="alert-triangle"></i> Monitor de Costos en Vivo
+                    </h3>
+                    
+                    <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); padding: 1.2rem; border-radius: 10px; text-align: center; margin-bottom: 1rem;">
+                        <p style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 1px; margin-bottom: 0.3rem;">FACTURA MENSUAL ACUMULADA</p>
+                        <p style="font-size: 2.2rem; font-weight: 800; font-family: monospace; color: var(--color-red);" id="sim-cost-val">$0.00</p>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.3rem;" id="sim-cost-lbl">Simulación detenida.</p>
+                    </div>
+
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn-nav" id="btn-run-cost-leak" onclick="startCostLeak()" style="border-color: var(--color-red); color: var(--color-red); background: rgba(239,68,68,0.05);">Simular Desvío Costo</button>
+                        <button class="btn-nav" id="btn-apply-cost-fix" onclick="applyCostFix()" disabled style="border-color: var(--color-green); color: var(--color-green); background: rgba(16,185,129,0.05);">Aplicar Caching &amp; Limits</button>
+                    </div>
+                </div>
+
+                <!-- Right: Script and Roleplay answer -->
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div class="chat-container" id="chat-c1">
+                        <div class="chat-bubble mentor">
+                            <strong>Hiring Manager:</strong> "Lanzamos el bot al puerto y en una semana quemamos todo el presupuesto de API de tokens del mes. ¿Qué pasó y qué hacés?"
+                        </div>
+                    </div>
+                    <div style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.45; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.8rem;">
+                        <strong>Causa Técnica:</strong> Loops de reintento infinitos en el agente sin tope máximo de llamadas y carencia de Prompt Caching.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 13: INTERACTIVE SIMULATOR - CASE 2 (LATENCY BOTTLENECK) -->
+        <div class="slide" id="slide-13">
+            <h2 class="slide-title">Caso 2: Latencia Crítica en Producción</h2>
+            <p class="slide-subtitle">Simulación de Roleplay. Click en los botones para simular la velocidad de respuesta del bot.</p>
+            
+            <div class="grid-2">
+                <!-- Left: Simulator Console -->
+                <div class="glass-card">
+                    <h3 style="font-family: var(--font-display); font-size: 1.05rem; color: var(--color-blue); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="hourglass"></i> Consola del Puerto (Latencia)
+                    </h3>
+                    
+                    <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); padding: 1.2rem; border-radius: 10px; text-align: center; margin-bottom: 1rem;">
+                        <p style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 1px; margin-bottom: 0.3rem;">TIEMPO DE ESPERA (TTFT)</p>
+                        <p style="font-size: 2.2rem; font-weight: 800; font-family: monospace; color: var(--color-blue);" id="sim-latency-val">0.0s</p>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem; text-align: left; height: 40px; font-family: monospace;" id="sim-latency-log">Esperando consulta...</div>
+                    </div>
+
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn-nav" id="btn-run-lat-leak" onclick="startLatencyLeak()" style="border-color: var(--color-red); color: var(--color-red); background: rgba(239,68,68,0.05);">Llamada Normal (Pesada)</button>
+                        <button class="btn-nav" id="btn-apply-lat-fix" onclick="applyLatencyFix()" disabled style="border-color: var(--color-green); color: var(--color-green); background: rgba(16,185,129,0.05);">Habilitar Streaming &amp; Router</button>
+                    </div>
+                </div>
+
+                <!-- Right: Script and Roleplay answer -->
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div class="chat-container" id="chat-c2">
+                        <div class="chat-bubble mentor">
+                            <strong>Hiring Manager:</strong> "Los operarios en las barcazas se quejan de que el bot tarda 12 segundos en empezar a responder. ¿Cómo bajas ese tiempo?"
+                        </div>
+                    </div>
+                    <div style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.45; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.8rem;">
+                        <strong>Causa Técnica:</strong> Inyección inútil de manuales gigantescos (sin chunking calibrado) y falta de habilitación de Token Streaming en el backend.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 14: INTERACTIVE SIMULATOR - CASE 3 (DATA LEAKAGE PREVENTION) -->
+        <div class="slide" id="slide-14">
+            <h2 class="slide-title">Caso 3: Blindaje de Fuga de Datos</h2>
+            <p class="slide-subtitle">Simulación de Roleplay. Click en los botones para simular la fuga y la activación del proxy de seguridad.</p>
+            
+            <div class="grid-2">
+                <!-- Left: Simulator Console -->
+                <div class="glass-card">
+                    <h3 style="font-family: var(--font-display); font-size: 1.05rem; color: var(--color-amber); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="shield-check"></i> Gateway de Seguridad (Proxy)
+                    </h3>
+                    
+                    <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); padding: 1.2rem; border-radius: 10px; margin-bottom: 1rem;">
+                        <p style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 1px; margin-bottom: 0.5rem; text-align: center;">PETICIÓN SALIENTE DE LA IA</p>
+                        <div style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45; font-family: monospace; background: rgba(0,0,0,0.3); padding: 0.8rem; border-radius: 6px; height: 50px; overflow-y: auto;" id="sim-security-log">
+                            Esperando envío...
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn-nav" id="btn-run-sec-leak" onclick="startSecurityLeak()" style="border-color: var(--color-red); color: var(--color-red); background: rgba(239,68,68,0.05);">Enviar Petición Cruda</button>
+                        <button class="btn-nav" id="btn-apply-sec-fix" onclick="applySecurityFix()" disabled style="border-color: var(--color-green); color: var(--color-green); background: rgba(16,185,129,0.05);">Encender API Gateway Proxy</button>
+                    </div>
+                </div>
+
+                <!-- Right: Script and Roleplay answer -->
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div class="chat-container" id="chat-c3">
+                        <div class="chat-bubble mentor">
+                            <strong>Hiring Manager:</strong> "Tengo miedo de que el agente comparta información comercial confidencial de Cargill con Claudio. ¿Cómo lo blindás?"
+                        </div>
+                    </div>
+                    <div style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.45; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.8rem;">
+                        <strong>Causa Técnica:</strong> El agente posee credenciales y acceso directo de escritura a APIs sin aislamiento lógico de seguridad ni regex de protección (PII).
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 15: CONCLUSION -->
+        <div class="slide" id="slide-15">
+            <div class="glass-card text-center" style="max-width: 800px; padding: 3rem;">
+                <span class="nav-session" style="display: inline-block; margin-bottom: 1.2rem;">programa completado</span>
+                <h2 class="slide-title" style="font-size: 2.8rem; margin-bottom: 1rem;">¡Felicitaciones por Completar el Plan!</h2>
+                <p style="font-size: 1.05rem; color: var(--text-secondary); line-height: 1.6; max-width: 600px; margin: 0 auto 2rem;">
+                    Has recorrido la modernización de DevOps, ideación de IA, diseño de orquestadores agénticos avanzados y los economics/evals corporativos. Estás listo para posicionarte en entrevistas IT.
+                </p>
+                <div style="display: inline-flex; gap: 0.8rem;">
+                    <a href="./glosario_completo_sesion_4.html" class="btn-nav" style="border-color: var(--color-amber); color: var(--color-amber); text-decoration: none;"><i data-lucide="book-open"></i> Explorar Glosario S4</a>
+                    <a href="../index.html" class="btn-nav" style="text-decoration: none;"><i data-lucide="home"></i> Portal Principal</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- NAVIGATION BAR -->
+    <div class="nav-bar">
+        <div class="nav-left">
+            <span class="nav-logo">MENTORÍA PM</span>
+            <span class="nav-session" id="slide-num-badge">Slide 1 / 15</span>
+        </div>
+        <div class="nav-right">
+            <button class="btn-nav" id="btn-prev" onclick="prevSlide()" disabled><i data-lucide="arrow-left" class="icon-sm"></i> Anterior</button>
+            <button class="btn-nav" id="btn-next" onclick="nextSlide()">Siguiente <i data-lucide="arrow-right" class="icon-sm"></i></button>
+        </div>
+    </div>
+
+    <script>
+        // SLIDESHOW CONTROLLER STATE
+        const totalSlides = 15;
+        let currentSlide = 1;
+
+        function updateNavigation() {
+            // Update slides visibility
+            for (let i = 1; i <= totalSlides; i++) {
+                const slide = document.getElementById(`slide-${i}`);
+                if (i === currentSlide) {
+                    slide.classList.add('active');
+                    slide.classList.remove('prev');
+                } else if (i < currentSlide) {
+                    slide.classList.remove('active');
+                    slide.classList.add('prev');
+                } else {
+                    slide.classList.remove('active');
+                    slide.classList.remove('prev');
+                }
+            }
+
+            // Update progress bar
+            const progress = ((currentSlide - 1) / (totalSlides - 1)) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+
+            // Update badge text
+            document.getElementById('slide-num-badge').textContent = `Slide ${currentSlide} / ${totalSlides}`;
+
+            // Enable/disable buttons
+            document.getElementById('btn-prev').disabled = (currentSlide === 1);
+            document.getElementById('btn-next').disabled = (currentSlide === totalSlides);
+            
+            // Run context calculations if slide active
+            if (currentSlide === 6) {
+                calculateROI();
+            } else if (currentSlide === 9) {
+                calculateEval();
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateNavigation();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateNavigation();
+            }
+        }
+
+        // KEYBOARD SHORTCUTS
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'ArrowRight' || e.code === 'Space') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.code === 'ArrowLeft') {
+                e.preventDefault();
+                prevSlide();
+            }
+        });
+
+        // --- INTERACTIVE ENGINE: ROI CALCULATOR (SLIDE 6) ---
+        function calculateROI() {
+            const volume = parseInt(document.getElementById('calc-volume').value);
+            const hourlyRate = parseInt(document.getElementById('calc-hourly').value);
+            
+            // Update labels
+            document.getElementById('calc-volume-val').textContent = volume.toLocaleString('es-AR');
+            document.getElementById('calc-hourly-val').textContent = `$${hourlyRate}`;
+            
+            // Calculations
+            // Cost RAG normal (Input: 10,000 tokens @ $5/M, Output: 500 tokens @ $15/M)
+            const inputCostNoCache = (10000 / 1000000) * 5;
+            const outputCost = (500 / 1000000) * 15;
+            const totalUnitCostNoCache = inputCostNoCache + outputCost;
+            const monthlyCostNoCache = totalUnitCostNoCache * volume;
+
+            // Cost RAG cached (2000 tokens full price @ $5/M, 8000 tokens cached @ $1.25/M, 500 output @ $15/M)
+            const inputCostFull = (2000 / 1000000) * 5;
+            const inputCostCached = (8000 / 1000000) * 1.25;
+            const totalUnitCostCache = inputCostFull + inputCostCached + outputCost;
+            const monthlyCostCache = totalUnitCostCache * volume;
+
+            // Human costs (5 contracts/hour)
+            const hoursNeeded = volume / 5;
+            const ftesNeeded = hoursNeeded / 160; // 160 hrs/month FTE
+            const monthlyCostHuman = hoursNeeded * hourlyRate;
+
+            const savings = monthlyCostHuman - monthlyCostCache;
+
+            // Render results
+            document.getElementById('cost-no-cache').textContent = `$${monthlyCostNoCache.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} USD`;
+            document.getElementById('cost-cache').textContent = `$${monthlyCostCache.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} USD`;
+            document.getElementById('cost-human').textContent = `$${monthlyCostHuman.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} USD`;
+            document.getElementById('hours-needed').textContent = `${hoursNeeded.toLocaleString('es-AR')} horas`;
+            document.getElementById('ftes-needed').textContent = ftesNeeded.toFixed(1);
+            document.getElementById('roi-savings').textContent = `$${savings.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} USD`;
+        }
+
+        // --- INTERACTIVE ENGINE: EVALS RUBRIC (SLIDE 9) ---
+        function calculateEval() {
+            const fidelidad = parseFloat(document.getElementById('eval-fidelidad').value);
+            const relevancia = parseFloat(document.getElementById('eval-relevancia').value);
+            
+            // Render indicator text
+            document.getElementById('eval-fidelidad-val').textContent = fidelidad.toFixed(1);
+            document.getElementById('eval-relevancia-val').textContent = relevancia.toFixed(1);
+            
+            const totalScore = (fidelidad + relevancia) / 2;
+            const statusTag = document.getElementById('eval-status');
+            const critique = document.getElementById('eval-critique');
+
+            if (totalScore >= 0.75 && fidelidad >= 0.8) {
+                statusTag.textContent = "APROBADO";
+                statusTag.className = "eval-tag success";
+                critique.textContent = "Excelente veracidad. Aprobado para desplegar en staging.";
+                critique.style.color = "var(--color-green)";
+            } else {
+                statusTag.textContent = "RECHAZADO";
+                statusTag.className = "eval-tag fail";
+                critique.textContent = fidelidad < 0.8 ? "Falta de fidelidad (alucinación detectada en la barcaza)." : "Relevancia semántica insuficiente.";
+                critique.style.color = "var(--color-red)";
+            }
+        }
+
+        // --- INTERACTIVE ENGINE: TRACE VIEWER (SLIDE 10) ---
+        function toggleTrace(id) {
+            const el = document.getElementById(id);
+            if (el.style.display === 'block') {
+                el.style.display = 'none';
+            } else {
+                el.style.display = 'block';
+            }
+        }
+
+        // --- INTERACTIVE ENGINE: COST LEAK ROLEPLAY (SLIDE 12) ---
+        let costInterval = null;
+        let costSimRunning = false;
+        function startCostLeak() {
+            if (costSimRunning) return;
+            costSimRunning = true;
+            
+            const chat = document.getElementById('chat-c1');
+            const costVal = document.getElementById('sim-cost-val');
+            const costLbl = document.getElementById('sim-cost-lbl');
+            const btnFix = document.getElementById('btn-apply-cost-fix');
+            const btnRun = document.getElementById('btn-run-cost-leak');
+
+            btnRun.disabled = true;
+            btnFix.disabled = false;
+
+            // Add roleplay dialogue
+            chat.innerHTML += `<div class="chat-bubble pm"><strong>PM (Vos):</strong> "Dejame revisar de inmediato la traza de Langfuse..."</div>`;
+            chat.scrollTop = chat.scrollHeight;
+
+            let curCost = 0;
+            costInterval = setInterval(() => {
+                curCost += Math.floor(Math.random() * 40) + 10;
+                costVal.textContent = `$${curCost.toLocaleString('es-AR')}.00`;
+                costLbl.textContent = "Factura de tokens saliéndose de control...";
+                
+                chat.scrollTop = chat.scrollHeight;
+            }, 200);
+        }
+
+        function applyCostFix() {
+            if (!costSimRunning) return;
+            clearInterval(costInterval);
+            costSimRunning = false;
+            
+            const chat = document.getElementById('chat-c1');
+            const costVal = document.getElementById('sim-cost-val');
+            const costLbl = document.getElementById('sim-cost-lbl');
+            const btnFix = document.getElementById('btn-apply-cost-fix');
+
+            btnFix.disabled = true;
+            costVal.style.color = "var(--color-green)";
+            costLbl.textContent = "Presupuesto estabilizado.";
+
+            chat.innerHTML += `<div class="chat-bubble pm" style="background: rgba(16,185,129,0.1); border-color: var(--color-green);"><strong>PM (Vos):</strong> "Hiring Manager, detecté el desvío. El orquestador estaba en un loop infinito de reintentos por un error 502 de la API, consumiendo 12.000 tokens por segundo. Apliqué un límite estricto de 5 iteraciones en el orquestador y encendí Prompt Caching para el prompt del sistema estático, lo que estabilizó el consumo y reducirá los costos en un 80%".</div>`;
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        // --- INTERACTIVE ENGINE: LATENCY LEAK ROLEPLAY (SLIDE 13) ---
+        let latencySimRunning = false;
+        function startLatencyLeak() {
+            if (latencySimRunning) return;
+            latencySimRunning = true;
+
+            const chat = document.getElementById('chat-c2');
+            const latVal = document.getElementById('sim-latency-val');
+            const latLog = document.getElementById('sim-latency-log');
+            const btnFix = document.getElementById('btn-apply-lat-fix');
+            const btnRun = document.getElementById('btn-run-lat-leak');
+
+            btnRun.disabled = true;
+            btnFix.disabled = false;
+
+            chat.innerHTML += `<div class="chat-bubble pm"><strong>PM (Vos):</strong> "Voy a simular la consulta pesada cargando todo el historial..."</div>`;
+            chat.scrollTop = chat.scrollHeight;
+
+            let curLat = 0;
+            latLog.textContent = "Cargando 40 páginas de manuales en la consulta...";
+            let interval = setInterval(() => {
+                curLat += 0.5;
+                latVal.textContent = `${curLat.toFixed(1)}s`;
+                
+                if (curLat >= 8.0) {
+                    clearInterval(interval);
+                    latLog.textContent = "IA: 'Los calados admisibles en Rosario hoy son...'";
+                    latVal.style.color = "var(--color-red)";
+                }
+            }, 250);
+        }
+
+        function applyLatencyFix() {
+            if (!latencySimRunning) return;
+            latencySimRunning = false;
+
+            const chat = document.getElementById('chat-c2');
+            const latVal = document.getElementById('sim-latency-val');
+            const latLog = document.getElementById('sim-latency-log');
+            const btnFix = document.getElementById('btn-apply-lat-fix');
+
+            btnFix.disabled = true;
+            
+            chat.innerHTML += `<div class="chat-bubble pm" style="background: rgba(16,185,129,0.1); border-color: var(--color-green);"><strong>PM (Vos):</strong> "Hiring Manager, optimicé la latencia. Primero habilité Token Streaming para que el operario empiece a leer palabras a los milisegundos en lugar de esperar la compilación completa de la API. Segundo, introduje Prompt Caching para el contexto de silos, reduciendo el tiempo de primer token de 8.0s a escasos 1.2s".</div>`;
+            chat.scrollTop = chat.scrollHeight;
+
+            let curLat = 0;
+            latLog.textContent = "IA: [Streaming en curso] 'Rosario calados...'";
+            let interval = setInterval(() => {
+                curLat += 0.2;
+                latVal.textContent = `${curLat.toFixed(1)}s`;
+                if (curLat >= 1.2) {
+                    clearInterval(interval);
+                    latVal.style.color = "var(--color-green)";
+                    latLog.textContent = "Flujo completado.";
+                }
+            }, 100);
+        }
+
+        // --- INTERACTIVE ENGINE: SECURITY LEAK ROLEPLAY (SLIDE 14) ---
+        let securitySimRunning = false;
+        function startSecurityLeak() {
+            if (securitySimRunning) return;
+            securitySimRunning = true;
+
+            const chat = document.getElementById('chat-c3');
+            const secLog = document.getElementById('sim-security-log');
+            const btnFix = document.getElementById('btn-apply-sec-fix');
+            const btnRun = document.getElementById('btn-run-sec-leak');
+
+            btnRun.disabled = true;
+            btnFix.disabled = false;
+
+            chat.innerHTML += `<div class="chat-bubble pm"><strong>PM (Vos):</strong> "Revisando traza de llamada externa..."</div>`;
+            chat.scrollTop = chat.scrollHeight;
+
+            secLog.innerHTML = `<span style="color: var(--color-red);">ENVIANDO CRUDA: {"silo_stock_key": "4500tn", "contrato_secreto_cliente": "Cargill-Claudio"}</span>`;
+        }
+
+        function applySecurityFix() {
+            if (!securitySimRunning) return;
+            securitySimRunning = false;
+
+            const chat = document.getElementById('chat-c3');
+            const secLog = document.getElementById('sim-security-log');
+            const btnFix = document.getElementById('btn-apply-sec-fix');
+
+            btnFix.disabled = true;
+
+            secLog.innerHTML = `<span style="color: var(--color-green);">OFUSCADO EN PROXY: {"silo_stock_key": "4500tn", "contrato_secreto_cliente": "[REDACTED_CLIENT_KEY]"}</span>`;
+
+            chat.innerHTML += `<div class="chat-bubble pm" style="background: rgba(16,185,129,0.1); border-color: var(--color-green);"><strong>PM (Vos):</strong> "Hiring Manager, blindé la privacidad de la empresa. Implementé un API Gateway Proxy que intercepta todas las llamadas salientes del agente de IA. Este Gateway ejecuta expresiones regulares y modelos locales que filtran y ofuscan cualquier propiedad intelectual (como nombres confidenciales) antes de redirigir los datos a la API pública de OpenAI".</div>`;
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        // INITIALIZATION
+        lucide.createIcons();
+        updateNavigation();
+    </script>
+</body>
+</html>

@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual del Mentor: Sesión 4 — Simulación de Entrevista &amp; Evals</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root {
+            --bg-primary: #0b0f19;
+            --bg-secondary: #111827;
+            --bg-card: #1f2937;
+            --color-blue: #3b82f6;
+            --color-purple: #8b5cf6;
+            --color-green: #10b981;
+            --color-red: #ef4444;
+            --color-orange: #f97316;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --border-color: #374151;
+            --font-display: 'Outfit', sans-serif;
+            --font-sans: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        .lucide {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2px;
+            color: currentColor;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .icon-sm { width: 16px; height: 16px; stroke-width: 2px; }
+        .icon-lg { width: 26px; height: 26px; stroke-width: 1.5px; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* LAYOUT STYLING */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR (NAV) */
+        .sidebar {
+            width: 320px;
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            padding: 2.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-title {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 2rem;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #ffffff 40%, var(--color-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .sidebar-item a {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.75rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-item a:hover {
+            background: rgba(255, 255, 255, 0.03);
+            color: #ffffff;
+        }
+
+        .sidebar-item.active a {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--color-blue);
+            font-weight: 600;
+            border-left: 3px solid var(--color-blue);
+            border-radius: 0 8px 8px 0;
+            padding-left: 0.8rem;
+        }
+
+        /* MAIN CONTENT AREA */
+        .main-content {
+            margin-left: 320px;
+            flex-grow: 1;
+            padding: 4rem 6rem;
+            max-width: 1200px;
+            width: calc(100% - 320px);
+        }
+
+        header {
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .meta-tag {
+            display: inline-block;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: var(--color-blue);
+            background: rgba(59, 130, 246, 0.08);
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.15;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #ffffff 50%, #a5b4fc 90%, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            line-height: 1.6;
+        }
+
+        /* CONTENT SECTIONS */
+        section {
+            margin-bottom: 5rem;
+            scroll-margin-top: 2rem;
+        }
+
+        h2 {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 1.8rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        h2::before {
+            content: '';
+            width: 4px;
+            height: 1.8rem;
+            background: var(--color-purple);
+            border-radius: 2px;
+            display: inline-block;
+        }
+
+        h3 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #f3f4f6;
+            margin: 2rem 0 1rem 0;
+        }
+
+        p {
+            color: #d1d5db;
+            margin-bottom: 1.25rem;
+            font-size: 1rem;
+            line-height: 1.65;
+        }
+
+        /* CALLOUT / ALERT BOXES */
+        .callout {
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 4px solid var(--border-color);
+            padding: 1.25rem 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .callout.tip { border-left-color: var(--color-blue); background: rgba(59, 130, 246, 0.02); }
+        .callout.tip .callout-title { color: #60a5fa; }
+        
+        .callout.important { border-left-color: var(--color-purple); background: rgba(139, 92, 246, 0.02); }
+        .callout.important .callout-title { color: #c084fc; }
+
+        .callout.warning { border-left-color: var(--color-orange); background: rgba(249, 115, 22, 0.02); }
+        .callout.warning .callout-title { color: #fdbb74; }
+
+        /* TABLES */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            font-size: 0.95rem;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th {
+            background-color: var(--bg-secondary);
+            color: #ffffff;
+            text-align: left;
+            padding: 1rem 1.2rem;
+            font-family: var(--font-display);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid var(--border-color);
+            color: #cbd5e1;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .highlight-red { color: #f87171; font-weight: 500; }
+        .highlight-green { color: #34d399; font-weight: 600; }
+        .highlight-purple { color: #c084fc; font-weight: 500; }
+
+        /* CODE BLOCKS */
+        code {
+            font-family: var(--font-mono);
+            background: rgba(255, 255, 255, 0.06);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.85em;
+            color: #f472b6;
+        }
+
+        pre {
+            background: #090d16;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+        }
+
+        /* GRID CARDS */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            transform: translateY(-2px);
+        }
+
+        .card-number {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 800;
+            color: rgba(59, 130, 246, 0.15);
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .card-title {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* RESPONSIVE DESIGN (MEDIA QUERIES) */
+        @media (max-width: 1024px) {
+            .app-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                padding: 1.5rem;
+                height: auto;
+            }
+            .sidebar-title {
+                margin-bottom: 1rem;
+            }
+            .sidebar-menu {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            .sidebar-item a {
+                padding: 0.5rem 0.8rem;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 2rem;
+                width: 100%;
+                max-width: 100%;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+
+        /* PRINT MEDIA STYLING */
+        @media print {
+            body { background-color: #ffffff; color: #000000; font-size: 11pt; }
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; padding: 0; max-width: 100%; }
+            h1, h2, h3 { color: #000000 !important; background: none !important; -webkit-text-fill-color: initial !important; }
+            h2::before { background: #000000; }
+            .callout { background: #f8fafc !important; border-left-color: #64748b !important; color: #0f172a !important; }
+            table { border: 1px solid #cbd5e1 !important; }
+            th { background-color: #f1f5f9 !important; color: #0f172a !important; border-bottom: 1px solid #cbd5e1 !important; }
+            td { border-bottom: 1px solid #e2e8f0 !important; color: #334155 !important; }
+            pre { background: #f8fafc !important; color: #0f172a !important; border: 1px solid #cbd5e1 !important; }
+            code { background: #f1f5f9 !important; color: #0f172a !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- SIDEBAR NAVIGATION -->
+        <div class="sidebar">
+            <div class="sidebar-title">MANUAL DEL MENTOR S4</div>
+            <nav>
+                <ul class="sidebar-menu">
+                    <li class="sidebar-item active"><a href="#objetivos"><i data-lucide="target" class="icon-sm"></i> 1. Objetivos &amp; Agenda</a></li>
+                    <li class="sidebar-item"><a href="#guion-diapositivas"><i data-lucide="book-open" class="icon-sm"></i> 2. Guión de Clase</a></li>
+                    <li class="sidebar-item"><a href="#machete-respuestas"><i data-lucide="key" class="icon-sm"></i> 3. Machete de Respuestas</a></li>
+                    <li class="sidebar-item"><a href="#consejos-roleplay"><i data-lucide="users" class="icon-sm"></i> 4. Consejos de Roleplay</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- MAIN CONTENT CONTAINER -->
+        <div class="main-content">
+            
+            <header>
+                <div class="meta-tag">Simulación de Entrevista &amp; Evals</div>
+                <h1>Manual del Mentor: Sesión 4</h1>
+                <div class="subtitle">Guías metodológicas, guiones detallados diapositiva por diapositiva, y simulación de auditoría técnica para Claudio Vernuccio.</div>
+            </header>
+
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <!-- SECTION 1: OBJETIVOS & AGENDA -->
+            <section id="objetivos">
+                <h2>1. Objetivos de Consolidación &amp; Agenda</h2>
+                <p>El núcleo de esta cuarta y última sesión radica en <strong>consolidar</strong> y hacer operativo el conocimiento aprendido en las semanas previas. No se introducen nuevos marcos teóricos extensos. El objetivo principal es estructurar y afinar el vocabulario técnico de Claudio Vernuccio, asegurando que pueda defender decisiones de arquitectura, costos y gobernanza de IA con la autoridad de un <em>Senior Technical Project Manager</em>.</p>
+                
+                <div class="callout important" style="margin-bottom: 2rem;">
+                    <div class="callout-title">
+                        <i data-lucide="shield-alert" class="icon-sm"></i>
+                        <span>La Regla Pedagógica de Cierre: Simulación Activa</span>
+                    </div>
+                    <div class="callout-content">
+                        No des clases teóricas en esta sesión. Claudio ya estudió el material. Tu rol hoy es actuar como un <strong>auditor de calidad y un hiring manager exigente</strong>. Cuestiona sus decisiones, presiona su léxico técnico y corrige cualquier imprecisión conceptual de inmediato.
+                    </div>
+                </div>
+
+                <!-- NEW: MODULO 0 CHECK-IN BOX -->
+                <div class="callout tip" style="margin-bottom: 2rem;">
+                    <div class="callout-title">
+                        <i data-lucide="users" class="icon-sm"></i>
+                        <span>💬 Módulo 0: Check-in y Rompehielos (00 - 05 min)</span>
+                    </div>
+                    <div class="callout-content" style="font-size: 0.9rem;">
+                        <p style="margin-bottom: 0.5rem;"><strong>Objetivo</strong>: Reducir la ansiedad de Claudio ante la simulación y validar su repaso semanal de RAG y Agentes.</p>
+                        <p style="font-style: italic; color: #cbd5e1; margin-bottom: 0.5rem; padding-left: 0.5rem; border-left: 2px solid var(--color-blue);">
+                            "Hola Claudio, ¿cómo estás? Llegamos a la sesión 4. Hoy completamos el ciclo de mentoría. En las sesiones previas construimos las bases de software: Git, entornos, APIs, RAG y flujos agénticos. Hoy no vamos a sumar nada de teoría nueva. Toda tu energía hoy está enfocada en la práctica, la simulación y el speech. Hoy tu rol es defender todo lo que diseñaste como un Senior Technical Project Manager de IA ante directores de tecnología globales. Antes de arrancar con los incidentes, cuéntame: ¿cómo te sientes con el material de las sesiones anteriores y qué dudas te quedaron flotando durante la semana?"
+                        </p>
+                        <ul style="margin-left: 1.2rem; margin-top: 0.5rem;">
+                            <li><strong>Si Claudio duda de su perfil de código:</strong> Recuérdale que su valor es entender la lógica para auditar y liderar ingenieros, no programar en caliente.</li>
+                            <li><strong>Transición:</strong> "Excelente Claudio. La dinámica de hoy se llama 'Muro de Fuego'. Los próximos 60 minutos simularán el ritmo de una auditoría real de QA. Vamos a pasar a la Diapositiva 1 para ver el mapa general."</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Distribución del Tiempo (60 Minutos)</h3>
+                <div class="cards-grid" style="margin-bottom: 2.5rem;">
+                    <div class="card">
+                        <div class="card-number">01</div>
+                        <div class="card-title">Setup y Check-in (5 min)</div>
+                        <div class="card-desc">
+                            Módulo 0 (Slide 1). Valida el repaso de Claudio de las sesiones previas. Rompe el hielo y alinea las reglas de la simulación.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-number">02</div>
+                        <div class="card-title">Módulo 1: Calidad &amp; Evals (20 min)</div>
+                        <div class="card-desc">
+                            <strong>Diapositivas 2 - 5.</strong> Taller de calidad. Analicen el concepto de <em>Golden Dataset</em>, construyan uno en vivo y calibren las métricas matemáticas de <em>Faithfulness</em>, <em>Relevance</em> y <em>Recall</em>.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-number">03</div>
+                        <div class="card-title">Módulo 2: Incidentes (15 min)</div>
+                        <div class="card-desc">
+                            <strong>Diapositiva 6.</strong> Resolución de incidentes en caliente. Discutan y resuelvan tres alertas de producción (loops agénticos, caída de API gubernamental y desvío de alucinaciones).
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-number">04</div>
+                        <div class="card-title">Módulo 3: CTO Audit &amp; Cierre (20 min)</div>
+                        <div class="card-desc">
+                            <strong>Diapositivas 7 - 11.</strong> Simulacro de auditoría de alta presión (ciberseguridad, modularidad de agentes, latencia). Cierra con la Definition of Done y la optimización de su CV.
+                        </div>
+                    </div>
+                </div>
+
+                <h3>🗺️ Diferencia de Alcance: Sesión 2 vs. Sesión 3 vs. Sesión 4</h3>
+                <p>Utiliza esta tabla comparativa para ayudar a Claudio a estructurar su progresión de speech:</p>
+                <table style="font-size: 0.88rem; line-height: 1.4; margin-top: 1rem;">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">Eje de Comparación</th>
+                            <th style="width: 26%;">Sesión 2: IA Pasiva &amp; RAG</th>
+                            <th style="width: 26%;">Sesión 3: IA Activa &amp; Agentes</th>
+                            <th style="width: 28%;">Sesión 4: Consolidación &amp; Evals (Hoy)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Foco Pedagógico</strong></td>
+                            <td>Recuperación e inyección de datos de dominio de forma estática en prompts.</td>
+                            <td>Sistemas que ejecutan acciones, toman decisiones y llaman a APIs externas de forma autónoma.</td>
+                            <td><strong>Práctica real y simulacros:</strong> Resolución de crisis, datasets de evaluación y simulacro de contratación técnica.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Arquitectura Clave</strong></td>
+                            <td>RAG (Chunking + Embeddings + Vector Database).</td>
+                            <td>Loops de razonamiento (ReAct) + Orquestadores + Tool Calling.</td>
+                            <td>Pipelines de monitoreo continuo (Langfuse) + Evals automatizadas en CI/CD (GitHub Actions).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Dinámica del Bot</strong></td>
+                            <td><strong>De Libro Abierto:</strong> El LLM lee el material y resume. No altera el mundo externo.</td>
+                            <td><strong>Ejecutor Autónomo:</strong> El bot modifica bases de datos, envía correos y llama a APIs internas.</td>
+                            <td><strong>Auditor y Guardián:</strong> Herramientas que controlan latencia, costos, y previenen alucinaciones antes de que las vea el usuario.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Actividad Práctica</strong></td>
+                            <td>Mock PRD del "Cargill Customs Bot".</td>
+                            <td>PRD y Diagrama de Flujo del Agente de CRM y despachos.</td>
+                            <td><strong>Golden Dataset &amp; Tablero de Evals:</strong> Definición de pruebas fácticas y métricas de producción en vivo.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="callout tip" style="margin-top: 2rem;">
+                    <div class="callout-title">
+                        <i data-lucide="cpu" class="icon-sm"></i>
+                        <span>🤖 Co-Mentoring con NotebookLM</span>
+                    </div>
+                    <div class="callout-content">
+                        Antes de iniciar la clase, pídele a Claudio que cargue las guías anteriores y esta misma guía en <strong>NotebookLM</strong>. Utilicen el siguiente prompt para simular dudas y respuestas rápidas durante la clase:
+                        <pre style="margin-top: 0.5rem; padding: 0.8rem; font-size: 0.8rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color);"><code>Actúa como un CTO internacional exigente. Tu objetivo es auditar técnicamente mis respuestas durante el simulacro de entrevista de la Sesión 4. Evalúa mi rigor metodológico (doctrina de software, Git, APIs, gobernanza de IA) y califica mis respuestas del 1 al 10, dándome feedback de mejora inmediata.</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: GUION DIAPOSITIVA POR DIAPOSITIVA -->
+            <section id="guion-diapositivas">
+                <h2>2. Guión de Clase y Diálogos (Diapositiva por Diapositiva)</h2>
+                <p>Utiliza este guión estructurado minuto a minuto para mantener un ritmo dinámico y asegurar que la sesión dure exactamente <strong>60 minutos</strong>.</p>
+
+                <!-- SLIDE 1 -->
+                <div class="card" style="margin-bottom: 2.5rem; border-left: 4px solid var(--color-blue);">
+                    <div class="card-number">Slide 1</div>
+                    <div class="card-title">Portada (Simulación de Entrevista & Evals)</div>
+                    <div class="card-desc" style="color: var(--text-primary); font-size: 0.95rem; margin-top: 1rem;">
+                        <div style="margin-bottom: 0.8rem;"><strong>Objetivo Metodológico:</strong> <p style="margin-bottom: 0.6rem;">Romper el hielo, setear el tono de alta exigencia de la sesión y felicitar al alumno por su constancia en el estudio.</p></div>
+                        
+                        <div class="callout" style="background: rgba(59, 130, 246, 0.03); border-left-color: var(--color-blue); margin: 1rem 0;">
+                            <div class="callout-title" style="color: #60a5fa; font-size: 0.85rem; text-transform: uppercase;"><i data-lucide="mic" class="icon-sm"></i> Diálogo del Mentor</div>
+                            <div style="font-style: italic; color: #cbd5e1; margin-bottom: 0;">
+                                <p style="margin-bottom: 0.6rem;">Claudio, bienvenido formalmente a la sesión 4. Como ves en pantalla, el título de hoy es Simulación de Entrevista y Evals. Tu valor diferencial en el mercado internacional radica en tu capacidad para unir tus 10 años de experiencia operativa en Retail Enterprise con la arquitectura técnica moderna de IA. En esta sesión asumiremos que eres el PM técnico a cargo del Retail AI Agent. Lideraremos la resolución de incidentes en caliente, diseñaremos un Golden Dataset interactivo para medir calidad, y defenderemos el sistema ante un CTO que nos auditará costes, latencias y seguridad legal. Pasemos a la diapositiva 2 para ver el cronograma exacto.</p>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 0.8rem;"><strong>⚡ Dinámica Interactiva:</strong> <p style="margin-bottom: 0.6rem;">Pregúntale a Claudio si comprende el alcance de las responsabilidades de un PM técnico de IA comparado con un PM tradicional de metodologías ágiles.</p></div>
+                        
+                        <div style="margin-top: 1rem; padding-top: 0.8rem; border-top: 1px dashed var(--border-color); font-size: 0.85rem; color: var(--text-secondary);"><strong>🔗 Transición:</strong> <p style="margin-bottom: 0.6rem;"><em>"Vamos a la Slide 2 para analizar los tres bloques de nuestro Muro de Fuego de 60 minutos."</em></p>
+<span style="display:block; margin-left: 0px; margin-bottom: 0.4rem;">• --</span></div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 2 -->
+                <div class="card" style="margin-bottom: 2.5rem; border-left: 4px solid var(--color-blue);">
+                    <div class="card-number">Slide 2</div>
+                    <div class="card-title">Estructura del "Muro de Fuego" (Cronograma)</div>
+                    <div class="card-desc" style="color: var(--text-primary); font-size: 0.95rem; margin-top: 1rem;">
+                        <div style="margin-bottom: 0.8rem;"><strong>Objetivo Metodológico:</strong> <p style="margin-bottom: 0.6rem;">Explicar la dinámica de la sesión, asegurando que Claudio comprenda el ritmo y la distribución del tiempo para manejar la presión.</p></div>
+                        
+                        <div class="callout" style="background: rgba(59, 130, 246, 0.03); border-left-color: var(--color-blue); margin: 1rem 0;">
+                            <div class="callout-title" style="color: #60a5fa; font-size: 0.85rem; text-transform: uppercase;"><i data-lucide="mic" class="icon-sm"></i> Diálogo del Mentor</div>
+                            <div style="font-style: italic; color: #cbd5e1; margin-bottom: 0;">
+                                <p style="margin-bottom: 0.6rem;">Esta sesión está estructurada como un ciclo de auditoría de ciberseguridad y QA en una multinacional. Dedicaremos los primeros 15 minutos a resolver incidentes críticos de producción a nivel de infraestructura. Luego, pasaremos a un bloque de 20 minutos de control estadístico de calidad de IA, construyendo un Golden Dataset en vivo y analizando métricas matemáticas. Finalmente, tendremos 20 minutos de simulacro de entrevista técnica, el CTO Audit, donde me pondré en la piel de un CTO muy desconfiado de la IA que te interrogará sobre costos y seguridad. Empecemos de inmediato con la Slide 3 para armar nuestra base de pruebas.</p>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 0.8rem;"><strong>⚡ Dinámica Interactiva:</strong> <p style="margin-bottom: 0.6rem;">Haz que Claudio lea los títulos de los bloques y valide que está listo para iniciar el primer bloque práctico de Incidentes.</p></div>
+                        
+                        <div style="margin-top: 1rem; padding-top: 0.8rem; border-top: 1px dashed var(--border-color); font-size: 0.85rem; color: var(--text-secondary);"><strong>🔗 Transición:</strong> <p style="margin-bottom: 0.6rem;"><em>"Pasamos a la Slide 3 para iniciar con el Taller de Calidad de Datos."</em></p>
+<span style="display:block; margin-left: 0px; margin-bottom: 0.4rem;">• --</span></div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 3 -->
+                <div class="card" style="margin-bottom: 2.5rem; border-left: 4px solid var(--color-blue);">
+                    <div class="card-number">Slide 3</div>
+                    <div class="card-title">Concepto — El Golden Dataset y la Inferencia</div>
+                    <div class="card-desc" style="color: var(--text-primary); font-size: 0.95rem; margin-top: 1rem;">
+                        <div style="margin-bottom: 0.8rem;"><strong>Objetivo Metodológico:</strong> <p style="margin-bottom: 0.6rem;">Explicar la diferencia entre probar software tradicional (determinista) y software probabilístico (LLM), introduciendo el rol clave del <em>Golden Dataset</em> y el <em>Ground Truth</em>.</p></div>
+                        
+                        <div class="callout" style="background: rgba(59, 130, 246, 0.03); border-left-color: var(--color-blue); margin: 1rem 0;">
+                            <div class="callout-title" style="color: #60a5fa; font-size: 0.85rem; text-transform: uppercase;"><i data-lucide="mic" class="icon-sm"></i> Diálogo del Mentor</div>
+                            <div style="font-style: italic; color: #cbd5e1; margin-bottom: 0;">
+                                <p style="margin-bottom: 0.6rem;">Claudio, antes de hacer el ejercicio práctico, es fundamental entender un concepto de QA. En el desarrollo de software tradicional, si ponés un input, siempre tenés el mismo output. Pero con modelos de lenguaje, el output es probabilístico. No sirve de nada probar 'chateando' de forma improvisada. Para auditar la calidad, construimos un <strong>Golden Dataset</strong>: una base de datos con consultas típicas de los usuarios y las respuestas perfectas redactadas por expertos, conocidas como <strong>Ground Truth</strong>. Al subir cambios al código o a los prompts, el sistema corre automáticamente estas preguntas en el pipeline de CI/CD para calcular su precisión antes del despliegue. Analicemos cómo se compone esta estructura.</p>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 0.8rem;"><strong>⚡ Dinámica Interactiva:</strong> <p style="margin-bottom: 0.6rem;">Preguntale a Claudio si en su experiencia en Retail Enterprise tenían bases de datos de prueba similares para validar flujos aduaneros o ERP, y hacé hincapié en que el <em>Ground Truth</em> siempre debe ser redactado por humanos expertos de negocio, nunca autogenerado por otra IA para evitar sesgos.</p></div>
+                        
+                        <div style="margin-top: 1rem; padding-top: 0.8rem; border-top: 1px dashed var(--border-color); font-size: 0.85rem; color: var(--text-secondary);"><strong>🔗 Transición:</strong> <p style="margin-bottom: 0.6rem;"><em>"Ahora que entendemos el concepto de Golden Dataset, pasemos a la Slide 4 para construir uno en vivo."</em></p>
+<span style="display:block; margin-left: 0px; margin-bottom: 0.4rem;">• --</span></div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 4 -->
+                <div class="card" style="margin-bottom: 2.5rem; border-left: 4px solid var(--color-purple);">
+                    <div class="card-number">Slide 4</div>
+                    <div class="card-title">Ejercicio — Creación de un Golden Dataset en Vivo</div>
+                    <div class="card-desc" style="color: var(--text-primary); font-size: 0.95rem; margin-top: 1rem;">
+                        <div style="margin-bottom: 0.8rem;"><strong>Objetivo Metodológico:</strong> <p style="margin-bottom: 0.6rem;">Hacer que Claudio elija y justifique la redacción de consultas de usuario, respuestas de referencia (<em>Ground Truth</em>) y fragmentos del manual para armar la base de testeo del Retail Support Bot.</p></div>
+                        
+                        <div class="callout" style="background: rgba(59, 130, 246, 0.03); border-left-color: var(--color-blue); margin: 1rem 0;">
+                            <div class="callout-title" style="color: #60a5fa; font-size: 0.85rem; text-transform: uppercase;"><i data-lucide="mic" class="icon-sm"></i> Diálogo del Mentor</div>
+                            <div style="font-style: italic; color: #cbd5e1; margin-bottom: 0;">
+                                <p style="margin-bottom: 0.6rem;">Claudio, las aplicaciones de IA no se pueden probar chateando de forma improvisada antes de producción. Implementamos un Golden Dataset. Como ves en el constructor interactivo de la diapositiva, agreguemos casos de prueba. Observa la relación entre la pregunta del usuario, el contexto oficial extraído y la respuesta experta (Ground Truth). Vamos a analizar la lógica detrás de cada fila que agregamos y a justificar por qué estructuramos así los casos de prueba.</p>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 0.8rem;"><strong>⚡ Dinámica Interactiva:</strong> <p style="margin-bottom: 0.6rem;">El mentor va agregando cada una de las 3 filas del Golden Dataset usando los botones del widget interactivo de las slides. Para cada fila agregada, realiza una pregunta específica para que Claudio justifique el diseño del caso de prueba:</p>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>1.</strong> <strong>Fila 1 (Políticas de Reembolso)</strong>:</span>
+<span style="display:block; margin-left: 50px; margin-bottom: 0.4rem;">• <strong>Pregunta del Mentor</strong>: <em>"Claudio, si comparamos la pregunta 1 ('¿Puedo devolver un suéter comprado en liquidación hace 15 días?') con la respuesta del manual y el Ground Truth, vemos que el manual menciona 'liquidación especial' y 'cupones de crédito de tienda' pero el Ground Truth especifica 'liquidación de temporada' y 'crédito de tienda'. ¿Por qué es crucial alinear la terminología exacta y evitar ambigüedades al redactar el Ground Truth?"</em></span>
+<span style="display:block; margin-left: 50px; margin-bottom: 0.4rem;">• <strong>Respuesta esperada de Claudio</strong>: Para que la evaluación semántica automatizada funcione, el Ground Truth debe usar la terminología de dominio exacta del manual indexado. Si el Ground Truth emplea términos diferentes o vagos, la métrica de <em>Context Recall</em> o <em>Answer Relevance</em> daría un falso negativo al comparar la respuesta del bot (basada en el manual) con un Ground Truth redactado con términos sinónimos pero no idénticos.</span>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>2.</strong> <strong>Fila 2 (Costos de Envío)</strong>:</span>
+<span style="display:block; margin-left: 50px; margin-bottom: 0.4rem;">• <strong>Pregunta del Mentor</strong>: <em>"Si el manual indica un límite de envío gratis a partir de $50.000 ARS y un plazo de entrega de 2 a 4 días hábiles, y el bot le responde al usuario que el envío es gratuito para cualquier monto y que llega en 24 horas, ¿cuál es el riesgo y cómo calificaría la fidelidad (Faithfulness) de esa respuesta?"</em></span>
+<span style="display:block; margin-left: 50px; margin-bottom: 0.4rem;">• <strong>Respuesta esperada de Claudio</strong>: El riesgo es financiero (pérdida de margen por envíos gratuitos no estipulados) y reputacional (quejas por promesas de entrega incumplidas). La fidelidad (Faithfulness) se calificaría con 0 o muy bajo porque contradice directamente la verdad provista en el manual. Esto demuestra que en sistemas probabilísticos, un desvío mínimo en valores críticos arruina la fidelidad del bot.</span>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>3.</strong> <strong>Fila 3 (Cobro Duplicado)</strong>:</span>
+<span style="display:block; margin-left: 50px; margin-bottom: 0.4rem;">• <strong>Pregunta del Mentor</strong>: <em>"Si se detecta un reclamo por cobro duplicado, el bot debe pausar el pedido e iniciar un reporte en la pasarela de pagos. ¿Por qué esto se define como una compuerta determinista estricta en el API Gateway y no se deja al criterio del LLM decidir si pausa o no la orden?"</em></span>
+<span style="display:block; margin-left: 50px; margin-bottom: 0.4rem;">• <strong>Respuesta esperada de Claudio</strong>: Porque los LLMs son probabilísticos y no garantizan el cumplimiento de protocolos de seguridad y prevención de fraude. Un cobro duplicado requiere suspender la transacción y escalar a revisión del área de finanzas (HITL) de inmediato; esa lógica transaccional debe ser una regla dura programada en el backend/middleware, previniendo fallas y pérdidas económicas.</span>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>4.</strong> <strong>Pregunta Conceptual de Cierre</strong>: <em>"Si un desarrollador del equipo te propone poblar el Ground Truth de forma automatizada usando GPT-4 para ahorrar tiempo, ¿qué le responderías y por qué es un riesgo de negocio?"</em></span>
+<span style="display:block; margin-left: 50px; margin-bottom: 0.4rem;">• <strong>Respuesta esperada de Claudio</strong>: Le respondería que no es viable. Utilizar un modelo generador probabilístico (como GPT-4) para redactar el Ground Truth introduce un sesgo de alineación del propio modelo y valida posibles alucinaciones silenciosas. El Ground Truth representa la "verdad de negocio" absoluta y debe ser redactado por expertos de dominio humanos para auditar de forma independiente a la IA.</span></div>
+                        
+                        <div style="margin-top: 1rem; padding-top: 0.8rem; border-top: 1px dashed var(--border-color); font-size: 0.85rem; color: var(--text-secondary);"><strong>🔗 Transición:</strong> <p style="margin-bottom: 0.6rem;"><em>"Ahora que entendemos cómo estructurar un dataset de control, pasemos a la Slide 4 para ver cómo evaluamos matemáticamente si las respuestas del bot se alinean con este dataset."</em></p></div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 5 -->
+                <div class="card" style="margin-bottom: 2.5rem; border-left: 4px solid var(--color-purple);">
+                    <div class="card-number">Slide 5</div>
+                    <div class="card-title">Ejercicio — Calibración del Tablero de Evals</div>
+                    <div class="card-desc" style="color: var(--text-primary); font-size: 0.95rem; margin-top: 1rem;">
+                        <div style="margin-bottom: 0.8rem;"><strong>Objetivo Metodológico:</strong> <p style="margin-bottom: 0.6rem;">Analizar las tres métricas fundamentales de evaluación probabilística (<em>Faithfulness</em>, <em>Answer Relevance</em> y <em>Context Recall</em>) y calibrar sus umbrales óptimos para producción.</p></div>
+                        
+                        <div class="callout" style="background: rgba(59, 130, 246, 0.03); border-left-color: var(--color-blue); margin: 1rem 0;">
+                            <div class="callout-title" style="color: #60a5fa; font-size: 0.85rem; text-transform: uppercase;"><i data-lucide="mic" class="icon-sm"></i> Diálogo del Mentor</div>
+                            <div style="font-style: italic; color: #cbd5e1; margin-bottom: 0;">
+                                <p style="margin-bottom: 0.6rem;">Analicemos las métricas automáticas de auditoría en la diapositiva. Veremos qué pasa cuando las métricas cuantitativas no coinciden con la apariencia superficial de la conversación. Claudio, examina el panel de Evals y decime cómo interpretarías los scores del dashboard en un escenario de producción real.</p>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 0.8rem;"><strong>⚡ Dinámica Interactiva:</strong> <p style="margin-bottom: 0.6rem;">El mentor y Claudio alternan entre las métricas en la diapositiva para examinar las fórmulas en el panel derecho. El mentor evalúa a Claudio en cada métrica con un escenario de falla real:</p>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>1.</strong> <strong>Faithfulness (Fidelidad)</strong>:</span>
+<span style="display:block; margin-left: 50px; margin-bottom: 0.4rem;">• <strong>Pregunta del Mentor</strong>: <em>"Claudio, supongamos que el bot responde: 'Las prendas en liquidación no admiten reembolsos en efectivo, y además te comento que los nuevos suéteres de cachemira de temporada son hermosos'. Si el manual de ventas no menciona en absoluto la belleza de la nueva colección, ¿cómo se ve afectada la fidelidad en Evals?"</em></span>
+<span style="display:block; margin-left: 50px; margin-bottom: 0.4rem;">• <strong>Respuesta esperada de Claudio</strong>: La fidelidad (Faithfulness) baja porque una parte de la respuesta no se puede verificar a partir del contexto recuperado. La métrica calcula (Sentencias Verificables en Contexto / Total de Sentencias Generadas); agregar información irrelevante o inventada en la respuesta, aunque sea inofensiva, penaliza el score e indica alucinación.</span>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>2.</strong> <strong>Answer Relevance (Relevancia)</strong>:</span>
+<span style="display:block; margin-left: 50px; margin-bottom: 0.4rem;">• <strong>Pregunta del Mentor</strong>: <em>"Si el usuario pregunta: '¿Cuáles son las sucursales físicas habilitadas para cambios?' y el bot responde: 'Nuestra marca tiene locales en todo el país. Vendemos prendas de alta calidad y calzado moderno...'. ¿Por qué esta respuesta tiene una relevancia muy baja, si es que no alucina nada?"</em></span>
+<span style="display:block; margin-left: 50px; margin-bottom: 0.4rem;">• <strong>Respuesta esperada de Claudio</strong>: Porque es una respuesta evasiva que no contesta la pregunta del usuario. Answer Relevance mide la alineación semántica de la respuesta con la consulta; irse por las ramas o dar rodeos conceptuales sin enumerar las sucursales habilitadas para cambios penaliza severamente el score.</span>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>3.</strong> <strong>Context Recall (Recuperación - Alerta Roja 0.40)</strong>:</span>
+<span style="display:block; margin-left: 50px; margin-bottom: 0.4rem;">• <strong>Pregunta del Mentor</strong>: <em>"Supongamos que el dashboard de Langfuse nos indica que Context Recall cayó a un alarmante 0.40. Si el equipo técnico te propone solucionar esto reescribiendo el System Prompt, ¿qué les dirías? ¿El problema está en el LLM o en la base vectorial (Retrieval)?"</em></span>
+<span style="display:block; margin-left: 50px; margin-bottom: 0.4rem;">• <strong>Respuesta esperada de Claudio</strong>: El problema está en el recuperador (Retrieval) de la Vector DB, no en el LLM. Un recall de 0.40 significa que el sistema sólo recuperó el 40% del manual necesario para contestar la pregunta del experto. Cambiar el prompt no servirá de nada porque la información no llegó a la ventana de contexto. Debemos optimizar el chunking, overlap o revisar metadatos en la indexación.</span></div>
+                        
+                        <div style="margin-top: 1rem; padding-top: 0.8rem; border-top: 1px dashed var(--border-color); font-size: 0.85rem; color: var(--text-secondary);"><strong>🔗 Transición:</strong> <p style="margin-bottom: 0.6rem;"><em>"Con el tablero de métricas calibrado, pasemos a la Slide 5 para enfrentar incidentes reales en caliente en producción."</em></p>
+<span style="display:block; margin-left: 0px; margin-bottom: 0.4rem;">• --</span></div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 6 -->
+                <div class="card" style="margin-bottom: 2.5rem; border-left: 4px solid var(--color-orange);">
+                    <div class="card-number">Slide 6</div>
+                    <div class="card-title">Ejercicio — Resolución de Incidentes en Vivo</div>
+                    <div class="card-desc" style="color: var(--text-primary); font-size: 0.95rem; margin-top: 1rem;">
+                        <div style="margin-bottom: 0.8rem;"><strong>Objetivo Metodológico:</strong> <p style="margin-bottom: 0.6rem;">Simular incidentes comunes de producción y evaluar la capacidad del PM para proponer soluciones lógicas de arquitectura sin necesidad de escribir código.</p></div>
+                        
+                        <div class="callout" style="background: rgba(59, 130, 246, 0.03); border-left-color: var(--color-blue); margin: 1rem 0;">
+                            <div class="callout-title" style="color: #60a5fa; font-size: 0.85rem; text-transform: uppercase;"><i data-lucide="mic" class="icon-sm"></i> Diálogo del Mentor</div>
+                            <div style="font-style: italic; color: #cbd5e1; margin-bottom: 0;">
+                                
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 0.8rem;"><strong>⚡ Dinámica Interactiva:</strong> <span style="display:block; margin: 0.5rem 0 0.5rem 1rem; padding-left: 0.8rem; border-left: 2px solid var(--color-blue); font-style: italic; color: #cbd5e1;">[!NOTE]</span>
+<span style="display:block; margin: 0.5rem 0 0.5rem 1rem; padding-left: 0.8rem; border-left: 2px solid var(--color-blue); font-style: italic; color: #cbd5e1;">En la interfaz de las diapositivas, las soluciones a cada incidente están ocultas por defecto. Pedile a Claudio que analice la consola y proponga la solución. Solo después de que responda, hacé clic en el botón <strong>"Revelar Solución Correcta"</strong> para contrastar.</span>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>1.</strong> Seleccionen la pestaña <strong>1. Loop de Tokens Infinitos (CRÍTICO)</strong>. Pídele a Claudio que lee los logs del panel de consola donde el bot reintenta ante un error 409 hasta consumir $12.50 USD.</span>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>2.</strong> Pregúntale a Claudio:</span>
+<span style="display:block; margin: 0.5rem 0 0.5rem 1rem; padding-left: 0.8rem; border-left: 2px solid var(--color-blue); font-style: italic; color: #cbd5e1;"><em>"Como PM técnico de este producto, ¿cuál es la mitigación de arquitectura rígida que debes priorizar de inmediato en el backlog para que esto no destruya el presupuesto de la empresa en un fin de semana?"</em></span>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>3.</strong> <em>Respuesta esperada</em>: Definir un límite rígido de <strong>Max Iterations (máximo 5)</strong> en la orquestación del agente y programar un "circuit breaker" que desvíe el control a un operador humano (compuerta HITL) ante fallos recurrentes del ERP. Hacé clic en <strong>"Revelar Solución Correcta"</strong> para mostrar la confirmación.</span>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>4.</strong> Seleccionen la pestaña <strong>2. Caída de API de Aduanas (WARN)</strong>. Pregúntale:</span>
+<span style="display:block; margin: 0.5rem 0 0.5rem 1rem; padding-left: 0.8rem; border-left: 2px solid var(--color-blue); font-style: italic; color: #cbd5e1;"><em>"Si la API del correo o de pagos se cae y el bot arroja un Connection Timeout de 503, ¿cómo se mitiga esto para no interrumpir el flujo de compra y despacho de pedidos?"</em></span>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>5.</strong> <em>Respuesta esperada</em>: Implementar reglas de <strong>Fallback con caché local</strong>. En el PRD especificamos que si la API oficial está caída, el bot consulte una tabla de costos de correo fuera de línea previamente almacenada en caché, mostrando un banner de advertencia al usuario: <em>'API oficial caída. Tarifas mostradas con base en la última actualización del [Fecha]'.</em> Hacé clic en <strong>"Revelar Solución Correcta"</strong> para validar.</span>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>6.</strong> Seleccionen la pestaña <strong>3. Alerta de Alucinación (ATENCIÓN)</strong>. Pregúntale:</span>
+<span style="display:block; margin: 0.5rem 0 0.5rem 1rem; padding-left: 0.8rem; border-left: 2px solid var(--color-blue); font-style: italic; color: #cbd5e1;"><em>"El validador automático de Langfuse detectó que la fidelidad de una respuesta cayó a 0.55. ¿Cómo evitamos que esa respuesta llegue a los ojos del despachante?"</em></span>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>7.</strong> <em>Respuesta esperada</em>: Implementar una capa intermedia de <strong>Guardrails en tiempo real</strong> (como Llama Guard o NeMo Guardrails) que audite la fidelidad del texto generado antes de renderizarlo en el chat del usuario. Si cae por debajo del umbral mínimo de 0.85, la respuesta se bloquea y se muestra un mensaje predefinido: <em>'No se pudo verificar la información con el manual oficial. Por favor, consulte al supervisor'.</em> Hacé clic en <strong>"Revelar Solución Correcta"</strong> para cerrar la sección.</span></div>
+                        
+                        <div style="margin-top: 1rem; padding-top: 0.8rem; border-top: 1px dashed var(--border-color); font-size: 0.85rem; color: var(--text-secondary);"><strong>🔗 Transición:</strong> <p style="margin-bottom: 0.6rem;"><em>"Has resuelto las tres crisis de producción con excelente criterio técnico. Ahora, Claudio, llegó el momento del desafío mayor: pasamos a la Slide 6 para iniciar formalmente tu CTO Audit."</em></p>
+<span style="display:block; margin-left: 0px; margin-bottom: 0.4rem;">• --</span></div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 7 -->
+                <div class="card" style="margin-bottom: 2.5rem; border-left: 4px solid var(--color-green);">
+                    <div class="card-number">Slide 7</div>
+                    <div class="card-title">Simulacro — El CTO Audit</div>
+                    <div class="card-desc" style="color: var(--text-primary); font-size: 0.95rem; margin-top: 1rem;">
+                        <div style="margin-bottom: 0.8rem;"><strong>Objetivo Metodológico:</strong> <p style="margin-bottom: 0.6rem;">Adoptar el rol del CTO exigente para evaluar la firmeza de Claudio, su vocabulario técnico y su capacidad de defensa de la gobernanza de IA.</p></div>
+                        
+                        <div class="callout" style="background: rgba(59, 130, 246, 0.03); border-left-color: var(--color-blue); margin: 1rem 0;">
+                            <div class="callout-title" style="color: #60a5fa; font-size: 0.85rem; text-transform: uppercase;"><i data-lucide="mic" class="icon-sm"></i> Diálogo del Mentor</div>
+                            <div style="font-style: italic; color: #cbd5e1; margin-bottom: 0;">
+                                
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 0.8rem;"><strong>⚡ Dinámica Interactiva:</strong> <p style="margin-bottom: 0.6rem;">El mentor realiza las siguientes preguntas de forma secuencial, exigiendo el uso de conceptos de las Sesiones 1-3. Hacé clic en las tarjetas de la diapositiva 6 para contrastar con la Respuesta Estrella:</p>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>1.</strong> <strong>Pregunta 1 (RAG vs Fine-Tuning - Sesión 2)</strong>: <em>"Nuestra base de datos de stock cambia por minuto y el bot da precios antiguos. ¿Deberíamos re-entrenar o hacer Fine-Tuning al modelo para solucionarlo?"</em></span>
+<span style="display:block; margin-left: 50px; margin-bottom: 0.4rem;">• <strong>Respuesta esperada de Claudio</strong>: No. El Fine-Tuning es para adaptar estilo y formato. Para datos factuales y dinámicos se usa <strong>RAG con filtrado de metadatos</strong> (por ejemplo, restringiendo la búsqueda vectorial al puerto y fecha actual).</span>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>2.</strong> <strong>Pregunta 2 (DevOps - Sesión 1)</strong>: <em>"Los prompts del bot cambian cada sprint. ¿Cómo gestiona tu equipo el control de versiones y el despliegue de prompts sin romper el sistema en producción? ¿Usan ramas de Git?"</em></span>
+<span style="display:block; margin-left: 50px; margin-bottom: 0.4rem;">• <strong>Respuesta esperada de Claudio</strong>: Los prompts se tratan como código. Se guardan en repositorios Git y las modificaciones se realizan en una rama de <strong>feature</strong>, se prueban automáticamente contra el Golden Dataset en nuestro pipeline de <strong>CI/CD (Staging)</strong> y, tras pasar el análisis, se integran a <strong>main</strong> para su despliegue. Alternativamente, usamos Prompt Registries (como Langfuse) para desplegarlos vía API sin necesidad de re-compilar.</span>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>3.</strong> <strong>Pregunta 3 (Ambientes - Sesión 1)</strong>: <em>"Para agilizar las pruebas del bot de IA en el ambiente de Staging, ¿podemos conectar el recuperador RAG directamente a la base de datos vectorial de Producción?"</em></span>
+<span style="display:block; margin-left: 50px; margin-bottom: 0.4rem;">• <strong>Respuesta esperada de Claudio</strong>: No. Esto viola la doctrina de <strong>aislamiento de ambientes</strong> (Dev, Staging, Prod). Staging debe consultar una base vectorial de Staging (con datos anonimizados o sintéticos) para evitar fugas de información, escrituras accidentales en producción o contaminación de métricas de observabilidad reales.</span></div>
+                        
+                        <div style="margin-top: 1rem; padding-top: 0.8rem; border-top: 1px dashed var(--border-color); font-size: 0.85rem; color: var(--text-secondary);"><strong>🔗 Transición:</strong> <p style="margin-bottom: 0.6rem;"><em>"Bien defendido el aislamiento y versionado. Pero no solo me preocupan los datos internos. Pasemos a la Slide 7 para auditar el cumplimiento legal y la seguridad de datos frente al comité directivo."</em></p>
+<span style="display:block; margin-left: 0px; margin-bottom: 0.4rem;">• --</span></div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 8 -->
+                <div class="card" style="margin-bottom: 2.5rem; border-left: 4px solid var(--color-green);">
+                    <div class="card-number">Slide 8</div>
+                    <div class="card-title">Preguntas Trampa — Ciberseguridad & SLAs</div>
+                    <div class="card-desc" style="color: var(--text-primary); font-size: 0.95rem; margin-top: 1rem;">
+                        <div style="margin-bottom: 0.8rem;"><strong>Objetivo Metodológico:</strong> <p style="margin-bottom: 0.6rem;">Evaluar el conocimiento de Claudio sobre la gobernanza de datos a nivel enterprise y regulaciones de cumplimiento (Data Leakage y Chunking).</p></div>
+                        
+                        <div class="callout" style="background: rgba(59, 130, 246, 0.03); border-left-color: var(--color-blue); margin: 1rem 0;">
+                            <div class="callout-title" style="color: #60a5fa; font-size: 0.85rem; text-transform: uppercase;"><i data-lucide="mic" class="icon-sm"></i> Diálogo del Mentor</div>
+                            <div style="font-style: italic; color: #cbd5e1; margin-bottom: 0;">
+                                
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 0.8rem;"><strong>⚡ Dinámica Interactiva:</strong> <p style="margin-bottom: 0.6rem;">El mentor realiza las siguientes preguntas sobre ciberseguridad y RAG, haciendo clic en las tarjetas de la diapositiva 7 para contrastar las respuestas:</p>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>1.</strong> <strong>Pregunta 1 (Gobernanza & SLAs - Sesión 2/4)</strong>: <em>"Como PM, ¿cómo garantizás que los datos de compras y tarjetas de clientes de nuestra empresa que se envían al bot no se utilicen para entrenar modelos públicos externos?"</em></span>
+<span style="display:block; margin-left: 50px; margin-bottom: 0.4rem;">• <strong>Respuesta esperada de Claudio</strong>: Exigiendo legal y técnicamente el uso de APIs corporativas bajo acuerdos de <strong>Enterprise SLAs</strong> con políticas contractuales de <strong>Zero-Data Retention</strong> (retención en cero). El proveedor se compromete a encriptar los datos, no guardar historial de consultas y prohibir estrictamente el uso de nuestros inputs para entrenar modelos públicos.</span>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>2.</strong> <strong>Pregunta 2 (Data Leakage - Sesión 2)</strong>: <em>"¿Qué es la fuga de datos (Data Leakage) en una aplicación RAG y cómo la mitiga el equipo?"</em></span>
+<span style="display:block; margin-left: 50px; margin-bottom: 0.4rem;">• <strong>Respuesta esperada de Claudio</strong>: Ocurre cuando RAG extrae chunks de información para los cuales el usuario no tiene permisos (ej. un analista junior consultando salarios de directores). Se mitiga aplicando <strong>Metadata Filtering</strong> según la identidad del usuario en Active Directory: antes de realizar la búsqueda semántica, se inyecta un filtro duro de metadatos (como <code>department_allow == 'ventas'</code>), aislando físicamente los registros inaccesibles.</span>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>3.</strong> <strong>Pregunta 3 (Chunking & Overlap - Sesión 2)</strong>: <em>"El bot a veces responde con información cortada a la mitad o no encuentra la relación entre dos párrafos continuos de un manual de políticas de devolución. ¿Qué error de diseño hay en RAG y cómo lo solucionas?"</em></span>
+<span style="display:block; margin-left: 50px; margin-bottom: 0.4rem;">• <strong>Respuesta esperada de Claudio</strong>: Es un problema de <strong>Chunk Size</strong> (tamaño de fragmento) y <strong>Overlap</strong> (solapamiento) inadecuados en el pipeline de ingesta. Si los chunks son muy pequeños o el overlap es de 0%, se corta el contexto semántico entre párrafos continuos. La solución es re-indexar los documentos con un tamaño de chunk mayor (ej. 512 tokens) y un overlap del 10% al 20% (ej. 50-100 tokens) para asegurar que el fin de un bloque se solape con el inicio del siguiente, preservando la continuidad informativa.</span></div>
+                        
+                        <div style="margin-top: 1rem; padding-top: 0.8rem; border-top: 1px dashed var(--border-color); font-size: 0.85rem; color: var(--text-secondary);"><strong>🔗 Transición:</strong> <p style="margin-bottom: 0.6rem;"><em>"Correcto, Claudio. Cumplimos con los requisitos legales de ciberseguridad y optimización de ingesta. Pasemos a la Slide 8 para resolver los problemas de rendimiento y llamadas a servicios externos en sistemas agénticos."</em></p>
+<span style="display:block; margin-left: 0px; margin-bottom: 0.4rem;">• --</span></div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 9 -->
+                <div class="card" style="margin-bottom: 2.5rem; border-left: 4px solid var(--color-green);">
+                    <div class="card-number">Slide 9</div>
+                    <div class="card-title">Preguntas Trampa — Control de Agentes Autónomos</div>
+                    <div class="card-desc" style="color: var(--text-primary); font-size: 0.95rem; margin-top: 1rem;">
+                        <div style="margin-bottom: 0.8rem;"><strong>Objetivo Metodológico:</strong> <p style="margin-bottom: 0.6rem;">Evaluar la capacidad de Claudio para resolver problemas financieros (costos de inferencia) y de rendimiento (latencia), además de integraciones legacy.</p></div>
+                        
+                        <div class="callout" style="background: rgba(59, 130, 246, 0.03); border-left-color: var(--color-blue); margin: 1rem 0;">
+                            <div class="callout-title" style="color: #60a5fa; font-size: 0.85rem; text-transform: uppercase;"><i data-lucide="mic" class="icon-sm"></i> Diálogo del Mentor</div>
+                            <div style="font-style: italic; color: #cbd5e1; margin-bottom: 0;">
+                                
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 0.8rem;"><strong>⚡ Dinámica Interactiva:</strong> <p style="margin-bottom: 0.6rem;">El mentor realiza las siguientes preguntas sobre agentes y APIs heredadas, haciendo clic en las tarjetas de la diapositiva 8 para contrastar las respuestas:</p>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>1.</strong> <strong>Pregunta 1 (Sistemas Agénticos - Sesión 3)</strong>: <em>"Un agente autónomo en producción es probabilístico e impredecible. ¿Cómo controlás el formato de sus salidas para que no rompa las integraciones con nuestro sistema de facturación ERP que es determinista?"</em></span>
+<span style="display:block; margin-left: 50px; margin-bottom: 0.4rem;">• <strong>Respuesta esperada de Claudio</strong>: Desacoplando la inferencia de texto libre del flujo transaccional. Implementamos una capa de validación rígida mediante esquemas de datos (<strong>Pydantic</strong> en Python o JSON Schema) que actúan como un 'filtro de ranura rígido'. Si el LLM retorna una variable fuera de formato o vacía, la capa de validación Pydantic arroja una excepción en milisegundos, bloqueando la llamada e impidiendo que el ERP procese una transacción inestable.</span>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>2.</strong> <strong>Pregunta 2 (APIs Legacy SOAP - Sesión 1/3)</strong>: <em>"Nuestros sistemas de logística más antiguos usan APIs SOAP heredadas (WSDL/XML). ¿Cómo puede el agente de IA, que usualmente trabaja con JSON/REST, interactuar con estos servicios legacy sin reprogramar el ERP?"</em></span>
+<span style="display:block; margin-left: 50px; margin-bottom: 0.4rem;">• <strong>Respuesta esperada de Claudio</strong>: Mediante una capa de abstracción intermedia o <strong>API Gateway / Middleware</strong>. En lugar de exponer el XML/SOAP directamente al agente (lo cual consumiría miles de tokens inútiles procesando esquemas XML complejos), creamos un microservicio intermedio REST/JSON. El agente llama al microservicio en JSON, y el middleware traduce el payload JSON a una consulta SOAP/XML estructurada para el ERP legacy, retornándole al agente solo la respuesta simplificada en JSON.</span>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>3.</strong> <strong>Pregunta 3 (Latencia & Optimización - Sesión 3/4)</strong>: <em>"El agente tiene que llamar a 3 APIs diferentes usando Tool Calling para verificar stock de tienda, costo de envío en API de correo y clima en depósito. La latencia total es de 10 segundos, lo cual es inaceptable. ¿Qué propondrías como PM?"</em></span>
+<span style="display:block; margin-left: 50px; margin-bottom: 0.4rem;">• <strong>Respuesta esperada de Claudio</strong>: Proponer:</span>
+<span style="display:block; margin-left: 70px; margin-bottom: 0.4rem;">• <strong>Parallel Tool Calling</strong> (ejecutar llamadas de APIs no dependientes en paralelo de forma asíncrona).</span>
+<span style="display:block; margin-left: 70px; margin-bottom: 0.4rem;">• <strong>Prompt Caching / KV Cache</strong> a nivel de API para no volver a procesar y facturar contextos estáticos (como reglamentos aduaneros).</span>
+<span style="display:block; margin-left: 70px; margin-bottom: 0.4rem;">• Evaluar si podemos reemplazar un loop agéntico ReAct largo por un <strong>Router de tareas determinista</strong> que derive la consulta directamente al agente trabajador específico.</span>
+<span style="display:block; margin-left: 20px; margin-bottom: 0.4rem;"><strong>4.</strong> <strong>Pregunta 4 (Arquitectura Multi-Agente - Sesión 3)</strong>: <em>"Para procesos complejos (despacho, tarifas de envío, stock), ¿por qué diseñar una arquitectura multi-agente en lugar de un único agente que resuelva todo?"</em></span>
+<span style="display:block; margin-left: 50px; margin-bottom: 0.4rem;">• <strong>Respuesta esperada de Claudio</strong>: Por modularidad, costo de contexto y control de calidad. Un agente monolítico requiere un system prompt gigante y muchas herramientas, lo que eleva la latencia y los costos de tokens, y causa confusión y alucinaciones en el Tool Calling. En su lugar, el patrón Supervisor-Trabajadores divide la complejidad para que cada agente especialista maneje un set acotado de herramientas, lo que facilita el testeo independiente, optimiza el costo y garantiza precisión.</span></div>
+                        
+                        <div style="margin-top: 1rem; padding-top: 0.8rem; border-top: 1px dashed var(--border-color); font-size: 0.85rem; color: var(--text-secondary);"><strong>🔗 Transición:</strong> <p style="margin-bottom: 0.6rem;"><em>(Sal de personaje)</em>: <em>"Claudio, felicitaciones. Has superado el simulacro de CTO Audit defendiendo los puntos críticos con excelente léxico técnico de las Sesiones 1, 2 y 3. Pasemos a la Slide 9 para evaluar el cumplimiento de nuestra meta de graduación."</em></p>
+<span style="display:block; margin-left: 0px; margin-bottom: 0.4rem;">• --</span></div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 10 -->
+                <div class="card" style="margin-bottom: 2.5rem; border-left: 4px solid var(--color-green);">
+                    <div class="card-number">Slide 10</div>
+                    <div class="card-title">Criterios de Finalización (DoD de la Mentoría)</div>
+                    <div class="card-desc" style="color: var(--text-primary); font-size: 0.95rem; margin-top: 1rem;">
+                        <div style="margin-bottom: 0.8rem;"><strong>Objetivo Metodológico:</strong> <p style="margin-bottom: 0.6rem;">Consolidar y repasar la lista de competencias validadas a lo largo de las 4 sesiones, certificando que Claudio ha cerrado la brecha tecnológica.</p></div>
+                        
+                        <div class="callout" style="background: rgba(59, 130, 246, 0.03); border-left-color: var(--color-blue); margin: 1rem 0;">
+                            <div class="callout-title" style="color: #60a5fa; font-size: 0.85rem; text-transform: uppercase;"><i data-lucide="mic" class="icon-sm"></i> Diálogo del Mentor</div>
+                            <div style="font-style: italic; color: #cbd5e1; margin-bottom: 0;">
+                                <p style="margin-bottom: 0.6rem;">Repasemos juntos la Definition of Done de tu mentoría. En estas 4 semanas has logrado objetivos enormes: tu speech de re-entry está completamente actualizado al vocabulario de software moderno (Git, CI/CD, APIs, ambientes), comprendes y defiendes la arquitectura RAG frente a propuestas erróneas de Fine-Tuning, dominas el diseño y la gobernanza de sistemas agénticos con compuertas de seguridad HITL y validadores Pydantic, y entiendes la mecánica estadística para evaluar software probabilístico mediante Golden Datasets y Langfuse. Tu ventaja en el mercado es ser el PM técnico que puede sentarse en una mesa con ingenieros de software y comprender exactamente la lógica del sistema para optimizarlo. Pasemos a la última diapositiva para ajustar los hitos en tu portafolio.</p>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 0.8rem;"><strong>⚡ Dinámica Interactiva:</strong> <p style="margin-bottom: 0.6rem;">Pídele a Claudio que elija cuál de estos cuatro pilares siente que ha sido su mayor salto de seniority técnico.</p></div>
+                        
+                        <div style="margin-top: 1rem; padding-top: 0.8rem; border-top: 1px dashed var(--border-color); font-size: 0.85rem; color: var(--text-secondary);"><strong>🔗 Transición:</strong> <p style="margin-bottom: 0.6rem;"><em>"Vamos a la Slide 10 para cerrar con la optimización de tu portafolio laboral."</em></p>
+<span style="display:block; margin-left: 0px; margin-bottom: 0.4rem;">• --</span></div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 11 -->
+                <div class="card" style="margin-bottom: 2.5rem; border-left: 4px solid var(--color-green);">
+                    <div class="card-number">Slide 11</div>
+                    <div class="card-title">Optimización del CV para el Rol de PM Técnico</div>
+                    <div class="card-desc" style="color: var(--text-primary); font-size: 0.95rem; margin-top: 1rem;">
+                        <div style="margin-bottom: 0.8rem;"><strong>Objetivo Metodológico:</strong> <p style="margin-bottom: 0.6rem;">Dar pautas concretas para posicionar a Claudio como un PM Técnico de IA que lidera, comprende y supervisa la arquitectura del producto sin necesidad de implementar el código directamente.</p></div>
+                        
+                        <div class="callout" style="background: rgba(59, 130, 246, 0.03); border-left-color: var(--color-blue); margin: 1rem 0;">
+                            <div class="callout-title" style="color: #60a5fa; font-size: 0.85rem; text-transform: uppercase;"><i data-lucide="mic" class="icon-sm"></i> Diálogo del Mentor</div>
+                            <div style="font-style: italic; color: #cbd5e1; margin-bottom: 0;">
+                                <p style="margin-bottom: 0.6rem;">Para cerrar, Claudio, hablemos de cómo hacer tangible este salto de seniority. En tu CV y LinkedIn debes posicionarte como 'Senior Technical Project Manager — IT & AI Products' o 'Technical Product Manager | AI Systems Architect'. Tu valor diferencial no es programar el código del bot de IA, sino comprender técnicamente los conceptos para supervisar el equipo de ingeniería. Por ejemplo, en tus logros podés destacar: 'Lideré el diseño técnico y gobernanza del Retail AI Agent, especificando la arquitectura de orquestación multi-agente, compuertas Human-in-the-loop y validación estructurada con Pydantic para mitigar riesgos en ERP', o también: 'Supervisé el diseño y la integración de pipelines de Evals estadísticas automatizadas en GitHub Actions con Langfuse, reduciendo las alucinaciones en consultas de clientes'. Esto le demuestra a cualquier Headhunter internacional que sabes liderar proyectos de IA del mundo real desde un rol de dirección técnica. Ha sido un placer acompañarte en este proceso. ¡Mucho éxito en tu camino!</p>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 0.8rem;"><strong>⚡ Dinámica Interactiva:</strong> </div>
+                        
+                        <div style="margin-top: 1rem; padding-top: 0.8rem; border-top: 1px dashed var(--border-color); font-size: 0.85rem; color: var(--text-secondary);"><strong>🔗 Transición:</strong> </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: MACHETE DE RESPUESTAS ESTRELLA -->
+            <section id="machete-respuestas">
+                <h2>3. Machete de Respuestas Estrella</h2>
+                <p>Utiliza esta referencia rápida durante el roleplay para calificar las respuestas técnicas de Claudio Vernuccio:</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;">Pregunta del CTO</th>
+                            <th style="width: 25%;">Mecanismo Técnico Clave</th>
+                            <th style="width: 50%;">Respuesta Estrella Esperada de Claudio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>¿Fine-tuning para base de stock dinámica?</td>
+                            <td class="highlight-red"><i data-lucide="filter" class="icon-sm"></i> RAG + Metadata Filtering</td>
+                            <td><strong>NO</strong>. El Fine-tuning cambia el estilo, formato y tono de respuesta, pero <strong>no</strong> sirve para inyectar hechos dinámicos de forma eficiente. RAG es la arquitectura correcta, combinada con un filtro estricto de metadatos en la Vector DB según active directory y fecha.</td>
+                        </tr>
+                        <tr>
+                            <td>¿Cómo evitar que el bot de IA rompa el ERP?</td>
+                            <td class="highlight-red"><i data-lucide="shield" class="icon-sm"></i> API Gateway + Pydantic + HITL</td>
+                            <td>El agente jamás escribe directo en la Base de Datos. Se aísla con un <strong>API Gateway</strong> determinista y validadores de esquema <strong>Pydantic</strong> (JSON Schema). Si se supera un umbral de desvío transaccional (ej. 10%), el sistema se frena y deriva a aprobación humana (<em>Human-in-the-loop</em>).</td>
+                        </tr>
+                        <tr>
+                            <td>¿Cómo blindar la privacidad y fuga de datos?</td>
+                            <td class="highlight-red"><i data-lucide="key" class="icon-sm"></i> Enterprise SLAs + Zero-Retention</td>
+                            <td>Consumiendo APIs empresariales protegidas bajo <strong>Enterprise SLAs</strong> con políticas contractuales de <strong>Zero-Retention</strong> de datos y cifrado TLS/AES-256. El proveedor tiene prohibido por contrato re-entrenar sus modelos públicos con nuestros datos corporativos.</td>
+                        </tr>
+                        <tr>
+                            <td>¿Cómo reducir latencias en Tool Calling?</td>
+                            <td class="highlight-red"><i data-lucide="zap" class="icon-sm"></i> Parallel Calling + Prompt Caching</td>
+                            <td>Implementando llamadas paralelas (Parallel Tool Calling) mediante asincronismo en backend, técnicas de caché a nivel de API (<em>Prompt Caching / KV Cache</em>) para datos regulatorios estáticos y reemplazando loops agénticos ReAct por un <strong>Router determinista</strong> rápido.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- SECTION 4: CONSEJOS DE ROLEPLAY -->
+            <section id="consejos-roleplay">
+                <h2>4. Consejos Metodológicos de Roleplay</h2>
+                <p>Para maximizar el impacto de la simulación de entrevista, sigue estas recomendaciones pedagógicas con Claudio Vernuccio:</p>
+                
+                <div style="display: flex; flex-direction: column; gap: 1.2rem;">
+                    <div class="glass-card" style="border-left: 4px solid var(--color-orange); background: rgba(249,115,22,0.02);">
+                        <div style="font-family: var(--font-display); font-weight: 700; color: #ffffff; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="user-x" style="color: var(--color-orange)"></i>
+                            <span>Adopta una postura corporativa (Skeptical CTO)</span>
+                        </div>
+                        <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 0;">
+                            No le facilites las respuestas a Claudio. Actúa con el tono escéptico de un CTO tradicional que cuida el presupuesto de la empresa y desconfía de las alucinaciones de la IA. Si responde de forma vaga o superficial, mantente firme e insiste en explicaciones de ingeniería de software.
+                        </p>
+                    </div>
+
+                    <div class="glass-card" style="border-left: 4px solid var(--color-purple); background: rgba(139,92,246,0.02);">
+                        <div style="font-family: var(--font-display); font-weight: 700; color: #ffffff; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="mic" style="color: var(--color-purple)"></i>
+                            <span>Exige rigor y precisión en el léxico técnico</span>
+                        </div>
+                        <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 0;">
+                            Si Claudio responde diciendo <em>"el programa revisa los manuales"</em>, interrúmpelo con respeto y hazle repetir la frase usando los términos técnicos correspondientes: <em>"el recuperador semántico (Retrieval) realiza la búsqueda vectorial e inyecta los chunks en la ventana de contexto del LLM"</em>.
+                        </p>
+                    </div>
+
+                    <div class="glass-card" style="border-left: 4px solid var(--color-blue); background: rgba(59,130,246,0.02);">
+                        <div style="font-family: var(--font-display); font-weight: 700; color: #ffffff; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="check-circle" style="color: var(--color-blue)"></i>
+                            <span>Evalúa la estructura lógica del Speech</span>
+                        </div>
+                        <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 0;">
+                            Asegúrate de que Claudio responda usando la estructura estrella de un Technical PM Senior:
+                            <br>
+                            1. <strong>Afirmación Directa / Decisión de Arquitectura</strong> (ej. <em>"No, el Fine-Tuning es inviable para stock dinámico..."</em>)
+                            <br>
+                            2. <strong>Justificación Técnica / Mecanismo</strong> (ej. <em>"...porque RAG inyecta datos factuales en la ventana de contexto en caliente a bajo costo..."</em>)
+                            <br>
+                            3. <strong>Mitigación de Riesgos / Control Financiero</strong> (ej. <em>"...y controlamos costos mediante Prompt Caching y un límite de Max Iterations."</em>)
+                        </p>
+                    </div>
+                </div>
+            </section>
+</div>
+    </div>
+
+    <!-- Initialize Lucide icons on load -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

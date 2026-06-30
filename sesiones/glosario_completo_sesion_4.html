@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glosario de Master: Sesión 4 - Finanzas de la IA, Evals & Preparación de Entrevistas</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root {
+            --primary: #F59E0B; /* Orange-accent for Session 4 */
+            --primary-light: #FEF3C7;
+            --primary-dark: #D97706;
+            --secondary: #3B82F6;
+            --accent: #8B5CF6;
+            --text-dark: #0F172A;
+            --text-muted: #475569;
+            --bg-light: #F8FAFC;
+            --bg-card: #FFFFFF;
+            --border-color: #E2E8F0;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background-color: #F1F5F9; color: var(--text-dark); line-height: 1.7; padding: 40px 20px; display: flex; justify-content: center; }
+        
+        .document-container { width: 100%; max-width: 1000px; background-color: var(--bg-card); box-shadow: var(--shadow-md); border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); }
+        
+        /* PORTADA */
+        .cover-page { min-height: 700px; background: linear-gradient(145deg, #0F172A 0%, #1E293B 100%); color: #FFFFFF; display: flex; flex-direction: column; justify-content: space-between; padding: 80px 60px; position: relative; overflow: hidden; }
+        .cover-page::before { content: ''; position: absolute; top: -10%; right: -10%; width: 50%; height: 50%; background: radial-gradient(circle, rgba(245, 158, 11, 0.2) 0%, transparent 70%); border-radius: 50%; }
+        .cover-header { display: flex; justify-content: space-between; align-items: center; z-index: 10; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 30px; }
+        .logo-text { font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: var(--primary); }
+        .edition-badge { background: rgba(245, 158, 11, 0.2); color: #FDE68A; border: 1px solid rgba(245, 158, 11, 0.3); padding: 8px 16px; border-radius: 30px; font-size: 0.85rem; font-weight: 700; }
+        .cover-title { font-family: 'Outfit', sans-serif; font-size: 4rem; font-weight: 800; line-height: 1.1; margin-bottom: 30px; background: linear-gradient(to right, #FFFFFF, #FDE68A); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .cover-subtitle { font-size: 1.4rem; font-weight: 300; color: #94A3B8; max-width: 700px; margin-bottom: 50px; }
+        .divider-accent { width: 150px; height: 8px; background: linear-gradient(90deg, var(--primary), #EF4444); border-radius: 4px; }
+        .cover-footer { display: flex; justify-content: space-between; align-items: flex-end; z-index: 10; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 40px; }
+
+        /* SECCIONES */
+        .page-content { padding: 80px 60px; }
+        .page-header-title { font-family: 'Outfit', sans-serif; font-size: 2.5rem; font-weight: 800; color: var(--text-dark); margin-bottom: 40px; border-bottom: 4px solid var(--primary-light); display: inline-block; }
+        .section-intro { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 60px; padding-left: 25px; border-left: 6px solid var(--primary); font-style: italic; }
+
+        /* CARDS */
+        .glossary-card { margin-bottom: 80px; scroll-margin-top: 40px; }
+        .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+        .concept-title { font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; gap: 15px; }
+        .concept-index { background: var(--primary); color: white; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 1.1rem; }
+        .concept-tag { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--primary-dark); background: var(--primary-light); padding: 6px 14px; border-radius: 20px; }
+
+        .definition-section { margin-bottom: 30px; }
+        .label { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; color: var(--primary-dark); letter-spacing: 1.5px; margin-bottom: 12px; display: block; }
+        .definition-text { font-size: 1.1rem; color: var(--text-dark); text-align: justify; }
+
+        /* DIAGRAMAS PRO */
+        .diagram-outer { background: var(--bg-light); border: 2px solid var(--border-color); border-radius: 20px; padding: 40px; margin: 40px 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+        .diagram-label { text-align: center; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-top: 25px; letter-spacing: 1px; }
+
+        .insight-box { background: #FDFCFB; border: 2px solid #E2E8F0; border-left: 8px solid var(--primary); border-radius: 12px; padding: 30px; margin-top: 40px; position: relative; }
+        .insight-box::after { content: 'ENFOQUE PM'; position: absolute; top: -12px; right: 20px; background: var(--primary-dark); color: white; font-size: 0.7rem; font-weight: 900; padding: 4px 10px; border-radius: 4px; }
+        .insight-header { font-family: 'Outfit', sans-serif; font-weight: 800; color: var(--primary-dark); font-size: 1rem; margin-bottom: 15px; text-transform: uppercase; }
+        
+        .analog-box { background: rgba(254, 243, 199, 0.5); padding: 25px; border-radius: 12px; margin-top: 25px; border: 1px solid var(--primary-light); }
+        .analog-header { font-weight: 700; color: var(--text-dark); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+
+        svg { filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05)); }
+        
+        @media (max-width: 768px) {
+            .cover-page { padding: 40px 30px; }
+            .cover-title { font-size: 2.5rem; }
+            .page-content { padding: 40px 20px; }
+            .concept-title { font-size: 1.4rem; }
+            .diagram-outer { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="document-container">
+    
+    <!-- PORTADA -->
+    <div class="cover-page">
+        <div class="cover-header">
+            <div class="logo-text">Mentoría IT / AI</div>
+            <div class="edition-badge">Nivel Master - 2026</div>
+        </div>
+        
+        <div class="cover-body">
+            <h1 class="cover-title">Finanzas de la IA &amp; Calidad:<br>Sesión 4</h1>
+            <p class="cover-subtitle">El manual definitivo para liderar la optimización de costos, gobernanza de seguridad, suites de evaluación (Evals) y preparación estratégica de entrevistas laborales de IT/IA.</p>
+            <div class="divider-accent"></div>
+        </div>
+        
+        <div class="cover-footer">
+            <div style="text-align: left;">
+                <p style="font-size: 0.8rem; color: #94A3B8; text-transform: uppercase; letter-spacing: 2px;">Preparado para</p>
+                <p style="font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 700; color: #FFFFFF; margin-top: 5px;">Claudio Vernuccio</p>
+            </div>
+            <div style="text-align: right;">
+                <p style="font-size: 0.8rem; color: #94A3B8; text-transform: uppercase; letter-spacing: 2px;">Sesión Final</p>
+                <p style="font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--primary); margin-top: 5px;">Economics &amp; Evals</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENIDO -->
+    <div class="page-content">
+        
+        <h2 class="page-header-title">I. Conceptos de AI Economics (Finanzas de IA)</h2>
+        <p class="section-intro">
+            Desplegar modelos de Inteligencia Artificial Generativa no es equivalente al software tradicional. Cada llamada probabilística a un LLM tiene costos específicos y dinámicos que debés dominar para proponer casos de negocio viables.
+        </p>
+
+        <!-- 1. AI Economics & ROI -->
+        <div class="glossary-card">
+            <div class="card-header">
+                <div class="concept-title"><span class="concept-index">01</span> AI Economics &amp; ROI</div>
+                <div class="concept-tag">Finanzas de la IA</div>
+            </div>
+            
+            <div class="definition-section">
+                <span class="label">Definición Técnica Profunda</span>
+                <div class="definition-text">
+                    La disciplina de negocio encargada de medir, analizar y optimizar la viabilidad financiera, el retorno de inversión (ROI) y los costos de infraestructura (COGS) asociados al despliegue de modelos de inteligencia artificial en producción. A diferencia de los servidores tradicionales, donde el almacenamiento y el procesamiento escalan de forma lineal y económica por peticiones HTTP, el software probabilístico de IA consume recursos de cómputo intensivos por cada token de entrada y salida procesado en la GPU.
+                </div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-header">🎯 Enfoque Estratégico para el PM</div>
+                Tu rol principal como PM de IA es justificar el caso de negocio demostrando que el ahorro operativo de tiempo y precisión (ej: automatizar la auditoría de contratos en silos fluviales) supera con creces la factura de API por consumo de tokens. Debés auditar las variables de costos constantemente para defender el margen de tu producto.
+            </div>
+        </div>
+
+        <!-- 2. Prompt Caching -->
+        <div class="glossary-card">
+            <div class="card-header">
+                <div class="concept-title"><span class="concept-index">02</span> Prompt Caching (Caché de Contexto)</div>
+                <div class="concept-tag">Optimización de Costos</div>
+            </div>
+            
+            <div class="definition-section">
+                <span class="label">Definición Técnica Profunda</span>
+                <div class="definition-text">
+                    Una optimización de bajo nivel a nivel de infraestructura GPU que permite almacenar temporalmente el estado matemático de los tokens del sistema que no cambian (ej. prompts de sistema extensos, manuales de aduana, o regulaciones de la empresa) en la memoria RAM del servidor de inferencia. Cuando el agente realiza consultas consecutivas, el modelo no vuelve a computar la porción estática, sino que reutiliza el estado guardado en caché.
+                </div>
+            </div>
+
+            <div class="diagram-outer">
+                <svg viewBox="0 0 700 250">
+                    <!-- Standard Flow -->
+                    <rect x="20" y="30" width="200" height="70" rx="8" fill="#F8FAFC" stroke="#EF4444" stroke-width="2"/>
+                    <text x="120" y="60" text-anchor="middle" font-size="11" font-weight="800" fill="#991B1B">Turno 1: Cómputo Completo</text>
+                    <text x="120" y="80" text-anchor="middle" font-size="9" fill="#475569">10k Tokens (Fijo) + 500 (Usuario)</text>
+                    
+                    <path d="M220 65 L300 65" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrow)"/>
+                    <text x="260" y="55" text-anchor="middle" font-size="9" fill="#475569">Factura 100%</text>
+
+                    <!-- Cached Flow -->
+                    <rect x="20" y="140" width="200" height="70" rx="8" fill="#ECFDF5" stroke="#10B981" stroke-width="2"/>
+                    <text x="120" y="170" text-anchor="middle" font-size="11" font-weight="800" fill="#065F46">Turno 2: PROMPT CACHING</text>
+                    <text x="120" y="190" text-anchor="middle" font-size="9" fill="#047857">10k Tokens (REUTILIZADOS) + 500 (Usuario)</text>
+
+                    <path d="M220 175 L300 175" stroke="#10B981" stroke-width="3" marker-end="url(#arrow-g)"/>
+                    <text x="260" y="160" text-anchor="middle" font-size="10" font-weight="800" fill="#047857">Ahorro: ~90%</text>
+                    
+                    <!-- GPU Mem -->
+                    <rect x="350" y="70" width="300" height="100" rx="10" fill="#1E293B" stroke="#3B82F6" stroke-width="3"/>
+                    <text x="500" y="110" text-anchor="middle" font-size="14" font-weight="900" fill="#FFFFFF">MEMORIA RAM GPU</text>
+                    <text x="500" y="135" text-anchor="middle" font-size="10" fill="#93C5FD">[Cache de Contexto Estático Guardado]</text>
+                </svg>
+                <div class="diagram-label">Prompt Caching: Evitando re-calcular tokens idénticos turno tras turno.</div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-header">🎯 Enfoque Estratégico para el PM</div>
+                Prompt Caching es tu mayor aliado técnico para reducir la latencia de primer token (TTFT) y los costos mensuales en interfaces conversacionales complejas. Debés exigir su configuración en el orquestador cuando inyectes bases de datos extensas o system prompts masivos de negocio.
+            </div>
+        </div>
+
+        <!-- 3. RAG vs Fine-Tuning -->
+        <div class="glossary-card">
+            <div class="card-header">
+                <div class="concept-title"><span class="concept-index">03</span> RAG vs. Fine-Tuning</div>
+                <div class="concept-tag">Comparación Técnica</div>
+            </div>
+            
+            <div class="definition-section">
+                <span class="label">Definición Técnica Profunda</span>
+                <div class="definition-text">
+                    La comparación de costos e infraestructura entre el uso de bases vectoriales para inyectar fragmentos de conocimiento relevantes en tiempo real (RAG) contra el entrenamiento estructurado de parámetros adicionales (Fine-Tuning) en un modelo pre-entrenado para adaptar su tono o comportamiento específico de salida.
+                </div>
+            </div>
+
+            <div class="analog-box">
+                <div class="analog-header">💡 Analogía Profesional</div>
+                <strong>Fine-Tuning</strong> enseña CÓMO hablar (estilo y estructura de datos), mientras que <strong>RAG</strong> enseña QUÉ decir (datos factuales y del negocio). Intentar inyectar información dinámica (como el inventario de hoy en los silos) mediante Fine-Tuning requiere re-entrenar el modelo todos los días con costos astronómicos; con RAG solo actualizas un PDF en la base de datos de manera instantánea y gratuita.
+            </div>
+        </div>
+
+        <h2 class="page-header-title">II. Calidad, Evals y Observabilidad</h2>
+        <p class="section-intro">
+            Asegurar la calidad en un sistema probabilístico no se logra chateando cinco minutos con el bot de forma manual. Requiere diseñar sistemas automatizados que califiquen y monitoreen la salida cognitiva en base a métricas.
+        </p>
+
+        <!-- 4. AI Evals -->
+        <div class="glossary-card">
+            <div class="card-header">
+                <div class="concept-title"><span class="concept-index">04</span> AI Evals (Evaluaciones de Calidad)</div>
+                <div class="concept-tag">Calidad Probabilística</div>
+            </div>
+            
+            <div class="definition-section">
+                <span class="label">Definición Técnica Profunda</span>
+                <div class="definition-text">
+                    Suites de pruebas automatizadas y estandarizadas diseñadas específicamente para medir el desempeño semántico y conceptual de modelos probabilísticos de IA. En lugar de comparar textos idénticos carácter por carácter (lo cual es inútil con respuestas no-deterministas), las Evals utilizan modelos de lenguaje evaluadores (<strong>LLM-as-a-judge</strong>) para calificar la salida de acuerdo con rúbricas de negocio (fidelidad, relevancia del contexto, relevancia de la respuesta).
+                </div>
+            </div>
+
+            <div class="diagram-outer">
+                <svg viewBox="0 0 700 250">
+                    <!-- Input -->
+                    <rect x="20" y="80" width="130" height="80" rx="10" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2"/>
+                    <text x="85" y="115" text-anchor="middle" font-size="11" font-weight="800">DATO RETRIEVED</text>
+                    <text x="85" y="135" text-anchor="middle" font-size="9" fill="#475569">[Contexto de Silos]</text>
+
+                    <path d="M150 120 L220 120" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrow)"/>
+
+                    <!-- Judge -->
+                    <rect x="220" y="50" width="220" height="140" rx="15" fill="#FFFBEB" stroke="#F59E0B" stroke-width="3"/>
+                    <text x="330" y="90" text-anchor="middle" font-size="14" font-weight="900" fill="#92400E">LLM EVALUADOR (Judge)</text>
+                    <text x="330" y="115" text-anchor="middle" font-size="10" fill="#B45309">Contraste contra Rúbrica de Silos</text>
+                    <text x="330" y="140" text-anchor="middle" font-size="10" font-weight="800" fill="#D97706">Métrica: FIDELIDAD</text>
+
+                    <path d="M440 120 L510 120" stroke="#10B981" stroke-width="3" marker-end="url(#arrow-g)"/>
+
+                    <!-- Output Score -->
+                    <rect x="510" y="80" width="150" height="80" rx="10" fill="#ECFDF5" stroke="#10B981" stroke-width="2"/>
+                    <text x="585" y="120" text-anchor="middle" font-size="14" font-weight="900" fill="#065F46">SCORE: 1.0 (Paso)</text>
+                    <text x="585" y="140" text-anchor="middle" font-size="9" fill="#047857">Evidencia 100% verídica</text>
+                </svg>
+                <div class="diagram-label">LLM-as-a-Judge: Un modelo externo audita la veracidad de la respuesta antes de ir a producción.</div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-header">🎯 Enfoque Estratégico para el PM</div>
+                Como PM, vos debés liderar la definición del **Golden Dataset** (el conjunto de pruebas estáticas con respuestas deseadas) y calibrar las rúbricas de evaluación. Esto permite al equipo de ingenieros realizar optimizaciones de prompts o de modelo sabiendo de antemano si el comportamiento mejoró o empeoró estadísticamente.
+            </div>
+        </div>
+
+        <!-- 5. Observabilidad & Tracing -->
+        <div class="glossary-card">
+            <div class="card-header">
+                <div class="concept-title"><span class="concept-index">05</span> Observabilidad &amp; Tracing (Langfuse)</div>
+                <div class="concept-tag">Monitoreo de Producción</div>
+            </div>
+            
+            <div class="definition-section">
+                <span class="label">Definición Técnica Profunda</span>
+                <div class="definition-text">
+                    La capacidad de registrar, trazar y auditar el ciclo completo de ejecución de tus agentes de IA en producción. Plataformas de observabilidad específicas de LLMs como **Langfuse** o **Arize** permiten registrar cada entrada, llamada interna, embeddings, alucinación informada y costo exacto por consulta (Tracing) para transformarlos en métricas operativas de negocio accionables.
+                </div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-header">🎯 Enfoque Estratégico para el PM</div>
+                Si un usuario del puerto reporta que el bot le dio una información errónea sobre el calado de una barcaza, con Langfuse no adivinás: buscás el ID de la conversación y ves exactamente qué prompt del sistema se ejecutó, qué datos de la base de datos se inyectaron y qué respuesta generó el modelo. Permite gestionar con métricas de ingeniería y no con sensaciones subjetivas.
+            </div>
+        </div>
+
+        <!-- 6. Data Leakage -->
+        <div class="glossary-card">
+            <div class="card-header">
+                <div class="concept-title"><span class="concept-index">06</span> Data Leakage (Fuga de Datos)</div>
+                <div class="concept-tag">Seguridad y Privacidad</div>
+            </div>
+            
+            <div class="definition-section">
+                <span class="label">Definición Técnica Profunda</span>
+                <div class="definition-text">
+                    El riesgo de seguridad corporativa en el cual información confidencial, propiedad intelectual o datos personales sensibles de la organización se transmiten y filtran involuntariamente a servidores externos de proveedores de LLMs. Esto ocurre si se utilizan endpoints de consumo masivo que retienen y usan la información de los chats para entrenar futuros modelos públicos del proveedor.
+                </div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-header">🎯 Enfoque Estratégico para el PM</div>
+                Debés blindar tu arquitectura de IA exigiendo a los ingenieros el uso exclusivo de **Enterprise API Contracts** con políticas de almacenamiento de retención cero (Zero Data Retention) y la inyección de una capa de protección (API Gateway) que limpie los datos sensibles (PII) antes de ser enviados a internet.
+            </div>
+        </div>
+
+        <h2 class="page-header-title">III. Casos de Estudio y Ejercicios Prácticos</h2>
+        <p class="section-intro">
+            Análisis de los ejercicios matemáticos de ROI y gobernanza que consolidan la viabilidad del proyecto, sirviendo como excelentes piezas de portafolio para tus entrevistas laborales.
+        </p>
+
+        <!-- Ejercicio 1 -->
+        <div class="glossary-card">
+            <div class="card-header">
+                <div class="concept-title"><span class="concept-index">07</span> Ejercicio 1: Caso de Negocio y ROI (Auditoría Contratos)</div>
+                <div class="concept-tag">Caso Práctico</div>
+            </div>
+            
+            <div class="definition-section">
+                <div class="definition-text">
+                    <strong>Consigna:</strong> Evaluar la viabilidad financiera de automatizar la auditoría de contratos fluviales agrícolas frente a la revisión manual humana.
+                    <br><br>
+                    <strong>Cálculos del Modelo de Costo IA (GPT-4o con Prompt Caching):</strong>
+                    <ul>
+                        <li><strong>Volumen mensual:</strong> 10.000 contratos de flete.</li>
+                        <li><strong>Tamaño de entrada:</strong> 10.000 tokens promedio (incluye prompt base de auditoría y cláusulas del contrato).</li>
+                        <li><strong>Costo de entrada base:</strong> $5 USD por 1M tokens.</li>
+                        <li><strong>Costo de entrada con caché:</strong> $1.25 USD por 1M tokens (80% de descuento).</li>
+                        <li><strong>Costo de salida (Response):</strong> $15 USD por 1M tokens (500 tokens generados).</li>
+                    </ul>
+                    <br>
+                    <strong>Cálculo Unitario por Contrato:</strong>
+                    <div style="background: var(--bg-light); border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; margin: 10px 0; font-family: monospace; font-size: 0.95rem;">
+                        Entrada Sin Caché (2k tokens): 2.000 / 1.000.000 * $5.00 = $0.0100 USD<br>
+                        Entrada Con Caché (8k tokens): 8.000 / 1.000.000 * $1.25 = $0.0100 USD<br>
+                        Salida Generada (500 tokens): 500 / 1.000.000 * $15.00 = $0.0075 USD<br>
+                        -----------------------------------------------------------<br>
+                        COSTO TOTAL UNITARIO: $0.0275 USD por contrato audited.
+                    </div>
+                    <strong>Margen de Comparativa Mensual:</strong>
+                    <ul>
+                        <li><strong>Costo IA Mensual:</strong> 10.000 contratos * $0.0275 = <strong>$275 USD al mes</strong>.</li>
+                        <li><strong>Costo Manual Humano:</strong> 1 analista junior revisa 5 contratos por hora (tarifa de $15/hr). Para auditar 10.000 contratos se requieren 2.000 horas de trabajo mensual (equivalente a ~12 analistas contratados a tiempo completo), costando <strong>$30.000 USD al mes</strong>.</li>
+                        <li><strong>Retorno y Eficiencia:</strong> Ahorro neto directo de <strong>$29.725 USD al mes</strong> (99% de ahorro) y reducción del ciclo de auditoría de semanas a escasos segundos.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 2 -->
+        <div class="glossary-card">
+            <div class="card-header">
+                <div class="concept-title"><span class="concept-index">08</span> Ejercicio 2: Rúbricas de Evals para la Auditoría de Silos</div>
+                <div class="concept-tag">Caso Práctico</div>
+            </div>
+            
+            <div class="definition-section">
+                <div class="definition-text">
+                    <strong>Consigna:</strong> Crear una rúbrica en Langfuse para calificar la veracidad de la información de stock y calado reportada por el bot.
+                    <br><br>
+                    <strong>Métricas de Auditoría Cognitive:</strong>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 15px; text-align: left; font-size: 0.9rem;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid var(--border-color); background: var(--bg-light);">
+                                <th style="padding: 10px;">Dimensión</th>
+                                <th style="padding: 10px;">Criterio de Evaluación</th>
+                                <th style="padding: 10px;">Rango Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 10px; font-weight: 700;">Fidelidad (Faithfulness)</td>
+                                <td style="padding: 10px;">¿Toda afirmación de stock o barcaza está soportada estrictamente por los datos extraídos de la Vector DB? (Evitar alucinaciones).</td>
+                                <td style="padding: 10px;"><strong>0.0</strong> (Alucinación grave) a <strong>1.0</strong> (Perfecta veracidad)</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 10px; font-weight: 700;">Relevancia de Contexto</td>
+                                <td style="padding: 10px;">¿Los fragmentos extraídos de la base de datos vectorial corresponden al silo y fecha de interés del usuario?</td>
+                                <td style="padding: 10px;"><strong>0.0</strong> (Chunk irrelevante) a <strong>1.0</strong> (Información exacta)</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 10px; font-weight: 700;">Relevancia de Respuesta</td>
+                                <td style="padding: 10px;">¿La respuesta final soluciona de forma concisa y con tono ejecutivo la consulta del operario del puerto?</td>
+                                <td style="padding: 10px;"><strong>0.0</strong> (Evasiva/desvíos) a <strong>1.0</strong> (Resolución directa)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div style="padding: 60px; background: #F8FAFC; border-top: 1px solid #E2E8F0; font-size: 0.9rem; color: #64748B; text-align: center;">
+        <p>Glosario de Master para Product Managers de IA - Sesión 4</p>
+        <p style="margin-top: 15px; font-weight: 800; color: #475569; letter-spacing: 2px;">2026 CLAUDIO VERNUCCIO | MENTORÍA ESTRATÉGICA IT</p>
+    </div>
+</div>
+
+<script>
+    lucide.createIcons();
+</script>
+</body>
+</html>
